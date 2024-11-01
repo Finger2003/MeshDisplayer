@@ -19,24 +19,24 @@ namespace Lab2.Model
         public Mesh(Vector3[,] controlPoints, int fidelityU, int fidelityV, int alphaAngle, int betaAngle)
         {
             ControlPoints = controlPoints;
-            SetFidelty(fidelityU, fidelityV);
-            SetAlphaAngle(alphaAngle);
-            SetBetaAngle(betaAngle);
+            SetFidelity(fidelityU, fidelityV);
+            SetAngles(alphaAngle, betaAngle);
         }
 
-        public void SetFidelty(int fidelityU, int fidelityV)
+        
+        public void SetFidelity(int fidelityU, int fidelityV)
         {
             Vertices = new Vertex[fidelityU, fidelityV];
 
 
-            float stepU = 1.0f / fidelityU;
-            float stepV = 1.0f / fidelityV;
+            float stepU = 1.0f / (fidelityU - 1);
+            float stepV = 1.0f / (fidelityV - 1);
 
             int n = ControlPoints.GetLength(0) - 1;
             int m = ControlPoints.GetLength(1) - 1;
 
 
-            // Potęgi u i v oraz 1-u i 1-v - pierwszy wymiar: kolejne u i v, drugi wymiar: kolejne potęgi
+            // Potęgi u i v oraz 1-u i 1-v - pierwszy wymiar: kolejne u i v oraz 1-u i 1-v, drugi wymiar: kolejne potęgi
             float[,] uPowers = new float[fidelityU, n + 1];
             float[,] vPowers = new float[fidelityV, m + 1];
             float[,] OneMinusUPowers = new float[fidelityU, n + 1];
@@ -48,7 +48,6 @@ namespace Lab2.Model
 
             for (int i = 0; i < fidelityV; i++)
                 vPowers[i, 0] = 1;
-
 
 
             float u, v;
@@ -75,18 +74,18 @@ namespace Lab2.Model
 
 
             for (int i = 0; i < fidelityU; i++)
-                OneMinusUPowers[i, n] = 1;
+                OneMinusUPowers[i, 0] = 1;
 
             for (int i = 0; i < fidelityV; i++)
-                OneMinusVPowers[i, m] = 1;
+                OneMinusVPowers[i, 0] = 1;
 
             float oneMinusU, oneMinusV;
             oneMinusU = 1;
             for (int i = 0; i < fidelityU; i++)
             {
-                for (int j = n - 1; j >= 0; j--)
+                for (int j = 1; j <= n; j++)
                 {
-                    OneMinusUPowers[i, j] = OneMinusUPowers[i, j + 1] * oneMinusU;
+                    OneMinusUPowers[i, j] = OneMinusUPowers[i, j - 1] * oneMinusU;
                 }
                 oneMinusU -= stepU;
             }
@@ -94,9 +93,9 @@ namespace Lab2.Model
             oneMinusV = 1;
             for (int i = 0; i < fidelityV; i++)
             {
-                for (int j = m - 1; j >= 0; j--)
+                for (int j = 1; j <= m; j++)
                 {
-                    OneMinusVPowers[i, j] = OneMinusVPowers[i, j + 1] * oneMinusV;
+                    OneMinusVPowers[i, j] = OneMinusVPowers[i, j - 1] * oneMinusV;
                 }
                 oneMinusV -= stepV;
             }
@@ -112,17 +111,18 @@ namespace Lab2.Model
 
             // Funkcje bazowe Bernsteina dla u
             u = 0;
-            for (int i = 0; i < fidelityU; i++)
+            for (int ui = 0; ui < fidelityU; ui++)
             {
                 int binCoeff0 = GetBinCoeff(n, 0);
                 int binCoeff1 = GetBinCoeff(n - 1, 0);
-                for (int j = 0; j <= n; j++)
+                for (int i = 0; i <= n; i++)
                 {
-                    Bu[i, j, 0] = binCoeff0 * uPowers[i, j] * OneMinusUPowers[i, n - j];
-                    binCoeff0 = binCoeff0 * (n - j) / (j + 1);
+                    float temp = uPowers[ui, i] * OneMinusUPowers[ui, n - i];
+                    Bu[ui, i, 0] = binCoeff0 * temp;
+                    binCoeff0 = binCoeff0 * (n - i) / (i + 1);
 
-                    Bu[i, j, 1] = binCoeff1 * uPowers[i, j] * OneMinusUPowers[i, n - j];
-                    binCoeff1 = binCoeff1 * (n - j - 1) / (j + 1);
+                    Bu[ui, i, 1] = binCoeff1 * temp;
+                    binCoeff1 = binCoeff1 * (n - i - 1) / (i + 1);
                 }
                 u += stepU;
             }
@@ -130,16 +130,17 @@ namespace Lab2.Model
 
             // Funkcje bazowe Bernsteina dla v
             v = 0;
-            for (int i = 0; i < fidelityV; i++)
+            for (int vi = 0; vi < fidelityV; vi++)
             {
                 int binCoeff0 = GetBinCoeff(m, 0);
                 int binCoeff1 = GetBinCoeff(m - 1, 0);
                 for (int j = 0; j <= m; j++)
                 {
-                    Bv[i, j, 0] = binCoeff0 * vPowers[i, j] * OneMinusVPowers[i, m - j];
+                    float temp = vPowers[vi, j] * OneMinusVPowers[vi, m - j];
+                    Bv[vi, j, 0] = binCoeff0 * temp;
                     binCoeff0 = binCoeff0 * (m - j) / (j + 1);
 
-                    Bv[i, j, 1] = binCoeff0 * vPowers[i, j] * OneMinusVPowers[i, m - j];
+                    Bv[vi, j, 1] = binCoeff0 * temp;
                     binCoeff1 = binCoeff1 * (m - j - 1) / (j + 1);
                 }
                 v += stepV;
@@ -157,21 +158,17 @@ namespace Lab2.Model
                     Vector3 nuv;
 
 
-                    for (int i = 0; i <= n - 1; i++)
-                        for (int j = 0; j <= m - 1; j++)
-                        {
+                    for (int i = 0; i <= n; i++)
+                        for (int j = 0; j <= m; j++)
                             p += Bu[ui, i, 0] * Bv[vi, j, 0] * ControlPoints[i, j];
-                            pu += Bu[ui, i, 1] * Bv[vi, j, 0] * (ControlPoints[i + 1, j] - ControlPoints[i, j]);
-                            pv += Bu[ui, i, 0] * Bv[vi, j, 1] * (ControlPoints[i, j + 1] - ControlPoints[i, j]);
-                        }
-
-                    p += Bu[ui, n, 0] * Bv[vi, m, 0] * ControlPoints[n, m];
 
                     for (int i = 0; i <= n - 1; i++)
-                        pu += Bu[ui, i, 1] * Bv[vi, m, 0] * (ControlPoints[i + 1, m] - ControlPoints[i, m]);
+                        for (int j = 0; j <= m; j++)
+                            pu += Bu[ui, i, 1] * Bv[vi, j, 0] * (ControlPoints[i + 1, j] - ControlPoints[i, j]);
 
-                    for (int j = 0; j <= m - 1; j++)
-                        pv += Bu[ui, n, 0] * Bv[vi, j, 1] * (ControlPoints[n, j + 1] - ControlPoints[n, j]);
+                    for (int i = 0; i <= n; i++)
+                        for (int j = 0; j <= m - 1; j++)
+                            pv += Bu[ui, i, 0] * Bv[vi, j, 1] * (ControlPoints[i, j + 1] - ControlPoints[i, j]);
 
                     pu *= n;
                     pv *= m;
@@ -181,10 +178,10 @@ namespace Lab2.Model
                 }
             }
 
-
-            for (int ui = 0; ui < n; ui++)
+            Triangles.Clear();
+            for (int ui = 0; ui < fidelityU - 1; ui++)
             {
-                for (int vi = 0; vi < m; vi++)
+                for (int vi = 0; vi < fidelityV - 1; vi++)
                 {
                     Triangle t1 = new Triangle(Vertices[ui, vi], Vertices[ui + 1, vi], Vertices[ui, vi + 1]);
                     Triangle t2 = new Triangle(Vertices[ui + 1, vi], Vertices[ui + 1, vi + 1], Vertices[ui, vi + 1]);
@@ -194,16 +191,23 @@ namespace Lab2.Model
                 }
             }
         }
-        public void SetAlphaAngle(int alphaAngle)
-        {
-            //Vertices = new List<Vertex>();
-            //Triangles = new List<Triangle>();
-        }
 
-        public void SetBetaAngle(int betaAngle)
+
+        public void SetAngles(int alphaAngle, int betaAngle)
         {
-            //Vertices = new List<Vertex>();
-            //Triangles = new List<Triangle>();
+            float alphaRadians = alphaAngle * MathF.PI / 180;
+            float betaRadians = betaAngle * MathF.PI / 180;
+            Matrix4x4 rotationMatrix = Matrix4x4.CreateRotationZ(alphaRadians) * Matrix4x4.CreateRotationX(betaRadians);
+
+            foreach (Vertex vertex in Vertices)
+            {
+                Vector3 p = Vector3.Transform(vertex.BeforeRotationState.P, rotationMatrix);
+                Vector3 pu = Vector3.Transform(vertex.BeforeRotationState.Pu, rotationMatrix);
+                Vector3 pv = Vector3.Transform(vertex.BeforeRotationState.Pv, rotationMatrix);
+                Vector3 n = Vector3.Transform(vertex.BeforeRotationState.N, rotationMatrix);
+
+                vertex.AfterRotationState = new Vertex.State(p, pu, pv, n);
+            }
         }
 
 

@@ -53,12 +53,13 @@
             // pictureBox
             // 
             pictureBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            pictureBox.BackColor = Color.White;
+            pictureBox.BackColor = SystemColors.Control;
             pictureBox.Location = new Point(12, 12);
             pictureBox.Name = "pictureBox";
             pictureBox.Size = new Size(583, 426);
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = false;
+            pictureBox.SizeChanged += pictureBox_SizeChanged;
             pictureBox.Paint += pictureBox_Paint;
             // 
             // fidelityPanel

@@ -1,6 +1,7 @@
 using Lab2.Model;
 using Lab2.VertexFileReaders;
 using System.Numerics;
+using System.Windows.Forms;
 
 namespace Lab2
 {
@@ -13,7 +14,7 @@ namespace Lab2
         private Vector3[,] ControlPoints { get; set; }
 
         private Bitmap Bitmap { get; set; }
-        private Mesh? Mesh { get; set; } 
+        private Mesh? Mesh { get; set; }
         Graphics G { get; set; }
         public MeshDisplayer()
         {
@@ -24,12 +25,15 @@ namespace Lab2
             betaAngleValueLabel.DataBindings.Add("Text", betaAngleTrackBar, "Value");
 
             Bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
+            pictureBox.Image = Bitmap;
+
             G = Graphics.FromImage(Bitmap);
             G.ScaleTransform(1, -1);
             G.TranslateTransform(Bitmap.Width / 2, -Bitmap.Height / 2);
 
             LoadControlPoints();
             Mesh = new(ControlPoints!, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
+            PaintPictureBox();
         }
 
         private void LoadControlPoints()
@@ -40,29 +44,31 @@ namespace Lab2
 
         private void fidelityTrackBar_Scroll(object sender, EventArgs e)
         {
-            fidelityTrackBar.Value = (int)Math.Round((double) fidelityTrackBar.Value / fidelityTrackBar.TickFrequency) * fidelityTrackBar.TickFrequency;
-            Mesh?.SetFidelty(fidelityTrackBar.Value, fidelityTrackBar.Value);
+            fidelityTrackBar.Value = (int)Math.Round((double)fidelityTrackBar.Value / fidelityTrackBar.TickFrequency) * fidelityTrackBar.TickFrequency;
+            Mesh?.SetFidelity(fidelityTrackBar.Value, fidelityTrackBar.Value);
         }
 
         private void alphaAngleTrackBar_Scroll(object sender, EventArgs e)
         {
-            Mesh?.SetAlphaAngle(alphaAngleTrackBar.Value);
+            Mesh?.SetAngles(alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
         }
 
         private void betaAngleTrackBar_Scroll(object sender, EventArgs e)
         {
-            Mesh?.SetBetaAngle(betaAngleTrackBar.Value);
+            Mesh?.SetAngles(alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
         }
 
         private void pictureBox_Paint(object sender, PaintEventArgs e)
         {
-            Paint();
+            PaintPictureBox();
         }
 
-        private void Paint()
+        private void PaintPictureBox()
         {
             if (Mesh is null)
                 return;
+
+            G.Clear(Color.White);
 
             foreach (Triangle triangle in Mesh.Triangles)
             {
@@ -74,6 +80,31 @@ namespace Lab2
                 G.DrawLine(Pens.Black, v2, v3);
                 G.DrawLine(Pens.Black, v3, v1);
             }
+
+            pictureBox.Image = Bitmap;
+        }
+
+        private void pictureBox_SizeChanged(object sender, EventArgs e)
+        {
+            if(pictureBox.Width <= 0 || pictureBox.Height <= 0 || Bitmap is null)
+                return;
+
+            Bitmap oldBitmap = Bitmap;
+            Graphics oldGraphics = G;
+
+            Bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
+            G = Graphics.FromImage(Bitmap);
+            G.ScaleTransform(1, -1);
+            G.TranslateTransform(Bitmap.Width / 2, -Bitmap.Height / 2);
+
+            G.DrawImage(oldBitmap, 0, 0);
+
+            pictureBox.Image = Bitmap;
+
+            oldGraphics.Dispose();
+            oldBitmap.Dispose();
+
+            pictureBox.Invalidate();
         }
     }
 }
