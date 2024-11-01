@@ -59,6 +59,7 @@
             pictureBox.Size = new Size(583, 426);
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = false;
+            pictureBox.Paint += pictureBox_Paint;
             // 
             // fidelityPanel
             // 
@@ -92,10 +93,16 @@
             // fidelityTrackBar
             // 
             fidelityTrackBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            fidelityTrackBar.LargeChange = 20;
             fidelityTrackBar.Location = new Point(3, 34);
+            fidelityTrackBar.Maximum = 100;
+            fidelityTrackBar.Minimum = 10;
             fidelityTrackBar.Name = "fidelityTrackBar";
             fidelityTrackBar.Size = new Size(181, 45);
+            fidelityTrackBar.SmallChange = 10;
             fidelityTrackBar.TabIndex = 0;
+            fidelityTrackBar.TickFrequency = 10;
+            fidelityTrackBar.Value = 10;
             fidelityTrackBar.Scroll += fidelityTrackBar_Scroll;
             // 
             // alphaAnglePanel
@@ -186,6 +193,7 @@
             Controls.Add(fidelityPanel);
             Controls.Add(pictureBox);
             Name = "MeshDisplayer";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "MeshDisplayer";
             ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
             fidelityPanel.ResumeLayout(false);
