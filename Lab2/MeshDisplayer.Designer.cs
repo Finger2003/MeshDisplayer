@@ -78,6 +78,7 @@
             fideltyValueLabel.Size = new Size(38, 15);
             fideltyValueLabel.TabIndex = 2;
             fideltyValueLabel.Text = "000";
+            fideltyValueLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
             // fideltyLabel
             // 
@@ -95,6 +96,7 @@
             fideltyTrackBar.Name = "fideltyTrackBar";
             fideltyTrackBar.Size = new Size(181, 45);
             fideltyTrackBar.TabIndex = 0;
+            fideltyTrackBar.Scroll += fideltyTrackBar_Scroll;
             // 
             // alphaAnglePanel
             // 
@@ -114,6 +116,7 @@
             alphaAngleValueLabel.Size = new Size(38, 15);
             alphaAngleValueLabel.TabIndex = 2;
             alphaAngleValueLabel.Text = "000";
+            alphaAngleValueLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
             // alphaAngleLabel
             // 
@@ -133,6 +136,7 @@
             alphaAngleTrackBar.Name = "alphaAngleTrackBar";
             alphaAngleTrackBar.Size = new Size(181, 45);
             alphaAngleTrackBar.TabIndex = 0;
+            alphaAngleTrackBar.Scroll += alphaAngleTrackBar_Scroll;
             // 
             // betaAnglePanel
             // 
@@ -152,6 +156,7 @@
             betaAngleValueLabel.Size = new Size(35, 15);
             betaAngleValueLabel.TabIndex = 2;
             betaAngleValueLabel.Text = "000";
+            betaAngleValueLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
             // betaAngleLabel
             // 
@@ -169,6 +174,7 @@
             betaAngleTrackBar.Name = "betaAngleTrackBar";
             betaAngleTrackBar.Size = new Size(181, 45);
             betaAngleTrackBar.TabIndex = 0;
+            betaAngleTrackBar.Scroll += betaAngleTrackBar_Scroll;
             // 
             // MeshDisplayer
             // 
