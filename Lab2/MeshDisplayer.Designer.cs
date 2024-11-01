@@ -96,7 +96,7 @@
             fideltyTrackBar.Name = "fideltyTrackBar";
             fideltyTrackBar.Size = new Size(181, 45);
             fideltyTrackBar.TabIndex = 0;
-            fideltyTrackBar.Scroll += fideltyTrackBar_Scroll;
+            fideltyTrackBar.Scroll += FideltyTrackBar_Scroll;
             // 
             // alphaAnglePanel
             // 

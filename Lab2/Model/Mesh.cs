@@ -8,6 +8,7 @@ namespace Lab2.Model
 {
     public class Mesh
     {
+        public List<Vertex> Vertices { get; set; } = [];
         public List<Triangle> Triangles { get; set; } = [];
     }
 }
