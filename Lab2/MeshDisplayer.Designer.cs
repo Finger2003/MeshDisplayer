@@ -33,20 +33,20 @@
             fideltyValueLabel = new Label();
             fideltyLabel = new Label();
             fideltyTrackBar = new TrackBar();
-            panel1 = new Panel();
+            alphaAnglePanel = new Panel();
             alphaAngleValueLabel = new Label();
             alphaAngleLabel = new Label();
             alphaAngleTrackBar = new TrackBar();
-            panel2 = new Panel();
+            betaAnglePanel = new Panel();
             betaAngleValueLabel = new Label();
             betaAngleLabel = new Label();
             betaAngleTrackBar = new TrackBar();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             fideltyPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)fideltyTrackBar).BeginInit();
-            panel1.SuspendLayout();
+            alphaAnglePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)alphaAngleTrackBar).BeginInit();
-            panel2.SuspendLayout();
+            betaAnglePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)betaAngleTrackBar).BeginInit();
             SuspendLayout();
             // 
@@ -96,16 +96,16 @@
             fideltyTrackBar.Size = new Size(181, 45);
             fideltyTrackBar.TabIndex = 0;
             // 
-            // panel1
+            // alphaAnglePanel
             // 
-            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            panel1.Controls.Add(alphaAngleValueLabel);
-            panel1.Controls.Add(alphaAngleLabel);
-            panel1.Controls.Add(alphaAngleTrackBar);
-            panel1.Location = new Point(601, 100);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(187, 82);
-            panel1.TabIndex = 3;
+            alphaAnglePanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            alphaAnglePanel.Controls.Add(alphaAngleValueLabel);
+            alphaAnglePanel.Controls.Add(alphaAngleLabel);
+            alphaAnglePanel.Controls.Add(alphaAngleTrackBar);
+            alphaAnglePanel.Location = new Point(601, 100);
+            alphaAnglePanel.Name = "alphaAnglePanel";
+            alphaAnglePanel.Size = new Size(187, 82);
+            alphaAnglePanel.TabIndex = 3;
             // 
             // alphaAngleValueLabel
             // 
@@ -134,16 +134,16 @@
             alphaAngleTrackBar.Size = new Size(181, 45);
             alphaAngleTrackBar.TabIndex = 0;
             // 
-            // panel2
+            // betaAnglePanel
             // 
-            panel2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            panel2.Controls.Add(betaAngleValueLabel);
-            panel2.Controls.Add(betaAngleLabel);
-            panel2.Controls.Add(betaAngleTrackBar);
-            panel2.Location = new Point(604, 188);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(184, 82);
-            panel2.TabIndex = 4;
+            betaAnglePanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            betaAnglePanel.Controls.Add(betaAngleValueLabel);
+            betaAnglePanel.Controls.Add(betaAngleLabel);
+            betaAnglePanel.Controls.Add(betaAngleTrackBar);
+            betaAnglePanel.Location = new Point(601, 188);
+            betaAnglePanel.Name = "betaAnglePanel";
+            betaAnglePanel.Size = new Size(187, 82);
+            betaAnglePanel.TabIndex = 4;
             // 
             // betaAngleValueLabel
             // 
@@ -167,7 +167,7 @@
             betaAngleTrackBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             betaAngleTrackBar.Location = new Point(3, 34);
             betaAngleTrackBar.Name = "betaAngleTrackBar";
-            betaAngleTrackBar.Size = new Size(178, 45);
+            betaAngleTrackBar.Size = new Size(181, 45);
             betaAngleTrackBar.TabIndex = 0;
             // 
             // MeshDisplayer
@@ -175,8 +175,8 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(panel2);
-            Controls.Add(panel1);
+            Controls.Add(betaAnglePanel);
+            Controls.Add(alphaAnglePanel);
             Controls.Add(fideltyPanel);
             Controls.Add(pictureBox);
             Name = "MeshDisplayer";
@@ -185,11 +185,11 @@
             fideltyPanel.ResumeLayout(false);
             fideltyPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)fideltyTrackBar).EndInit();
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
+            alphaAnglePanel.ResumeLayout(false);
+            alphaAnglePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)alphaAngleTrackBar).EndInit();
-            panel2.ResumeLayout(false);
-            panel2.PerformLayout();
+            betaAnglePanel.ResumeLayout(false);
+            betaAnglePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)betaAngleTrackBar).EndInit();
             ResumeLayout(false);
         }
@@ -201,11 +201,11 @@
         private Label fideltyLabel;
         private TrackBar fideltyTrackBar;
         private Label fideltyValueLabel;
-        private Panel panel1;
+        private Panel alphaAnglePanel;
         private Label alphaAngleValueLabel;
         private Label alphaAngleLabel;
         private TrackBar alphaAngleTrackBar;
-        private Panel panel2;
+        private Panel betaAnglePanel;
         private Label betaAngleValueLabel;
         private Label betaAngleLabel;
         private TrackBar betaAngleTrackBar;
