@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             pictureBox = new PictureBox();
-            fideltyPanel = new Panel();
+            fidelityPanel = new Panel();
             fideltyValueLabel = new Label();
-            fideltyLabel = new Label();
-            fideltyTrackBar = new TrackBar();
+            fidelityLabel = new Label();
+            fidelityTrackBar = new TrackBar();
             alphaAnglePanel = new Panel();
             alphaAngleValueLabel = new Label();
             alphaAngleLabel = new Label();
@@ -42,8 +42,8 @@
             betaAngleLabel = new Label();
             betaAngleTrackBar = new TrackBar();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
-            fideltyPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)fideltyTrackBar).BeginInit();
+            fidelityPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)fidelityTrackBar).BeginInit();
             alphaAnglePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)alphaAngleTrackBar).BeginInit();
             betaAnglePanel.SuspendLayout();
@@ -60,16 +60,16 @@
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = false;
             // 
-            // fideltyPanel
+            // fidelityPanel
             // 
-            fideltyPanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            fideltyPanel.Controls.Add(fideltyValueLabel);
-            fideltyPanel.Controls.Add(fideltyLabel);
-            fideltyPanel.Controls.Add(fideltyTrackBar);
-            fideltyPanel.Location = new Point(601, 12);
-            fideltyPanel.Name = "fideltyPanel";
-            fideltyPanel.Size = new Size(187, 82);
-            fideltyPanel.TabIndex = 1;
+            fidelityPanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            fidelityPanel.Controls.Add(fideltyValueLabel);
+            fidelityPanel.Controls.Add(fidelityLabel);
+            fidelityPanel.Controls.Add(fidelityTrackBar);
+            fidelityPanel.Location = new Point(601, 12);
+            fidelityPanel.Name = "fidelityPanel";
+            fidelityPanel.Size = new Size(187, 82);
+            fidelityPanel.TabIndex = 1;
             // 
             // fideltyValueLabel
             // 
@@ -80,23 +80,23 @@
             fideltyValueLabel.Text = "000";
             fideltyValueLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // fideltyLabel
+            // fidelityLabel
             // 
-            fideltyLabel.AutoSize = true;
-            fideltyLabel.Location = new Point(3, 11);
-            fideltyLabel.Name = "fideltyLabel";
-            fideltyLabel.Size = new Size(137, 15);
-            fideltyLabel.TabIndex = 1;
-            fideltyLabel.Text = "Dokładność triangulacji: ";
+            fidelityLabel.AutoSize = true;
+            fidelityLabel.Location = new Point(3, 11);
+            fidelityLabel.Name = "fidelityLabel";
+            fidelityLabel.Size = new Size(137, 15);
+            fidelityLabel.TabIndex = 1;
+            fidelityLabel.Text = "Dokładność triangulacji: ";
             // 
-            // fideltyTrackBar
+            // fidelityTrackBar
             // 
-            fideltyTrackBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            fideltyTrackBar.Location = new Point(3, 34);
-            fideltyTrackBar.Name = "fideltyTrackBar";
-            fideltyTrackBar.Size = new Size(181, 45);
-            fideltyTrackBar.TabIndex = 0;
-            fideltyTrackBar.Scroll += FideltyTrackBar_Scroll;
+            fidelityTrackBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            fidelityTrackBar.Location = new Point(3, 34);
+            fidelityTrackBar.Name = "fidelityTrackBar";
+            fidelityTrackBar.Size = new Size(181, 45);
+            fidelityTrackBar.TabIndex = 0;
+            fidelityTrackBar.Scroll += fidelityTrackBar_Scroll;
             // 
             // alphaAnglePanel
             // 
@@ -183,14 +183,14 @@
             ClientSize = new Size(800, 450);
             Controls.Add(betaAnglePanel);
             Controls.Add(alphaAnglePanel);
-            Controls.Add(fideltyPanel);
+            Controls.Add(fidelityPanel);
             Controls.Add(pictureBox);
             Name = "MeshDisplayer";
             Text = "MeshDisplayer";
             ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
-            fideltyPanel.ResumeLayout(false);
-            fideltyPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)fideltyTrackBar).EndInit();
+            fidelityPanel.ResumeLayout(false);
+            fidelityPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)fidelityTrackBar).EndInit();
             alphaAnglePanel.ResumeLayout(false);
             alphaAnglePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)alphaAngleTrackBar).EndInit();
@@ -203,9 +203,9 @@
         #endregion
 
         private PictureBox pictureBox;
-        private Panel fideltyPanel;
-        private Label fideltyLabel;
-        private TrackBar fideltyTrackBar;
+        private Panel fidelityPanel;
+        private Label fidelityLabel;
+        private TrackBar fidelityTrackBar;
         private Label fideltyValueLabel;
         private Panel alphaAnglePanel;
         private Label alphaAngleValueLabel;

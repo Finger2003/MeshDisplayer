@@ -19,7 +19,7 @@ namespace Lab2
         {
             InitializeComponent();
 
-            fideltyValueLabel.DataBindings.Add("Text", fideltyTrackBar, "Value");
+            fideltyValueLabel.DataBindings.Add("Text", fidelityTrackBar, "Value");
             alphaAngleValueLabel.DataBindings.Add("Text", alphaAngleTrackBar, "Value");
             betaAngleValueLabel.DataBindings.Add("Text", betaAngleTrackBar, "Value");
 
@@ -28,7 +28,7 @@ namespace Lab2
             G.ScaleTransform(1, -1);
             G.TranslateTransform(pictureBox.Width / 2, -pictureBox.Height / 2);
 
-            LoadControlPoints();
+            //LoadControlPoints();
         }
 
         private void LoadControlPoints()
@@ -37,22 +37,20 @@ namespace Lab2
             ControlPoints = reader.Read(ControlPointsPath);
         }
 
-        private void FideltyTrackBar_Scroll(object sender, EventArgs e)
+        private void fidelityTrackBar_Scroll(object sender, EventArgs e)
         {
-            //int fidelity = fideltyTrackBar.Value;
-            //fideltyValueLabel.Text = fidelity.ToString();
+            Mesh.SetFidelty(fidelityTrackBar.Value, fidelityTrackBar.Value);
         }
 
         private void alphaAngleTrackBar_Scroll(object sender, EventArgs e)
         {
-            //int alphaAngle = alphaAngleTrackBar.Value;
-            //alphaAngleValueLabel.Text = alphaAngle.ToString();
+            Mesh.SetAlphaAngle(alphaAngleTrackBar.Value);
         }
 
         private void betaAngleTrackBar_Scroll(object sender, EventArgs e)
         {
-            //int betaAngle = betaAngleTrackBar.Value;
-            //betaAngleValueLabel.Text = betaAngle.ToString();
+            Mesh.SetBetaAngle(betaAngleTrackBar.Value);
         }
+
     }
 }
