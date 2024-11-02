@@ -83,7 +83,7 @@ namespace Lab2
                 G.DrawLine(Pens.Black, v3, v1);
             }
 
-            pictureBox.Image = Bitmap;
+            //pictureBox.Image = Bitmap;
         }
 
         private void pictureBox_SizeChanged(object sender, EventArgs e)
@@ -96,10 +96,10 @@ namespace Lab2
 
             Bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
             G = Graphics.FromImage(Bitmap);
+            G.DrawImage(oldBitmap, 0, 0);
+
             G.ScaleTransform(1, -1);
             G.TranslateTransform(Bitmap.Width / 2, -Bitmap.Height / 2);
-
-            //G.DrawImage(oldBitmap, 0, 0);
 
             pictureBox.Image = Bitmap;
 
