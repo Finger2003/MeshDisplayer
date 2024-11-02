@@ -73,27 +73,32 @@ namespace Lab2.Model
                     Vector3 pv = new(0, 0, 0);
                     Vector3 nuv;
 
-
+                    // Punkt P
                     for (int i = 0; i <= n; i++)
                         for (int j = 0; j <= m; j++)
                             p += Bu[ui, i, 0] * Bv[vi, j, 0] * ControlPoints[i, j];
 
+                    // Wektor styczny Pu
                     for (int i = 0; i <= n - 1; i++)
                         for (int j = 0; j <= m; j++)
                             pu += Bu[ui, i, 1] * Bv[vi, j, 0] * (ControlPoints[i + 1, j] - ControlPoints[i, j]);
 
+                    // Wektor styczny Pv
                     for (int i = 0; i <= n; i++)
                         for (int j = 0; j <= m - 1; j++)
                             pv += Bu[ui, i, 0] * Bv[vi, j, 1] * (ControlPoints[i, j + 1] - ControlPoints[i, j]);
 
                     pu *= n;
                     pv *= m;
+
+                    // Wektor normalny
                     nuv = Vector3.Cross(pu, pv);
 
                     Vertices[ui, vi] = new Vertex(p, pu, pv, nuv);
                 }
             }
 
+            // Łączenie w trójkąty
             Triangles.Clear();
             for (int ui = 0; ui < fidelityU - 1; ui++)
             {
@@ -107,6 +112,7 @@ namespace Lab2.Model
                 }
             }
 
+            // Obrót wierzchołków
             RotateVertices();
 
 
@@ -150,23 +156,6 @@ namespace Lab2.Model
             }
         }
 
-
-        //public void SetAngles(int alphaAngle, int betaAngle)
-        //{
-        //    float alphaRadians = alphaAngle * MathF.PI / 180;
-        //    float betaRadians = betaAngle * MathF.PI / 180;
-        //    Matrix4x4 rotationMatrix = Matrix4x4.CreateRotationZ(alphaRadians) * Matrix4x4.CreateRotationX(betaRadians);
-
-        //    foreach (Vertex vertex in Vertices)
-        //    {
-        //        Vector3 p = Vector3.Transform(vertex.BeforeRotationState.P, rotationMatrix);
-        //        Vector3 pu = Vector3.Transform(vertex.BeforeRotationState.Pu, rotationMatrix);
-        //        Vector3 pv = Vector3.Transform(vertex.BeforeRotationState.Pv, rotationMatrix);
-        //        Vector3 n = Vector3.Transform(vertex.BeforeRotationState.N, rotationMatrix);
-
-        //        vertex.AfterRotationState = new Vertex.State(p, pu, pv, n);
-        //    }
-        //}
 
         public void SetAlphaAngle(int alphaAngle)
         {
