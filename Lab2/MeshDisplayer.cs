@@ -121,30 +121,13 @@ namespace Lab2
                 PointF v3 = new(triangle.V3.AfterRotationState.P.X, triangle.V3.AfterRotationState.P.Y);
 
                 BitmapData bitmapData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-                //fillTriangle([v1, v2, v3], bitmapData);
                 fillTriangle(triangle, bitmapData);
                 Bitmap.UnlockBits(bitmapData);
 
                 G.DrawLine(Pens.Black, v1, v2);
                 G.DrawLine(Pens.Black, v2, v3);
                 G.DrawLine(Pens.Black, v3, v1);
-
-                //fillPolygon([v1, v2, v3]);
             }
-
-            //List<Point> points = [new Point(0, 100), new Point(-100, -100), new Point(100, -100)];
-            //fillPolygon(points);
-            //G.DrawLine(Pens.Black, points[0], points[1]);
-            //G.DrawLine(Pens.Black, points[1], points[2]);
-            //G.DrawLine(Pens.Black, points[2], points[0]);
-
-            //List<Point> points = [new Point(-200, -50), new Point(-80, 90), new Point(150, 40), new Point(130, -80)];
-            //G.DrawLine(Pens.Black, points[0], points[1]);
-            //G.DrawLine(Pens.Black, points[1], points[2]);
-            //G.DrawLine(Pens.Black, points[2], points[3]);
-            //G.DrawLine(Pens.Black, points[3], points[0]);
-            //fillPolygon(points);
-            //pictureBox.Image = Bitmap;
         }
 
         private void fillTriangle(Triangle triangle, BitmapData bitmapData)
@@ -169,6 +152,8 @@ namespace Lab2
                 for (int i = 0; i < trianglePoints.Count; i++)
                 {
                     Point point = trianglePoints[i];
+
+                    // Jeœli punkt by³ na scanline zaktualizuj AET o krawêdzie, które go zawieraj¹
                     if (point.Y == scanline - 1)
                     {
                         int previousIndex = i == 0 ? trianglePoints.Count - 1 : i - 1;
@@ -177,47 +162,52 @@ namespace Lab2
                         Point previousPoint = trianglePoints[previousIndex];
                         Point nextPoint = trianglePoints[nextIndex];
 
-                        checkAndAddToAET(previousPoint, point);
-                        checkAndAddToAET(nextPoint, point);
+                        checkAndUpdateAET(previousPoint, point);
+                        checkAndUpdateAET(nextPoint, point);
                     }
                 }
 
-                void checkAndAddToAET(Point p1, Point p2)
+                void checkAndUpdateAET(Point p1, Point p2)
                 {
-                    if (p1.Y >= p2.Y)
+                    if (p1.Y > p2.Y)
                         AET.Add(new AETElement(p1, p2));
                     else
                         AET.RemoveAll(edge => edge.P1 == p2 && edge.P2 == p1);
                 }
 
+                // Posortowanie AET w kierunku rosn¹cych X
                 AET.Sort((e1, e2) => e1.X.CompareTo(e2.X));
 
                 unsafe
                 {
+                    // Transformacja uk³adu wspó³rzêdnych
                     int transformedY = -scanline + Bitmap.Height / 2;
+
+                    // WskaŸnik na pierwszy piksel w scanline
                     byte* row = (byte*)bitmapData.Scan0 + transformedY * bitmapData.Stride;
 
+                    // Aktualnie rozwa¿any punkt
                     Point p = new(0, scanline);
 
-                    for (int j = 0; j < AET.Count - 1; j++)
+                    // Dla kolejnych par krawêdzi 0-1, 2-3
+                    for (int i = 0; i < AET.Count - 1; i+=2)
                     {
-                        AETElement e1 = AET[j];
-                        AETElement e2 = AET[j + 1];
+                        AETElement e1 = AET[i];
+                        AETElement e2 = AET[i + 1];
 
                         int x1 = (int)e1.X;
                         int x2 = (int)e2.X;
 
-                        if (x1 > x2)
-                            (x1, x2) = (x2, x1);
-
                         if (transformedY >= 0 && transformedY < bitmapData.Height)
                         {
-                            for (int x = x1; x <= x2; x++)
+                            // Wype³nianie scanlinii miêdzy krawêdziami
+                            for (int x = x1; x < x2; x++)
                             {
                                 p.X = x;
                                 float[] coords = getBaricentricCoords(p);
                                 byte[] color = getColor([MeshColor.R, MeshColor.G, MeshColor.B], coords);
 
+                                // Transformacja uk³adu wspó³rzêdnych
                                 int transformedX = x + bitmapData.Width / 2;
 
                                 if (transformedX < 0 || transformedX >= bitmapData.Width)
@@ -231,27 +221,28 @@ namespace Lab2
                                 row[index + 3] = MeshColor.A;
                             }
                         }
-
-                        e1.X += e1.InverseSlope;
-                        e2.X += e2.InverseSlope;
                     }
+
+                    // Aktualizacja wartoœci x dla nowej scanlinii
+                    for (int i = 0; i < AET.Count; i++)
+                        AET[i].X += AET[i].InverseSlope;
                 }
+
 
                 byte[] getColor(float[] color, float[] cords)
                 {
                     Vector3 Il = new(LightColor.R, LightColor.G, LightColor.B);
                     Vector3 Io = new(color);
-                    Vector3 L = new(0, 0, 1);
+                    Vector3 L = new(0, 1, 1);
                     Vector3 N = triangle.V1.AfterRotationState.N * cords[0] + triangle.V2.AfterRotationState.N * cords[1] + triangle.V3.AfterRotationState.N * cords[2];
                     Vector3 V = new(0, 0, 1);
-                    //N = -N;
                     N = Vector3.Abs(N);
-                    Vector3 R = 2 * Vector3.Dot(N, L) * N - L;
 
                     Il = Vector3.Normalize(Il);
                     Io = Vector3.Normalize(Io);
                     L = Vector3.Normalize(L);
                     N = Vector3.Normalize(N);
+                    Vector3 R = 2 * Vector3.Dot(N, L) * N - L;
                     R = Vector3.Normalize(R);
 
                     Vector3 I = Kd * Il * Math.Max(0, Vector3.Dot(L, N)) + Ks * Il * MathF.Pow(Math.Max(0, Vector3.Dot(R, V)), M);
@@ -259,7 +250,6 @@ namespace Lab2
                     I *= 255;
                     I = Vector3.Clamp(I, new Vector3(0, 0, 0), new Vector3(255, 255, 255));
 
-                    //return [MeshColor.R, MeshColor.G, MeshColor.B];
                     return [(byte)I.X, (byte)I.Y, (byte)I.Z];
                 }
 
@@ -273,9 +263,9 @@ namespace Lab2
                     return coords;
                 }
 
-                float getDoubledSarea(Point p1, Point p2, Point p3)
+                int getDoubledSarea(Point p1, Point p2, Point p3)
                 {
-                    return (float)(p1.X - p3.X) * (p2.Y - p3.Y) - (p2.X - p3.X) * (p1.Y - p3.Y);
+                    return (p1.X - p3.X) * (p2.Y - p3.Y) - (p2.X - p3.X) * (p1.Y - p3.Y);
                 }
             }
         }

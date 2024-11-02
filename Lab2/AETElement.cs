@@ -12,8 +12,7 @@
             P1 = p1;
             P2 = p2;
             X = p2.X;
-            if (p1.Y != p2.Y)
-                InverseSlope = (float)(p2.X - p1.X) / (p2.Y - p1.Y);
+            InverseSlope = (float)(p2.X - p1.X) / (p2.Y - p1.Y);
         }
     }
 }
