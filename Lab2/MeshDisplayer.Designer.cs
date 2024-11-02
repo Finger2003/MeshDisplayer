@@ -57,7 +57,7 @@
             mTrackBar = new TrackBar();
             panel4 = new Panel();
             lightZAxisValueLabel = new Label();
-            lightZAxis = new Label();
+            lightZAxisLabel = new Label();
             lightZAxisTrackBar = new TrackBar();
             objectColorPanel = new Panel();
             textureRadioButton = new RadioButton();
@@ -268,6 +268,7 @@
             kdTrackBar.Size = new Size(181, 45);
             kdTrackBar.TabIndex = 0;
             kdTrackBar.TickFrequency = 10;
+            kdTrackBar.Scroll += kdTrackBar_Scroll;
             // 
             // panel2
             // 
@@ -307,6 +308,7 @@
             ksTrackBar.Size = new Size(181, 45);
             ksTrackBar.TabIndex = 0;
             ksTrackBar.TickFrequency = 10;
+            ksTrackBar.Scroll += ksTrackBar_Scroll;
             // 
             // panel3
             // 
@@ -346,12 +348,13 @@
             mTrackBar.Name = "mTrackBar";
             mTrackBar.Size = new Size(181, 45);
             mTrackBar.TabIndex = 0;
+            mTrackBar.Scroll += mTrackBar_Scroll;
             // 
             // panel4
             // 
             panel4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             panel4.Controls.Add(lightZAxisValueLabel);
-            panel4.Controls.Add(lightZAxis);
+            panel4.Controls.Add(lightZAxisLabel);
             panel4.Controls.Add(lightZAxisTrackBar);
             panel4.Location = new Point(6, 324);
             panel4.Name = "panel4";
@@ -367,14 +370,14 @@
             lightZAxisValueLabel.Text = "000";
             lightZAxisValueLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // lightZAxis
+            // lightZAxisLabel
             // 
-            lightZAxis.AutoSize = true;
-            lightZAxis.Location = new Point(3, 11);
-            lightZAxis.Name = "lightZAxis";
-            lightZAxis.Size = new Size(134, 15);
-            lightZAxis.TabIndex = 1;
-            lightZAxis.Text = "Oś obrotu źródła światła";
+            lightZAxisLabel.AutoSize = true;
+            lightZAxisLabel.Location = new Point(3, 11);
+            lightZAxisLabel.Name = "lightZAxisLabel";
+            lightZAxisLabel.Size = new Size(134, 15);
+            lightZAxisLabel.TabIndex = 1;
+            lightZAxisLabel.Text = "Oś obrotu źródła światła";
             // 
             // lightZAxisTrackBar
             // 
@@ -388,6 +391,7 @@
             lightZAxisTrackBar.SmallChange = 5;
             lightZAxisTrackBar.TabIndex = 0;
             lightZAxisTrackBar.TickFrequency = 5;
+            lightZAxisTrackBar.Scroll += lightZAxisTrackBar_Scroll;
             // 
             // objectColorPanel
             // 
@@ -545,7 +549,7 @@
         private TrackBar mTrackBar;
         private Panel panel4;
         private Label lightZAxisValueLabel;
-        private Label lightZAxis;
+        private Label lightZAxisLabel;
         private TrackBar lightZAxisTrackBar;
         private Panel objectColorPanel;
         private RadioButton textureRadioButton;
