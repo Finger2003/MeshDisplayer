@@ -41,28 +41,11 @@ namespace Lab2.Model
             int n = ControlPoints.GetLength(0) - 1;
             int m = ControlPoints.GetLength(1) - 1;
 
-
             // Potęgi u i v oraz 1-u i 1-v - pierwszy wymiar: kolejne u i v oraz 1-u i 1-v, drugi wymiar: kolejne potęgi
             float[,] uPowers = new float[fidelityU, n + 1];
             float[,] vPowers = new float[fidelityV, m + 1];
             float[,] OneMinusUPowers = new float[fidelityU, n + 1];
             float[,] OneMinusVPowers = new float[fidelityV, m + 1];
-
-            void fillWithPowers(float[,] tab, float initialValue, float step)
-            {
-                int rows = tab.GetLength(0);
-                int cols = tab.GetLength(1);
-
-                for (int i = 0; i < rows; i++)
-                {
-                    tab[i, 0] = 1;
-                    for (int j = 1; j < cols; j++)
-                    {
-                        tab[i, j] = tab[i, j - 1] * initialValue;
-                    }
-                    initialValue += step;
-                }
-            }
 
             fillWithPowers(uPowers, 0, stepU);
             fillWithPowers(vPowers, 0, stepV);
@@ -70,134 +53,15 @@ namespace Lab2.Model
             fillWithPowers(OneMinusVPowers, 1, -stepV);
 
 
-            //for (int i = 0; i < fidelityU; i++)
-            //    uPowers[i, 0] = 1;
-
-            //for (int i = 0; i < fidelityV; i++)
-            //    vPowers[i, 0] = 1;
-
-
-            //float u, v;
-            //u = 0;
-            //for (int i = 0; i < fidelityU; i++)
-            //{
-            //    for (int j = 1; j <= n; j++)
-            //    {
-            //        uPowers[i, j] = uPowers[i, j - 1] * u;
-            //    }
-            //    u += stepU;
-            //}
-
-            //v = 0;
-            //for (int i = 0; i < fidelityV; i++)
-            //{
-            //    for (int j = 1; j <= m; j++)
-            //    {
-            //        vPowers[i, j] = vPowers[i, j - 1] * v;
-            //    }
-            //    v += stepV;
-            //}
-
-
-
-            //for (int i = 0; i < fidelityU; i++)
-            //    OneMinusUPowers[i, 0] = 1;
-
-            //for (int i = 0; i < fidelityV; i++)
-            //    OneMinusVPowers[i, 0] = 1;
-
-            //float oneMinusU, oneMinusV;
-            //oneMinusU = 1;
-            //for (int i = 0; i < fidelityU; i++)
-            //{
-            //    for (int j = 1; j <= n; j++)
-            //    {
-            //        OneMinusUPowers[i, j] = OneMinusUPowers[i, j - 1] * oneMinusU;
-            //    }
-            //    oneMinusU -= stepU;
-            //}
-
-            //oneMinusV = 1;
-            //for (int i = 0; i < fidelityV; i++)
-            //{
-            //    for (int j = 1; j <= m; j++)
-            //    {
-            //        OneMinusVPowers[i, j] = OneMinusVPowers[i, j - 1] * oneMinusV;
-            //    }
-            //    oneMinusV -= stepV;
-            //}
-
-
-
-
             // Pierwszy wymiar: kolejne u, drugi wymiar: kolejne i, trzeci wymiar: n i n - 1
             float[,,] Bu = new float[fidelityU, n + 1, 2];
             // Pierwszy wymiar: kolejne v, drugi wymiar: kolejne i, trzeci wymiar: m i m - 1
             float[,,] Bv = new float[fidelityV, m + 1, 2];
 
-
-            //// Funkcje bazowe Bernsteina dla u
-            ////u = 0;
-            //for (int ui = 0; ui < fidelityU; ui++)
-            //{
-            //    int binCoeff0 = GetBinCoeff(n, 0);
-            //    int binCoeff1 = GetBinCoeff(n - 1, 0);
-            //    for (int i = 0; i <= n; i++)
-            //    {
-            //        float temp = uPowers[ui, i] * OneMinusUPowers[ui, n - i];
-            //        Bu[ui, i, 0] = binCoeff0 * temp;
-            //        binCoeff0 = binCoeff0 * (n - i) / (i + 1);
-
-            //        Bu[ui, i, 1] = binCoeff1 * temp;
-            //        binCoeff1 = binCoeff1 * (n - i - 1) / (i + 1);
-            //    }
-            //    //u += stepU;
-            //}
-
-
-            //// Funkcje bazowe Bernsteina dla v
-            ////v = 0;
-            //for (int vi = 0; vi < fidelityV; vi++)
-            //{
-            //    int binCoeff0 = GetBinCoeff(m, 0);
-            //    int binCoeff1 = GetBinCoeff(m - 1, 0);
-            //    for (int j = 0; j <= m; j++)
-            //    {
-            //        float temp = vPowers[vi, j] * OneMinusVPowers[vi, m - j];
-            //        Bv[vi, j, 0] = binCoeff0 * temp;
-            //        binCoeff0 = binCoeff0 * (m - j) / (j + 1);
-
-            //        Bv[vi, j, 1] = binCoeff1 * temp;
-            //        binCoeff1 = binCoeff1 * (m - j - 1) / (j + 1);
-            //    }
-            //    //v += stepV;
-            //}
-
             fillWithBernstein(Bu, uPowers, OneMinusUPowers);
             fillWithBernstein(Bv, vPowers, OneMinusVPowers);
 
-            void fillWithBernstein(float[,,] tab, float[,] powers, float[,] oneMinusPowers)
-            {
-                int rows = tab.GetLength(0);
-                int cols = tab.GetLength(1);
-                int m = cols - 1;
 
-                for (int i = 0; i < rows; i++)
-                {
-                    int binCoeff0 = GetBinCoeff(m, 0);
-                    int binCoeff1 = GetBinCoeff(m - 1, 0);
-                    for (int j = 0; j < cols; j++)
-                    {
-                        float temp = powers[i, j] * oneMinusPowers[i, m - j];
-
-                        tab[i, j, 0] = binCoeff0 * temp;
-                        binCoeff0 = binCoeff0 * (m - j) / (j + 1);
-
-                        tab[i, j, 1] = binCoeff1 * temp;
-                        binCoeff1 = binCoeff1 * (m - j - 1) / (j + 1);
-                    }
-                }
-            }
 
             // Wyznaczanie wierzchołków
             for (int ui = 0; ui < fidelityU; ui++)
@@ -244,6 +108,46 @@ namespace Lab2.Model
             }
 
             RotateVertices();
+
+
+            void fillWithPowers(float[,] tab, float initialValue, float step)
+            {
+                int rows = tab.GetLength(0);
+                int cols = tab.GetLength(1);
+
+                for (int i = 0; i < rows; i++)
+                {
+                    tab[i, 0] = 1;
+                    for (int j = 1; j < cols; j++)
+                    {
+                        tab[i, j] = tab[i, j - 1] * initialValue;
+                    }
+                    initialValue += step;
+                }
+            }
+
+            void fillWithBernstein(float[,,] tab, float[,] powers, float[,] oneMinusPowers)
+            {
+                int rows = tab.GetLength(0);
+                int cols = tab.GetLength(1);
+                int m = cols - 1;
+
+                for (int i = 0; i < rows; i++)
+                {
+                    int binCoeff0 = GetBinCoeff(m, 0);
+                    int binCoeff1 = GetBinCoeff(m - 1, 0);
+                    for (int j = 0; j < cols; j++)
+                    {
+                        float temp = powers[i, j] * oneMinusPowers[i, m - j];
+
+                        tab[i, j, 0] = binCoeff0 * temp;
+                        binCoeff0 = binCoeff0 * (m - j) / (j + 1);
+
+                        tab[i, j, 1] = binCoeff1 * temp;
+                        binCoeff1 = binCoeff1 * (m - j - 1) / (j + 1);
+                    }
+                }
+            }
         }
 
 
