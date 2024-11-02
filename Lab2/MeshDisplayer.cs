@@ -50,12 +50,14 @@ namespace Lab2
 
         private void alphaAngleTrackBar_Scroll(object sender, EventArgs e)
         {
-            Mesh?.SetAngles(alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
+            //Mesh?.SetAngles(alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
+            Mesh?.SetAlphaAngle(alphaAngleTrackBar.Value);
         }
 
         private void betaAngleTrackBar_Scroll(object sender, EventArgs e)
         {
-            Mesh?.SetAngles(alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
+            //Mesh?.SetAngles(alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
+            Mesh?.SetBetaAngle(betaAngleTrackBar.Value);
         }
 
         private void pictureBox_Paint(object sender, PaintEventArgs e)
@@ -97,14 +99,14 @@ namespace Lab2
             G.ScaleTransform(1, -1);
             G.TranslateTransform(Bitmap.Width / 2, -Bitmap.Height / 2);
 
-            G.DrawImage(oldBitmap, 0, 0);
+            //G.DrawImage(oldBitmap, 0, 0);
 
             pictureBox.Image = Bitmap;
 
             oldGraphics.Dispose();
             oldBitmap.Dispose();
 
-            pictureBox.Invalidate();
+            //pictureBox.Invalidate();
         }
     }
 }

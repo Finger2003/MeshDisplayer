@@ -16,11 +16,17 @@ namespace Lab2.Model
 
         public Vector3[,] ControlPoints { get; set; }
 
+        private float AlphaRadians { get; set; }
+        private float BetaRadians { get; set; }
+
         public Mesh(Vector3[,] controlPoints, int fidelityU, int fidelityV, int alphaAngle, int betaAngle)
         {
             ControlPoints = controlPoints;
             SetFidelity(fidelityU, fidelityV);
-            SetAngles(alphaAngle, betaAngle);
+            //SetAngles(alphaAngle, betaAngle);
+            AlphaRadians = alphaAngle * MathF.PI / 180;
+            BetaRadians = betaAngle * MathF.PI / 180;
+            RotateVertices();
         }
 
         
@@ -190,14 +196,42 @@ namespace Lab2.Model
                     Triangles.Add(t2);
                 }
             }
+
+            RotateVertices();
         }
 
 
-        public void SetAngles(int alphaAngle, int betaAngle)
+        //public void SetAngles(int alphaAngle, int betaAngle)
+        //{
+        //    float alphaRadians = alphaAngle * MathF.PI / 180;
+        //    float betaRadians = betaAngle * MathF.PI / 180;
+        //    Matrix4x4 rotationMatrix = Matrix4x4.CreateRotationZ(alphaRadians) * Matrix4x4.CreateRotationX(betaRadians);
+
+        //    foreach (Vertex vertex in Vertices)
+        //    {
+        //        Vector3 p = Vector3.Transform(vertex.BeforeRotationState.P, rotationMatrix);
+        //        Vector3 pu = Vector3.Transform(vertex.BeforeRotationState.Pu, rotationMatrix);
+        //        Vector3 pv = Vector3.Transform(vertex.BeforeRotationState.Pv, rotationMatrix);
+        //        Vector3 n = Vector3.Transform(vertex.BeforeRotationState.N, rotationMatrix);
+
+        //        vertex.AfterRotationState = new Vertex.State(p, pu, pv, n);
+        //    }
+        //}
+
+        public void SetAlphaAngle(int alphaAngle)
         {
-            float alphaRadians = alphaAngle * MathF.PI / 180;
-            float betaRadians = betaAngle * MathF.PI / 180;
-            Matrix4x4 rotationMatrix = Matrix4x4.CreateRotationZ(alphaRadians) * Matrix4x4.CreateRotationX(betaRadians);
+            AlphaRadians = alphaAngle * MathF.PI / 180;
+            RotateVertices();
+        }
+        public void SetBetaAngle(int betaAngle)
+        {
+            BetaRadians = betaAngle * MathF.PI / 180;
+            RotateVertices();
+        }
+
+        private void RotateVertices()
+        {
+            Matrix4x4 rotationMatrix = Matrix4x4.CreateRotationZ(AlphaRadians) * Matrix4x4.CreateRotationX(BetaRadians);
 
             foreach (Vertex vertex in Vertices)
             {
