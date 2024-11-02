@@ -56,7 +56,7 @@
             pictureBox.BackColor = SystemColors.Control;
             pictureBox.Location = new Point(12, 12);
             pictureBox.Name = "pictureBox";
-            pictureBox.Size = new Size(583, 426);
+            pictureBox.Size = new Size(771, 569);
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = false;
             pictureBox.SizeChanged += pictureBox_SizeChanged;
@@ -68,7 +68,7 @@
             fidelityPanel.Controls.Add(fideltyValueLabel);
             fidelityPanel.Controls.Add(fidelityLabel);
             fidelityPanel.Controls.Add(fidelityTrackBar);
-            fidelityPanel.Location = new Point(601, 12);
+            fidelityPanel.Location = new Point(789, 12);
             fidelityPanel.Name = "fidelityPanel";
             fidelityPanel.Size = new Size(187, 82);
             fidelityPanel.TabIndex = 1;
@@ -94,16 +94,16 @@
             // fidelityTrackBar
             // 
             fidelityTrackBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            fidelityTrackBar.LargeChange = 20;
+            fidelityTrackBar.LargeChange = 18;
             fidelityTrackBar.Location = new Point(3, 34);
-            fidelityTrackBar.Maximum = 100;
-            fidelityTrackBar.Minimum = 10;
+            fidelityTrackBar.Maximum = 40;
+            fidelityTrackBar.Minimum = 4;
             fidelityTrackBar.Name = "fidelityTrackBar";
             fidelityTrackBar.Size = new Size(181, 45);
-            fidelityTrackBar.SmallChange = 10;
+            fidelityTrackBar.SmallChange = 4;
             fidelityTrackBar.TabIndex = 0;
-            fidelityTrackBar.TickFrequency = 10;
-            fidelityTrackBar.Value = 10;
+            fidelityTrackBar.TickFrequency = 4;
+            fidelityTrackBar.Value = 4;
             fidelityTrackBar.Scroll += fidelityTrackBar_Scroll;
             // 
             // alphaAnglePanel
@@ -112,7 +112,7 @@
             alphaAnglePanel.Controls.Add(alphaAngleValueLabel);
             alphaAnglePanel.Controls.Add(alphaAngleLabel);
             alphaAnglePanel.Controls.Add(alphaAngleTrackBar);
-            alphaAnglePanel.Location = new Point(601, 100);
+            alphaAnglePanel.Location = new Point(789, 100);
             alphaAnglePanel.Name = "alphaAnglePanel";
             alphaAnglePanel.Size = new Size(187, 82);
             alphaAnglePanel.TabIndex = 3;
@@ -152,7 +152,7 @@
             betaAnglePanel.Controls.Add(betaAngleValueLabel);
             betaAnglePanel.Controls.Add(betaAngleLabel);
             betaAnglePanel.Controls.Add(betaAngleTrackBar);
-            betaAnglePanel.Location = new Point(601, 188);
+            betaAnglePanel.Location = new Point(789, 188);
             betaAnglePanel.Name = "betaAnglePanel";
             betaAnglePanel.Size = new Size(187, 82);
             betaAnglePanel.TabIndex = 4;
@@ -188,7 +188,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(988, 593);
             Controls.Add(betaAnglePanel);
             Controls.Add(alphaAnglePanel);
             Controls.Add(fidelityPanel);
