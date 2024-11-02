@@ -121,7 +121,7 @@ namespace Lab2
                 //fillPolygon([v1, v2, v3]);
             }
 
-            //List<Point> points = [new Point(100, 100), new Point(100, -100), new Point(-100, 100)];
+            //List<Point> points = [new Point(0, 100), new Point(-100, -100), new Point(100, -100)];
             //fillPolygon(points);
             //G.DrawLine(Pens.Black, points[0], points[1]);
             //G.DrawLine(Pens.Black, points[1], points[2]);
@@ -155,98 +155,22 @@ namespace Lab2
 
             oldGraphics.Dispose();
             oldBitmap.Dispose();
-
-            //pictureBox.Invalidate();
         }
-
-        //private void fillPolygon(List<PointF> polygon)
-        //{
-        //    //polygon.Sort((p1, p2) => p1.Y.CompareTo(p2.Y));
-        //    int[] indices = Enumerable.Range(0, polygon.Count).ToArray();
-        //    Array.Sort(indices, (i1, i2) => polygon[i1].Y.CompareTo(polygon[i2].Y));
-        //    float polygonYMin = polygon[indices[0]].Y;
-        //    float polygonYMax = polygon[indices[^1]].Y;
-
-        //    //List<(PointF p1, PointF p2)> AET = [];
-
-        //    List<(PointF p1, PointF p2, float yMax, float x, float oneOverM)> AET = [];
-
-        //    for (float scanline = polygonYMin; scanline < polygonYMax; scanline++)
-        //    {
-        //        for(int i = 0; i < polygon.Count; i++)
-        //        {
-        //            PointF point = polygon[i];
-        //            if ((int)point.Y == (int)scanline - 1)
-        //            {
-        //                int previousIndex = i == 0 ? polygon.Count - 1 : i - 1;
-        //                int nextIndex = i == polygon.Count - 1 ? 0 : i + 1;
-
-        //                PointF previousPoint = polygon[previousIndex];
-        //                PointF nextPoint = polygon[nextIndex];
-
-        //                if (previousPoint.Y >= point.Y)
-        //                {
-        //                    float oneOverM = 0;
-        //                    if(point.Y != previousPoint.Y)
-        //                        oneOverM = (point.X - previousPoint.X) / (point.Y - previousPoint.Y);
-        //                    AET.Add((previousPoint, point, previousPoint.Y, previousPoint.X, oneOverM));
-        //                }
-        //                else
-        //                    AET.RemoveAll(item => (item.p1 == previousPoint && item.p2 == point));
-
-        //                if (nextPoint.Y >= point.Y)
-        //                {
-        //                    float oneOverM = 0;
-        //                    if (point.Y != nextPoint.Y)
-        //                        oneOverM = (point.X - nextPoint.X) / (point.Y - nextPoint.Y);
-        //                    AET.Add((nextPoint, point, nextPoint.Y, point.X, (point.X - nextPoint.X) / (point.Y - nextPoint.Y)));
-        //                }
-        //                else
-        //                    AET.RemoveAll(item => (item.p1 == nextPoint && item.p2 == point));
-        //            }
-
-        //            AET.Sort((e1, e2) => e1.x.CompareTo(e2.x));
-        //            for (int j = 0; j < AET.Count - 1; j += 2)
-        //            {
-        //                var e1 = AET[j];
-        //                var e2 = AET[j + 1];
-
-        //                float x1 = e1.x;
-        //                float x2 = e2.x;
-
-        //                if (x1 > x2)
-        //                    (x1, x2) = (x2, x1);
-
-        //                for (float x = x1; x < x2; x++)
-        //                {
-        //                    //Bitmap.SetPixel((int)x, (int)scanline, MeshColor);
-        //                }
-
-        //                e1.x += e1.oneOverM;
-        //                e2.x += e2.oneOverM;
-
-        //                AET[j] = e1;
-        //                AET[j + 1] = e2;
-        //            }
-        //        }
-
-        //    }
 
 
         private void fillPolygon(List<Point> polygonPoints)
         {
-            //polygon.Sort((p1, p2) => p1.Y.CompareTo(p2.Y));
             int[] indices = Enumerable.Range(0, polygonPoints.Count).ToArray();
             Array.Sort(indices, (i1, i2) => polygonPoints[i1].Y.CompareTo(polygonPoints[i2].Y));
             int polygonYMin = polygonPoints[indices[0]].Y;
             int polygonYMax = polygonPoints[indices[^1]].Y;
 
 
-            List<(Point p1, Point p2, float x, float inverseSlope)> AET = [];
+            List<AETElement> AET = [];
 
             for (int scanline = polygonYMin; scanline < polygonYMax; scanline++)
             {
-                AET.RemoveAll(item => item.p1.Y == item.p2.Y);
+                AET.RemoveAll(edge => edge.P1.Y == edge.P2.Y);
                 for (int i = 0; i < polygonPoints.Count; i++)
                 {
                     Point point = polygonPoints[i];
@@ -259,45 +183,40 @@ namespace Lab2
                         Point nextPoint = polygonPoints[nextIndex];
 
                         if (previousPoint.Y >= point.Y)
-                        {
-                            float inverseSlope = 0;
-                            if (point.Y != previousPoint.Y)
-                                inverseSlope = (point.X - previousPoint.X) / (point.Y - previousPoint.Y);
-                            AET.Add((previousPoint, point, point.X, inverseSlope));
-                        }
+                            AET.Add(new AETElement(previousPoint, point));
                         else
-                            AET.RemoveAll(item => (item.p1 == point && item.p2 == previousPoint));
+                            AET.RemoveAll(edge => edge.P1 == point && edge.P2 == previousPoint);
 
                         if (nextPoint.Y >= point.Y)
-                        {
-                            float inverseSlope = 0;
-                            if (point.Y != nextPoint.Y)
-                                inverseSlope = (point.X - nextPoint.X) / (point.Y - nextPoint.Y);
-                            AET.Add((nextPoint, point, point.X, inverseSlope));
-                        }
+                            AET.Add(new AETElement(nextPoint, point));
                         else
-                            AET.RemoveAll(item => (item.p1 == point && item.p2 == nextPoint));
+                            AET.RemoveAll(edge => edge.P1 == point && edge.P2 == nextPoint);
                     }
 
                 }
 
-                AET.Sort((e1, e2) => e1.x.CompareTo(e2.x));
+                AET.Sort((e1, e2) => e1.X.CompareTo(e2.X));
 
+                int transformedY = -scanline + Bitmap.Height / 2;
                 for (int j = 0; j < AET.Count - 1; j++)
                 {
-                    var e1 = AET[j];
-                    var e2 = AET[j + 1];
+                    AETElement e1 = AET[j];
+                    AETElement e2 = AET[j + 1];
 
-                    float x1 = e1.x;
-                    float x2 = e2.x;
+                    //G.DrawLine(Pens.AliceBlue, e1.X, scanline, e2.X, scanline);
+                    int x1 = (int)e1.X;
+                    int x2 = (int)e2.X;
 
-                    G.DrawLine(Pens.AliceBlue, x1, scanline, x2, scanline);
 
-                    e1.x += e1.inverseSlope;
-                    e2.x += e2.inverseSlope;
+                    for (int x = x1; x < x2; x++)
+                    {
+                        int transformedX = x + Bitmap.Width / 2;
+                        if(transformedX >= 0 && transformedX < Bitmap.Width && transformedY >= 0 && transformedY < Bitmap.Height)
+                            Bitmap.SetPixel(transformedX, transformedY, MeshColor);
+                    }
 
-                    AET[j] = e1;
-                    AET[j + 1] = e2;
+                    e1.X += e1.InverseSlope;
+                    e2.X += e2.InverseSlope;
                 }
 
             }
