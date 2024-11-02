@@ -46,18 +46,24 @@ namespace Lab2
         {
             fidelityTrackBar.Value = (int)Math.Round((double)fidelityTrackBar.Value / fidelityTrackBar.TickFrequency) * fidelityTrackBar.TickFrequency;
             Mesh?.SetFidelity(fidelityTrackBar.Value, fidelityTrackBar.Value);
+            pictureBox.Refresh();
+            pictureBox.Refresh();
         }
 
         private void alphaAngleTrackBar_Scroll(object sender, EventArgs e)
         {
             //Mesh?.SetAngles(alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
             Mesh?.SetAlphaAngle(alphaAngleTrackBar.Value);
+            pictureBox.Refresh();
+            pictureBox.Refresh();
         }
 
         private void betaAngleTrackBar_Scroll(object sender, EventArgs e)
         {
             //Mesh?.SetAngles(alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
             Mesh?.SetBetaAngle(betaAngleTrackBar.Value);
+            pictureBox.Refresh();
+            pictureBox.Refresh();
         }
 
         private void pictureBox_Paint(object sender, PaintEventArgs e)
