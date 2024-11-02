@@ -1,5 +1,6 @@
 using Lab2.Model;
 using Lab2.VertexFileReaders;
+using System.Drawing.Imaging;
 using System.Numerics;
 
 namespace Lab2
@@ -106,13 +107,16 @@ namespace Lab2
 
             G.Clear(Color.White);
 
+
             foreach (Triangle triangle in Mesh.Triangles)
             {
                 PointF v1 = new(triangle.V1.AfterRotationState.P.X, triangle.V1.AfterRotationState.P.Y);
                 PointF v2 = new(triangle.V2.AfterRotationState.P.X, triangle.V2.AfterRotationState.P.Y);
                 PointF v3 = new(triangle.V3.AfterRotationState.P.X, triangle.V3.AfterRotationState.P.Y);
 
-                fillPolygon([new Point((int)v1.X, (int)v1.Y), new Point((int)v2.X, (int)v2.Y), new Point((int)v3.X, (int)v3.Y)]);
+                BitmapData bitmapData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+                fillPolygon([new Point((int)v1.X, (int)v1.Y), new Point((int)v2.X, (int)v2.Y), new Point((int)v3.X, (int)v3.Y)], bitmapData);
+                Bitmap.UnlockBits(bitmapData);
 
                 G.DrawLine(Pens.Black, v1, v2);
                 G.DrawLine(Pens.Black, v2, v3);
@@ -136,30 +140,10 @@ namespace Lab2
             //pictureBox.Image = Bitmap;
         }
 
-        private void pictureBox_SizeChanged(object sender, EventArgs e)
+        private void fillPolygon(List<Point> polygonPoints, BitmapData bitmapData)
         {
-            if (pictureBox.Width <= 0 || pictureBox.Height <= 0 || Bitmap is null)
-                return;
+            const int bytesPerPixel = 4;
 
-            Bitmap oldBitmap = Bitmap;
-            Graphics oldGraphics = G;
-
-            Bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
-            G = Graphics.FromImage(Bitmap);
-            G.DrawImage(oldBitmap, 0, 0);
-
-            G.ScaleTransform(1, -1);
-            G.TranslateTransform(Bitmap.Width / 2, -Bitmap.Height / 2);
-
-            pictureBox.Image = Bitmap;
-
-            oldGraphics.Dispose();
-            oldBitmap.Dispose();
-        }
-
-
-        private void fillPolygon(List<Point> polygonPoints)
-        {
             int[] indices = Enumerable.Range(0, polygonPoints.Count).ToArray();
             Array.Sort(indices, (i1, i2) => polygonPoints[i1].Y.CompareTo(polygonPoints[i2].Y));
             int polygonYMin = polygonPoints[indices[0]].Y;
@@ -197,29 +181,67 @@ namespace Lab2
 
                 AET.Sort((e1, e2) => e1.X.CompareTo(e2.X));
 
-                int transformedY = -scanline + Bitmap.Height / 2;
-                for (int j = 0; j < AET.Count - 1; j++)
+                unsafe
                 {
-                    AETElement e1 = AET[j];
-                    AETElement e2 = AET[j + 1];
+                    int transformedY = -scanline + Bitmap.Height / 2;
+                    byte* row = (byte*)bitmapData.Scan0 + transformedY * bitmapData.Stride;
 
-                    //G.DrawLine(Pens.AliceBlue, e1.X, scanline, e2.X, scanline);
-                    int x1 = (int)e1.X;
-                    int x2 = (int)e2.X;
-
-
-                    for (int x = x1; x < x2; x++)
+                    for (int j = 0; j < AET.Count - 1; j++)
                     {
-                        int transformedX = x + Bitmap.Width / 2;
-                        if(transformedX >= 0 && transformedX < Bitmap.Width && transformedY >= 0 && transformedY < Bitmap.Height)
-                            Bitmap.SetPixel(transformedX, transformedY, MeshColor);
+                        AETElement e1 = AET[j];
+                        AETElement e2 = AET[j + 1];
+
+                        int x1 = (int)e1.X;
+                        int x2 = (int)e2.X;
+
+                        if(row >=  (byte*)bitmapData.Scan0 && transformedY < bitmapData.Height)
+                        {
+                            for (int x = x1; x < x2; x++)
+                            {
+                                int transformedX = x + bitmapData.Width / 2;
+
+                                if(transformedX < 0 || transformedX >= bitmapData.Width)
+                                    continue;
+
+                                int index = transformedX * bytesPerPixel;
+                                row[index] = MeshColor.B;
+                                row[index + 1] = MeshColor.G;
+                                row[index + 2] = MeshColor.R;
+                                row[index + 3] = MeshColor.A;
+                            }
+                        }
+
+                        e1.X += e1.InverseSlope;
+                        e2.X += e2.InverseSlope;
                     }
 
-                    e1.X += e1.InverseSlope;
-                    e2.X += e2.InverseSlope;
                 }
 
             }
         }
+
+        private void pictureBox_SizeChanged(object sender, EventArgs e)
+        {
+            if (pictureBox.Width <= 0 || pictureBox.Height <= 0 || Bitmap is null)
+                return;
+
+            Bitmap oldBitmap = Bitmap;
+            Graphics oldGraphics = G;
+
+            Bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
+            G = Graphics.FromImage(Bitmap);
+            G.DrawImage(oldBitmap, 0, 0);
+
+            G.ScaleTransform(1, -1);
+            G.TranslateTransform(Bitmap.Width / 2, -Bitmap.Height / 2);
+
+            pictureBox.Image = Bitmap;
+
+            oldGraphics.Dispose();
+            oldBitmap.Dispose();
+        }
+
+
+
     }
 }
