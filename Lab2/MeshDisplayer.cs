@@ -83,22 +83,25 @@ namespace Lab2
         {
             fidelityTrackBar.Value = (int)Math.Round((double)fidelityTrackBar.Value / fidelityTrackBar.TickFrequency) * fidelityTrackBar.TickFrequency;
             Mesh?.SetFidelity(fidelityTrackBar.Value, fidelityTrackBar.Value);
-            pictureBox.Refresh();
-            pictureBox.Refresh();
+            //pictureBox.Refresh();
+            //pictureBox.Refresh();
+            pictureBox.Invalidate();
         }
 
         private void alphaAngleTrackBar_Scroll(object sender, EventArgs e)
         {
             Mesh?.SetAlphaAngle(alphaAngleTrackBar.Value);
-            pictureBox.Refresh();
-            pictureBox.Refresh();
+            //pictureBox.Refresh();
+            //pictureBox.Refresh();
+            pictureBox.Invalidate();
         }
 
         private void betaAngleTrackBar_Scroll(object sender, EventArgs e)
         {
             Mesh?.SetBetaAngle(betaAngleTrackBar.Value);
-            pictureBox.Refresh();
-            pictureBox.Refresh();
+            //pictureBox.Refresh();
+            //pictureBox.Refresh();
+            pictureBox.Invalidate();
         }
 
         private void pictureBox_Paint(object sender, PaintEventArgs e)
@@ -128,6 +131,7 @@ namespace Lab2
                 G.DrawLine(Pens.Black, v2, v3);
                 G.DrawLine(Pens.Black, v3, v1);
             }
+            pictureBox.Image = Bitmap;
         }
 
         private void fillTriangle(Triangle triangle, BitmapData bitmapData)
@@ -299,29 +303,33 @@ namespace Lab2
         private void kdTrackBar_Scroll(object sender, EventArgs e)
         {
             Kd = scaleTrackBarValueToOne(kdTrackBar);
-            pictureBox.Refresh();
-            pictureBox.Refresh();
+            //pictureBox.Refresh();
+            //pictureBox.Refresh();
+            pictureBox.Invalidate();
         }
 
         private void ksTrackBar_Scroll(object sender, EventArgs e)
         {
             Ks = scaleTrackBarValueToOne(ksTrackBar);
-            pictureBox.Refresh();
-            pictureBox.Refresh();
+            //pictureBox.Refresh();
+            //pictureBox.Refresh();
+            pictureBox.Invalidate();
         }
 
         private void mTrackBar_Scroll(object sender, EventArgs e)
         {
             M = mTrackBar.Value;
-            pictureBox.Refresh();
-            pictureBox.Refresh();
+            //pictureBox.Refresh();
+            //pictureBox.Refresh();
+            pictureBox.Invalidate();
         }
 
         private void lightZAxisTrackBar_Scroll(object sender, EventArgs e)
         {
             LightZAxis = lightZAxisTrackBar.Value;
-            pictureBox.Refresh();
-            pictureBox.Refresh();
+            //pictureBox.Refresh();
+            //pictureBox.Refresh();
+            pictureBox.Invalidate();
         }
     }
 }
