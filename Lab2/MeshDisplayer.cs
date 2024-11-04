@@ -9,7 +9,7 @@ namespace Lab2
     {
         private int ControlPointsFirstDimensionCount { get; set; } = 4;
         private int ControlPointsSecondDimensionCount { get; set; } = 4;
-        private string ControlPointsPath { get; set; } = "control_points.txt";
+        private string ControlPointsPath { get; set; } = "control_points3D.txt";
 
         private Vector3[,] ControlPoints { get; set; }
 
@@ -233,15 +233,20 @@ namespace Lab2
                 {
                     Vector3 Il = new(LightColor.R, LightColor.G, LightColor.B);
                     Vector3 Io = new(color);
-                    Vector3 L = new(0, 1, 1);
+                    //Vector3 L = new(0, 0, 1);
+                    Vector3 Punkt = triangle.V1.AfterRotationState.P * cords[0] + triangle.V2.AfterRotationState.P * cords[1] + triangle.V3.AfterRotationState.P * cords[2];
+                    Vector3 L = new Vector3(0, 0, 200);
+                    L = L - Punkt;
                     Vector3 N = triangle.V1.AfterRotationState.N * cords[0] + triangle.V2.AfterRotationState.N * cords[1] + triangle.V3.AfterRotationState.N * cords[2];
+                    //Vector3 N = new(0, 0, 1);
                     Vector3 V = new(0, 0, 1);
-                    N = Vector3.Abs(N);
+                    //N = Vector3.Abs(N);
 
                     Il = Vector3.Normalize(Il);
                     Io = Vector3.Normalize(Io);
                     L = Vector3.Normalize(L);
                     N = Vector3.Normalize(N);
+
                     Vector3 R = 2 * Vector3.Dot(N, L) * N - L;
                     R = Vector3.Normalize(R);
 
