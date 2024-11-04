@@ -9,7 +9,6 @@ namespace Lab2.Model
 {
     public class Mesh
     {
-        //public List<Vertex> Vertices { get; set; } = [];
         public List<Triangle> Triangles { get; set; } = [];
 
         public Vertex[,] Vertices { get; set; } = new Vertex[0, 0];
@@ -22,11 +21,9 @@ namespace Lab2.Model
         public Mesh(Vector3[,] controlPoints, int fidelityU, int fidelityV, int alphaAngle, int betaAngle)
         {
             ControlPoints = controlPoints;
-            //SetAngles(alphaAngle, betaAngle);
             AlphaRadians = alphaAngle * MathF.PI / 180;
             BetaRadians = betaAngle * MathF.PI / 180;
             SetFidelity(fidelityU, fidelityV);
-            //RotateVertices();
         }
 
 
@@ -150,143 +147,14 @@ namespace Lab2.Model
                 for (int i = 0; i < rows; i++)
                 {
                     int binCoeff = basebinCoeff;
-                    //int binCoeff1 = GetBinCoeff(m - 1, 0);
                     for (int j = 0; j < cols; j++)
                     {
-                        //float temp = powers[i, j] * oneMinusPowers[i, m - j];
-                        //float diff0 = temp - getBernsteinWithoutCoeff(j, m, powers[i, 1]);
-
                         tab[i, j] = binCoeff * powers[i, j] * oneMinusPowers[i, m - j];
                         binCoeff = binCoeff * (m - j) / (j + 1);
-
-                        //tab[i, j, 1] = binCoeff1 * powers[i, j] * oneMinusPowers[i, m - j - 1];
-                        //binCoeff1 = binCoeff1 * (m - j - 1) / (j + 1);
-
-                        //float diff1 = tab[i, j, 0] - getBernstein(j, m, powers[i, 1]);
-                        //float diff2 = tab[i, j, 1] - getBernstein(j, m - 1, powers[i, 1]);
                     }
                 }
             }
-
-            float getBernstein(int i, int n, float t)
-            {
-                return GetBinCoeff(n, i) * getBernsteinWithoutCoeff(i, n, t);
-                //return GetBinCoeff(n, i) * MathF.Pow(t, i) * MathF.Pow(1 - t, n - i);
-            }
-            float getBernsteinWithoutCoeff(int i, int n, float t)
-            {
-                return MathF.Pow(t, i) * MathF.Pow(1 - t, n - i);
-            }
-        }
-        //public void SetFidelity(int fidelityU, int fidelityV)
-        //{
-        //    Vertices = new Vertex[fidelityU, fidelityV];
-
-
-        //    float stepU = 1.0f / (fidelityU - 1);
-        //    float stepV = 1.0f / (fidelityV - 1);
-
-        //    int n = ControlPoints.GetLength(0) - 1;
-        //    int m = ControlPoints.GetLength(1) - 1;
-
-        //    float u = 0, v = 0;
-
-        //    // Wyznaczanie wierzchołków
-        //    for (int ui = 0; ui < fidelityU; ui++)
-        //    {
-        //        v = 0;
-        //        for (int vi = 0; vi < fidelityV; vi++)
-        //        {
-        //            Vector3 p = new(0, 0, 0);
-        //            Vector3 pu = new(0, 0, 0);
-        //            Vector3 pv = new(0, 0, 0);
-        //            Vector3 nuv;
-
-        //            // Punkt P
-        //            float binCoeff1 = GetBinCoeff(n, 0);
-        //            float binCoeff2 = GetBinCoeff(m, 0);
-        //            for (int i = 0; i <= n; i++)
-        //            {
-        //                binCoeff2 = GetBinCoeff(m, 0);
-        //                for (int j = 0; j <= m; j++)
-        //                {
-
-        //                    //p += getBernstein(i, n, u) * getBernstein(j, m, v) * ControlPoints[i, j];
-        //                    p += binCoeff1 * binCoeff2 * getBernstein(i, n, u) * getBernstein(j, m, v) * ControlPoints[i, j];
-        //                    binCoeff2 = binCoeff2 * (m - j) / (j + 1);
-        //                    //p += getBernstein(i, n, u) * getBernstein(j, m, v) * ControlPoints[i, j];
-        //                }
-        //                    binCoeff1 = binCoeff1 * (n - i) / (i + 1);
-        //            }
-
-        //            // Wektor styczny Pu
-        //            binCoeff1 = GetBinCoeff(n - 1, 0);
-        //            binCoeff2 = GetBinCoeff(m, 0);
-        //            for (int i = 0; i <= n - 1; i++)
-        //            {
-        //                binCoeff2 = GetBinCoeff(m, 0);
-        //                for (int j = 0; j <= m; j++)
-        //                {
-        //                    pu += binCoeff1 * binCoeff2 * getBernstein(i, n - 1, u) * getBernstein(j, m, v) * (ControlPoints[i + 1, j] - ControlPoints[i, j]);
-        //                    binCoeff2 = binCoeff2 * (m - j) / (j + 1);
-        //                    //pu += getBernstein(i, n-1, u)*getBernstein(j,m,v) * (ControlPoints[i + 1, j] - ControlPoints[i, j]);
-        //                }
-        //                    binCoeff1 = binCoeff1 * (n - 1 - i) / (i + 1);
-
-        //            }
-
-        //            // Wektor styczny Pv
-        //            binCoeff1 = GetBinCoeff(n, 0);
-        //            binCoeff2 = GetBinCoeff(m - 1, 0);
-        //            for (int i = 0; i <= n; i++)
-        //            {
-        //                binCoeff2 = GetBinCoeff(m, 0);
-        //                for (int j = 0; j <= m - 1; j++)
-        //                {
-        //                    pv += binCoeff1 * binCoeff2 * getBernstein(i, n, u) * getBernstein(j, m - 1, v) * (ControlPoints[i, j + 1] - ControlPoints[i, j]);
-        //                    binCoeff2 = binCoeff2 * (m - 1 - j) / (j + 1);
-        //                    //pv += getBernstein(i, n, u)*getBernstein(j,m-1,v) * (ControlPoints[i, j + 1] - ControlPoints[i, j]);
-        //                }
-
-        //                    binCoeff1 = binCoeff1 * (n - i) / (i + 1);
-        //            }
-
-        //            pu *= n;
-        //            pv *= m;
-
-        //            // Wektor normalny
-        //            nuv = Vector3.Cross(pu, pv);
-        //            nuv = -Vector3.Normalize(nuv);
-
-        //            Vertices[ui, vi] = new Vertex(p, pu, pv, nuv);
-
-        //            v += stepV;
-        //        }
-        //        u += stepU;
-        //    }
-
-        //    // Łączenie w trójkąty
-        //    Triangles.Clear();
-        //    for (int ui = 0; ui < fidelityU - 1; ui++)
-        //    {
-        //        for (int vi = 0; vi < fidelityV - 1; vi++)
-        //        {
-        //            Triangle t1 = new Triangle(Vertices[ui, vi], Vertices[ui + 1, vi], Vertices[ui, vi + 1]);
-        //            Triangle t2 = new Triangle(Vertices[ui + 1, vi], Vertices[ui + 1, vi + 1], Vertices[ui, vi + 1]);
-
-        //            Triangles.Add(t1);
-        //            Triangles.Add(t2);
-        //        }
-        //    }
-
-        //    // Obrót wierzchołków
-        //    RotateVertices();
-
-        //    float getBernstein(int i, int n, float t)
-        //    {
-        //        return /*GetBinCoeff(n, i) * */MathF.Pow(t, i) * MathF.Pow(1 - t, n - i);
-        //    }
-        //}
+        }       
 
 
         public void SetAlphaAngle(int alphaAngle)
