@@ -66,10 +66,11 @@ namespace Lab2.Model
             fillWithBernstein(BuTan, uPowers, oneMinusUPowers);
             fillWithBernstein(BvTan, vPowers, oneMinusVPowers);
 
-
+            float v, u = 0;
             // Wyznaczanie wierzchołków
             for (int ui = 0; ui < fidelityU; ui++)
             {
+                v = 0;
                 for (int vi = 0; vi < fidelityV; vi++)
                 {
                     Vector3 p = new(0, 0, 0);
@@ -99,8 +100,10 @@ namespace Lab2.Model
                     nuv = Vector3.Cross(pv, pu);
                     nuv = Vector3.Normalize(nuv);
 
-                    Vertices[ui, vi] = new Vertex(p, pu, pv, nuv);
+                    Vertices[ui, vi] = new Vertex(p, pu, pv, nuv, u, v);
+                    v += stepV;
                 }
+                u += stepU;
             }
 
             // Łączenie w trójkąty

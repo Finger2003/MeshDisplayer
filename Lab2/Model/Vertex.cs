@@ -15,10 +15,15 @@ namespace Lab2.Model
         public State BeforeRotationState { get; set; }
         public State AfterRotationState { get; set; }
 
-        public Vertex (Vector3 p, Vector3 pu, Vector3 pv, Vector3 n)
+        public float U { get; }
+        public float V { get; }
+
+        public Vertex (Vector3 p, Vector3 pu, Vector3 pv, Vector3 n, float u, float v)
         {
             BeforeRotationState = new State(p, pu, pv, n);
             AfterRotationState = BeforeRotationState;
+            U = u;
+            V = v;
         }
     }
 }
