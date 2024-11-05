@@ -467,6 +467,7 @@
             textureButton.TabIndex = 12;
             textureButton.Text = "Zmień teskturę";
             textureButton.UseVisualStyleBackColor = true;
+            textureButton.Click += textureButton_Click;
             // 
             // lightAndColorsGroupBox
             // 

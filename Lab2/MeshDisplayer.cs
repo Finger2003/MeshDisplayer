@@ -9,8 +9,8 @@ namespace Lab2
     {
         private int ControlPointsFirstDimensionCount { get; set; } = 4;
         private int ControlPointsSecondDimensionCount { get; set; } = 4;
-        private string ControlPointsPath { get; set; } = "control_points3D.txt";
-        private string TexturePath { get; set; } = "texture.jpg";
+        private string DefaultControlPointsPath { get; } = "control_points3D.txt";
+        private string DefaultTexturePath { get; } = "texture.jpg";
         private Bitmap TextureBitmap { get; set; }
 
         private Vector3[,] ControlPoints { get; set; }
@@ -59,7 +59,7 @@ namespace Lab2
 
 
             Bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
-            TextureBitmap = new(TexturePath);
+            TextureBitmap = new(DefaultTexturePath);
             //pictureBox.Image = Bitmap;
 
             G = Graphics.FromImage(Bitmap);
@@ -86,7 +86,7 @@ namespace Lab2
         private void LoadControlPoints()
         {
             TxtControlPointsReader reader = new(ControlPointsFirstDimensionCount, ControlPointsSecondDimensionCount);
-            ControlPoints = reader.Read(ControlPointsPath);
+            ControlPoints = reader.Read(DefaultControlPointsPath);
         }
 
         private void fidelityTrackBar_Scroll(object sender, EventArgs e)
@@ -243,7 +243,7 @@ namespace Lab2
                                 float[] coords = getBaricentricCoords(p);
                                 float u = triangle.V1.U * coords[0] + triangle.V2.U * coords[1] + triangle.V3.U * coords[2];
                                 float v = triangle.V1.V * coords[0] + triangle.V2.V * coords[1] + triangle.V3.V * coords[2];
-                                byte[] color = getColor(GetColor(u,v), coords);
+                                byte[] color = getColor(GetColor(u, v), coords);
 
                                 // Transformacja uk³adu wspó³rzêdnych
                                 int transformedX = x + bitmapData.Width / 2;
@@ -418,10 +418,21 @@ namespace Lab2
             u = Math.Clamp(u, 0, 1);
             v = Math.Clamp(v, 0, 1);
 
+            int x = (int)Math.Round(u * (TextureBitmap.Width - 1));
+            int y = (int)Math.Round(v * (TextureBitmap.Height - 1));
 
-            int x = (int)(u * (TextureBitmap.Width - 1));
-            int y = (int)(v * (TextureBitmap.Height - 1));
             return TextureBitmap.GetPixel(x, y);
+        }
+
+        private void textureButton_Click(object sender, EventArgs e)
+        {
+            if(textureOpenFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                //TexturePath = textureOpenFileDialog.FileName;
+                TextureBitmap = new(textureOpenFileDialog.FileName);
+
+                pictureBox.Invalidate();
+            }
         }
     }
 }
