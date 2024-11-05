@@ -59,7 +59,7 @@ namespace Lab2
 
             LoadControlPoints();
             Mesh = new(ControlPoints!, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
-            PaintPictureBox();
+            //PaintPictureBox();
         }
 
         private void bindFormat(object sender, ConvertEventArgs e)
@@ -106,11 +106,6 @@ namespace Lab2
 
         private void pictureBox_Paint(object sender, PaintEventArgs e)
         {
-            PaintPictureBox();
-        }
-
-        private void PaintPictureBox()
-        {
             if (Mesh is null)
                 return;
 
@@ -131,8 +126,33 @@ namespace Lab2
                 G.DrawLine(Pens.Black, v2, v3);
                 G.DrawLine(Pens.Black, v3, v1);
             }
-            pictureBox.Image = Bitmap;
+            e.Graphics.DrawImage(Bitmap, 0, 0);
         }
+
+        //private void PaintPictureBox(PaintEventArgs e)
+        //{
+        //    if (Mesh is null)
+        //        return;
+
+        //    G.Clear(Color.White);
+
+
+        //    foreach (Triangle triangle in Mesh.Triangles)
+        //    {
+        //        PointF v1 = new(triangle.V1.AfterRotationState.P.X, triangle.V1.AfterRotationState.P.Y);
+        //        PointF v2 = new(triangle.V2.AfterRotationState.P.X, triangle.V2.AfterRotationState.P.Y);
+        //        PointF v3 = new(triangle.V3.AfterRotationState.P.X, triangle.V3.AfterRotationState.P.Y);
+
+        //        BitmapData bitmapData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+        //        fillTriangle(triangle, bitmapData);
+        //        Bitmap.UnlockBits(bitmapData);
+
+        //        G.DrawLine(Pens.Black, v1, v2);
+        //        G.DrawLine(Pens.Black, v2, v3);
+        //        G.DrawLine(Pens.Black, v3, v1);
+        //    }
+        //    e.Graphics.DrawImage(Bitmap, 0, 0);
+        //}
 
         private void fillTriangle(Triangle triangle, BitmapData bitmapData)
         {
@@ -262,7 +282,7 @@ namespace Lab2
                     Vector3 R = 2 * Vector3.Dot(N, L) * N - L;
                     R = Vector3.Normalize(R);
 
-                    Vector3 I = Kd * Il * Math.Max(0, Vector3.Dot(L, N)) + Ks * Il * MathF.Pow(Math.Max(0, Vector3.Dot(R, V)), M);
+                    Vector3 I = Kd * Il * Io * Math.Max(0, Vector3.Dot(L, N)) + Ks * Il * Io * MathF.Pow(Math.Max(0, Vector3.Dot(R, V)), M);
 
                     I *= 255;
                     I = Vector3.Clamp(I, new Vector3(0, 0, 0), new Vector3(255, 255, 255));
@@ -338,6 +358,41 @@ namespace Lab2
             //pictureBox.Refresh();
             //pictureBox.Refresh();
             pictureBox.Invalidate();
+        }
+
+        private void lightColorButton_Click(object sender, EventArgs e)
+        {
+            //ColorDialog lcd = new();
+            //lcd.Color = LightColor;
+            //if (lcd.ShowDialog() == DialogResult.OK)
+            //{
+            //    LightColor = lcd.Color;
+            //    //pictureBox.Refresh();
+            //    //pictureBox.Refresh();
+            //    pictureBox.Invalidate();
+            //}
+            //return;
+
+            lightColorDialog.Color = LightColor;
+            if (lightColorDialog.ShowDialog() == DialogResult.OK)
+            {
+                LightColor = lightColorDialog.Color;
+                //pictureBox.Refresh();
+                //pictureBox.Refresh();
+                pictureBox.Invalidate();
+            }
+        }
+
+        private void meshColorButton_Click(object sender, EventArgs e)
+        {
+            meshColorDialog.Color = MeshColor;
+            if (meshColorDialog.ShowDialog() == DialogResult.OK)
+            {
+                MeshColor = meshColorDialog.Color;
+                //pictureBox.Refresh();
+                //pictureBox.Refresh();
+                pictureBox.Invalidate();
+            }
         }
     }
 }

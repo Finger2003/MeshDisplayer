@@ -63,7 +63,7 @@
             textureRadioButton = new RadioButton();
             fixedColorRadioButton = new RadioButton();
             textureOpenFileDialog = new OpenFileDialog();
-            colorButton = new Button();
+            meshColorButton = new Button();
             meshGroupBox = new GroupBox();
             textureButton = new Button();
             colorDialog1 = new ColorDialog();
@@ -93,10 +93,9 @@
             // 
             pictureBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pictureBox.BackColor = SystemColors.Control;
-            pictureBox.Location = new Point(17, 220);
-            pictureBox.Margin = new Padding(4, 5, 4, 5);
+            pictureBox.Location = new Point(12, 132);
             pictureBox.Name = "pictureBox";
-            pictureBox.Size = new Size(1131, 823);
+            pictureBox.Size = new Size(792, 494);
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = false;
             pictureBox.SizeChanged += pictureBox_SizeChanged;
@@ -107,18 +106,16 @@
             fidelityPanel.Controls.Add(fideltyValueLabel);
             fidelityPanel.Controls.Add(fidelityLabel);
             fidelityPanel.Controls.Add(fidelityTrackBar);
-            fidelityPanel.Location = new Point(9, 43);
-            fidelityPanel.Margin = new Padding(4, 5, 4, 5);
+            fidelityPanel.Location = new Point(6, 26);
             fidelityPanel.Name = "fidelityPanel";
-            fidelityPanel.Size = new Size(267, 137);
+            fidelityPanel.Size = new Size(187, 82);
             fidelityPanel.TabIndex = 1;
             // 
             // fideltyValueLabel
             // 
-            fideltyValueLabel.Location = new Point(209, 18);
-            fideltyValueLabel.Margin = new Padding(4, 0, 4, 0);
+            fideltyValueLabel.Location = new Point(146, 11);
             fideltyValueLabel.Name = "fideltyValueLabel";
-            fideltyValueLabel.Size = new Size(54, 25);
+            fideltyValueLabel.Size = new Size(38, 15);
             fideltyValueLabel.TabIndex = 2;
             fideltyValueLabel.Text = "000";
             fideltyValueLabel.TextAlign = ContentAlignment.MiddleRight;
@@ -126,10 +123,9 @@
             // fidelityLabel
             // 
             fidelityLabel.AutoSize = true;
-            fidelityLabel.Location = new Point(4, 18);
-            fidelityLabel.Margin = new Padding(4, 0, 4, 0);
+            fidelityLabel.Location = new Point(3, 11);
             fidelityLabel.Name = "fidelityLabel";
-            fidelityLabel.Size = new Size(206, 25);
+            fidelityLabel.Size = new Size(137, 15);
             fidelityLabel.TabIndex = 1;
             fidelityLabel.Text = "Dokładność triangulacji: ";
             // 
@@ -137,12 +133,11 @@
             // 
             fidelityTrackBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             fidelityTrackBar.LargeChange = 18;
-            fidelityTrackBar.Location = new Point(4, 57);
-            fidelityTrackBar.Margin = new Padding(4, 5, 4, 5);
+            fidelityTrackBar.Location = new Point(3, 34);
             fidelityTrackBar.Maximum = 40;
             fidelityTrackBar.Minimum = 4;
             fidelityTrackBar.Name = "fidelityTrackBar";
-            fidelityTrackBar.Size = new Size(259, 69);
+            fidelityTrackBar.Size = new Size(181, 45);
             fidelityTrackBar.SmallChange = 4;
             fidelityTrackBar.TabIndex = 0;
             fidelityTrackBar.TickFrequency = 4;
@@ -154,18 +149,16 @@
             alphaAnglePanel.Controls.Add(alphaAngleValueLabel);
             alphaAnglePanel.Controls.Add(alphaAngleLabel);
             alphaAnglePanel.Controls.Add(alphaAngleTrackBar);
-            alphaAnglePanel.Location = new Point(280, 43);
-            alphaAnglePanel.Margin = new Padding(4, 5, 4, 5);
+            alphaAnglePanel.Location = new Point(196, 26);
             alphaAnglePanel.Name = "alphaAnglePanel";
-            alphaAnglePanel.Size = new Size(267, 137);
+            alphaAnglePanel.Size = new Size(187, 82);
             alphaAnglePanel.TabIndex = 3;
             // 
             // alphaAngleValueLabel
             // 
-            alphaAngleValueLabel.Location = new Point(209, 18);
-            alphaAngleValueLabel.Margin = new Padding(4, 0, 4, 0);
+            alphaAngleValueLabel.Location = new Point(146, 11);
             alphaAngleValueLabel.Name = "alphaAngleValueLabel";
-            alphaAngleValueLabel.Size = new Size(54, 25);
+            alphaAngleValueLabel.Size = new Size(38, 15);
             alphaAngleValueLabel.TabIndex = 2;
             alphaAngleValueLabel.Text = "000";
             alphaAngleValueLabel.TextAlign = ContentAlignment.MiddleRight;
@@ -173,22 +166,20 @@
             // alphaAngleLabel
             // 
             alphaAngleLabel.AutoSize = true;
-            alphaAngleLabel.Location = new Point(4, 18);
-            alphaAngleLabel.Margin = new Padding(4, 0, 4, 0);
+            alphaAngleLabel.Location = new Point(3, 11);
             alphaAngleLabel.Name = "alphaAngleLabel";
-            alphaAngleLabel.Size = new Size(79, 25);
+            alphaAngleLabel.Size = new Size(52, 15);
             alphaAngleLabel.TabIndex = 1;
             alphaAngleLabel.Text = "Kąt alfa: ";
             // 
             // alphaAngleTrackBar
             // 
             alphaAngleTrackBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            alphaAngleTrackBar.Location = new Point(4, 57);
-            alphaAngleTrackBar.Margin = new Padding(4, 5, 4, 5);
+            alphaAngleTrackBar.Location = new Point(3, 34);
             alphaAngleTrackBar.Maximum = 45;
             alphaAngleTrackBar.Minimum = -45;
             alphaAngleTrackBar.Name = "alphaAngleTrackBar";
-            alphaAngleTrackBar.Size = new Size(259, 69);
+            alphaAngleTrackBar.Size = new Size(181, 45);
             alphaAngleTrackBar.TabIndex = 0;
             alphaAngleTrackBar.Scroll += alphaAngleTrackBar_Scroll;
             // 
@@ -197,18 +188,16 @@
             betaAnglePanel.Controls.Add(betaAngleValueLabel);
             betaAnglePanel.Controls.Add(betaAngleLabel);
             betaAnglePanel.Controls.Add(betaAngleTrackBar);
-            betaAnglePanel.Location = new Point(556, 43);
-            betaAnglePanel.Margin = new Padding(4, 5, 4, 5);
+            betaAnglePanel.Location = new Point(389, 26);
             betaAnglePanel.Name = "betaAnglePanel";
-            betaAnglePanel.Size = new Size(267, 137);
+            betaAnglePanel.Size = new Size(187, 82);
             betaAnglePanel.TabIndex = 4;
             // 
             // betaAngleValueLabel
             // 
-            betaAngleValueLabel.Location = new Point(209, 18);
-            betaAngleValueLabel.Margin = new Padding(4, 0, 4, 0);
+            betaAngleValueLabel.Location = new Point(146, 11);
             betaAngleValueLabel.Name = "betaAngleValueLabel";
-            betaAngleValueLabel.Size = new Size(50, 25);
+            betaAngleValueLabel.Size = new Size(35, 15);
             betaAngleValueLabel.TabIndex = 2;
             betaAngleValueLabel.Text = "000";
             betaAngleValueLabel.TextAlign = ContentAlignment.MiddleRight;
@@ -216,34 +205,32 @@
             // betaAngleLabel
             // 
             betaAngleLabel.AutoSize = true;
-            betaAngleLabel.Location = new Point(4, 18);
-            betaAngleLabel.Margin = new Padding(4, 0, 4, 0);
+            betaAngleLabel.Location = new Point(3, 11);
             betaAngleLabel.Name = "betaAngleLabel";
-            betaAngleLabel.Size = new Size(86, 25);
+            betaAngleLabel.Size = new Size(56, 15);
             betaAngleLabel.TabIndex = 1;
             betaAngleLabel.Text = "Kąt beta: ";
             // 
             // betaAngleTrackBar
             // 
             betaAngleTrackBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            betaAngleTrackBar.Location = new Point(4, 57);
-            betaAngleTrackBar.Margin = new Padding(4, 5, 4, 5);
+            betaAngleTrackBar.Location = new Point(3, 34);
             betaAngleTrackBar.Maximum = 90;
             betaAngleTrackBar.Name = "betaAngleTrackBar";
-            betaAngleTrackBar.Size = new Size(259, 69);
+            betaAngleTrackBar.Size = new Size(181, 45);
             betaAngleTrackBar.TabIndex = 0;
             betaAngleTrackBar.Scroll += betaAngleTrackBar_Scroll;
             // 
             // lightColorButton
             // 
             lightColorButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            lightColorButton.Location = new Point(9, 37);
-            lightColorButton.Margin = new Padding(4, 5, 4, 5);
+            lightColorButton.Location = new Point(6, 22);
             lightColorButton.Name = "lightColorButton";
-            lightColorButton.Size = new Size(267, 38);
+            lightColorButton.Size = new Size(187, 23);
             lightColorButton.TabIndex = 5;
             lightColorButton.Text = "Zmień kolor światła";
             lightColorButton.UseVisualStyleBackColor = true;
+            lightColorButton.Click += lightColorButton_Click;
             // 
             // panel1
             // 
@@ -251,18 +238,16 @@
             panel1.Controls.Add(kdValueLabel);
             panel1.Controls.Add(kdLabel);
             panel1.Controls.Add(kdTrackBar);
-            panel1.Location = new Point(9, 100);
-            panel1.Margin = new Padding(4, 5, 4, 5);
+            panel1.Location = new Point(6, 60);
             panel1.Name = "panel1";
-            panel1.Size = new Size(267, 137);
+            panel1.Size = new Size(187, 82);
             panel1.TabIndex = 3;
             // 
             // kdValueLabel
             // 
-            kdValueLabel.Location = new Point(209, 18);
-            kdValueLabel.Margin = new Padding(4, 0, 4, 0);
+            kdValueLabel.Location = new Point(146, 11);
             kdValueLabel.Name = "kdValueLabel";
-            kdValueLabel.Size = new Size(54, 25);
+            kdValueLabel.Size = new Size(38, 15);
             kdValueLabel.TabIndex = 2;
             kdValueLabel.Text = "000";
             kdValueLabel.TextAlign = ContentAlignment.MiddleRight;
@@ -270,10 +255,9 @@
             // kdLabel
             // 
             kdLabel.AutoSize = true;
-            kdLabel.Location = new Point(4, 18);
-            kdLabel.Margin = new Padding(4, 0, 4, 0);
+            kdLabel.Location = new Point(3, 11);
             kdLabel.Name = "kdLabel";
-            kdLabel.Size = new Size(156, 25);
+            kdLabel.Size = new Size(102, 15);
             kdLabel.TabIndex = 1;
             kdLabel.Text = "Współczynnik kd: ";
             // 
@@ -281,10 +265,9 @@
             // 
             kdTrackBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             kdTrackBar.LargeChange = 2;
-            kdTrackBar.Location = new Point(4, 57);
-            kdTrackBar.Margin = new Padding(4, 5, 4, 5);
+            kdTrackBar.Location = new Point(3, 34);
             kdTrackBar.Name = "kdTrackBar";
-            kdTrackBar.Size = new Size(259, 69);
+            kdTrackBar.Size = new Size(181, 45);
             kdTrackBar.TabIndex = 0;
             kdTrackBar.TickFrequency = 10;
             kdTrackBar.Value = 10;
@@ -296,18 +279,16 @@
             panel2.Controls.Add(ksValueLabel);
             panel2.Controls.Add(ksLabel);
             panel2.Controls.Add(ksTrackBar);
-            panel2.Location = new Point(9, 247);
-            panel2.Margin = new Padding(4, 5, 4, 5);
+            panel2.Location = new Point(6, 148);
             panel2.Name = "panel2";
-            panel2.Size = new Size(267, 137);
+            panel2.Size = new Size(187, 82);
             panel2.TabIndex = 6;
             // 
             // ksValueLabel
             // 
-            ksValueLabel.Location = new Point(209, 18);
-            ksValueLabel.Margin = new Padding(4, 0, 4, 0);
+            ksValueLabel.Location = new Point(146, 11);
             ksValueLabel.Name = "ksValueLabel";
-            ksValueLabel.Size = new Size(54, 25);
+            ksValueLabel.Size = new Size(38, 15);
             ksValueLabel.TabIndex = 2;
             ksValueLabel.Text = "000";
             ksValueLabel.TextAlign = ContentAlignment.MiddleRight;
@@ -315,10 +296,9 @@
             // ksLabel
             // 
             ksLabel.AutoSize = true;
-            ksLabel.Location = new Point(4, 18);
-            ksLabel.Margin = new Padding(4, 0, 4, 0);
+            ksLabel.Location = new Point(3, 11);
             ksLabel.Name = "ksLabel";
-            ksLabel.Size = new Size(153, 25);
+            ksLabel.Size = new Size(100, 15);
             ksLabel.TabIndex = 1;
             ksLabel.Text = "Współczynnik ks: ";
             // 
@@ -326,10 +306,9 @@
             // 
             ksTrackBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             ksTrackBar.LargeChange = 2;
-            ksTrackBar.Location = new Point(4, 57);
-            ksTrackBar.Margin = new Padding(4, 5, 4, 5);
+            ksTrackBar.Location = new Point(3, 34);
             ksTrackBar.Name = "ksTrackBar";
-            ksTrackBar.Size = new Size(259, 69);
+            ksTrackBar.Size = new Size(181, 45);
             ksTrackBar.TabIndex = 0;
             ksTrackBar.TickFrequency = 10;
             ksTrackBar.Scroll += ksTrackBar_Scroll;
@@ -340,18 +319,16 @@
             panel3.Controls.Add(mValueLabel);
             panel3.Controls.Add(mLabel);
             panel3.Controls.Add(mTrackBar);
-            panel3.Location = new Point(9, 393);
-            panel3.Margin = new Padding(4, 5, 4, 5);
+            panel3.Location = new Point(6, 236);
             panel3.Name = "panel3";
-            panel3.Size = new Size(267, 137);
+            panel3.Size = new Size(187, 82);
             panel3.TabIndex = 7;
             // 
             // mValueLabel
             // 
-            mValueLabel.Location = new Point(209, 18);
-            mValueLabel.Margin = new Padding(4, 0, 4, 0);
+            mValueLabel.Location = new Point(146, 11);
             mValueLabel.Name = "mValueLabel";
-            mValueLabel.Size = new Size(54, 25);
+            mValueLabel.Size = new Size(38, 15);
             mValueLabel.TabIndex = 2;
             mValueLabel.Text = "000";
             mValueLabel.TextAlign = ContentAlignment.MiddleRight;
@@ -359,10 +336,9 @@
             // mLabel
             // 
             mLabel.AutoSize = true;
-            mLabel.Location = new Point(4, 18);
-            mLabel.Margin = new Padding(4, 0, 4, 0);
+            mLabel.Location = new Point(3, 11);
             mLabel.Name = "mLabel";
-            mLabel.Size = new Size(152, 25);
+            mLabel.Size = new Size(100, 15);
             mLabel.TabIndex = 1;
             mLabel.Text = "Współczynnik m: ";
             // 
@@ -370,11 +346,10 @@
             // 
             mTrackBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             mTrackBar.LargeChange = 10;
-            mTrackBar.Location = new Point(4, 57);
-            mTrackBar.Margin = new Padding(4, 5, 4, 5);
+            mTrackBar.Location = new Point(3, 34);
             mTrackBar.Maximum = 100;
             mTrackBar.Name = "mTrackBar";
-            mTrackBar.Size = new Size(259, 69);
+            mTrackBar.Size = new Size(181, 45);
             mTrackBar.TabIndex = 0;
             mTrackBar.Scroll += mTrackBar_Scroll;
             // 
@@ -384,18 +359,16 @@
             panel4.Controls.Add(lightZAxisValueLabel);
             panel4.Controls.Add(lightZAxisLabel);
             panel4.Controls.Add(lightZAxisTrackBar);
-            panel4.Location = new Point(9, 540);
-            panel4.Margin = new Padding(4, 5, 4, 5);
+            panel4.Location = new Point(6, 324);
             panel4.Name = "panel4";
-            panel4.Size = new Size(267, 137);
+            panel4.Size = new Size(187, 82);
             panel4.TabIndex = 8;
             // 
             // lightZAxisValueLabel
             // 
-            lightZAxisValueLabel.Location = new Point(209, 18);
-            lightZAxisValueLabel.Margin = new Padding(4, 0, 4, 0);
+            lightZAxisValueLabel.Location = new Point(146, 11);
             lightZAxisValueLabel.Name = "lightZAxisValueLabel";
-            lightZAxisValueLabel.Size = new Size(54, 25);
+            lightZAxisValueLabel.Size = new Size(38, 15);
             lightZAxisValueLabel.TabIndex = 2;
             lightZAxisValueLabel.Text = "000";
             lightZAxisValueLabel.TextAlign = ContentAlignment.MiddleRight;
@@ -403,10 +376,9 @@
             // lightZAxisLabel
             // 
             lightZAxisLabel.AutoSize = true;
-            lightZAxisLabel.Location = new Point(4, 18);
-            lightZAxisLabel.Margin = new Padding(4, 0, 4, 0);
+            lightZAxisLabel.Location = new Point(3, 11);
             lightZAxisLabel.Name = "lightZAxisLabel";
-            lightZAxisLabel.Size = new Size(208, 25);
+            lightZAxisLabel.Size = new Size(134, 15);
             lightZAxisLabel.TabIndex = 1;
             lightZAxisLabel.Text = "Oś obrotu źródła światła";
             // 
@@ -414,12 +386,11 @@
             // 
             lightZAxisTrackBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lightZAxisTrackBar.LargeChange = 10;
-            lightZAxisTrackBar.Location = new Point(4, 57);
-            lightZAxisTrackBar.Margin = new Padding(4, 5, 4, 5);
+            lightZAxisTrackBar.Location = new Point(3, 34);
             lightZAxisTrackBar.Maximum = 100;
             lightZAxisTrackBar.Minimum = -100;
             lightZAxisTrackBar.Name = "lightZAxisTrackBar";
-            lightZAxisTrackBar.Size = new Size(259, 69);
+            lightZAxisTrackBar.Size = new Size(181, 45);
             lightZAxisTrackBar.SmallChange = 5;
             lightZAxisTrackBar.TabIndex = 0;
             lightZAxisTrackBar.TickFrequency = 5;
@@ -429,19 +400,17 @@
             // 
             objectColorPanel.Controls.Add(textureRadioButton);
             objectColorPanel.Controls.Add(fixedColorRadioButton);
-            objectColorPanel.Location = new Point(9, 687);
-            objectColorPanel.Margin = new Padding(4, 5, 4, 5);
+            objectColorPanel.Location = new Point(6, 412);
             objectColorPanel.Name = "objectColorPanel";
-            objectColorPanel.Size = new Size(267, 43);
+            objectColorPanel.Size = new Size(187, 26);
             objectColorPanel.TabIndex = 9;
             // 
             // textureRadioButton
             // 
             textureRadioButton.AutoSize = true;
-            textureRadioButton.Location = new Point(166, 5);
-            textureRadioButton.Margin = new Padding(4, 5, 4, 5);
+            textureRadioButton.Location = new Point(116, 3);
             textureRadioButton.Name = "textureRadioButton";
-            textureRadioButton.Size = new Size(101, 29);
+            textureRadioButton.Size = new Size(68, 19);
             textureRadioButton.TabIndex = 1;
             textureRadioButton.TabStop = true;
             textureRadioButton.Text = "Tekstura";
@@ -450,10 +419,9 @@
             // fixedColorRadioButton
             // 
             fixedColorRadioButton.AutoSize = true;
-            fixedColorRadioButton.Location = new Point(4, 5);
-            fixedColorRadioButton.Margin = new Padding(4, 5, 4, 5);
+            fixedColorRadioButton.Location = new Point(3, 3);
             fixedColorRadioButton.Name = "fixedColorRadioButton";
-            fixedColorRadioButton.Size = new Size(121, 29);
+            fixedColorRadioButton.Size = new Size(80, 19);
             fixedColorRadioButton.TabIndex = 0;
             fixedColorRadioButton.TabStop = true;
             fixedColorRadioButton.Text = "Stały kolor";
@@ -463,27 +431,25 @@
             // 
             textureOpenFileDialog.FileName = "openFileDialog1";
             // 
-            // colorButton
+            // meshColorButton
             // 
-            colorButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            colorButton.Location = new Point(9, 740);
-            colorButton.Margin = new Padding(4, 5, 4, 5);
-            colorButton.Name = "colorButton";
-            colorButton.Size = new Size(127, 70);
-            colorButton.TabIndex = 10;
-            colorButton.Text = "Zmień kolor siatki";
-            colorButton.UseVisualStyleBackColor = true;
+            meshColorButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            meshColorButton.Location = new Point(6, 444);
+            meshColorButton.Name = "meshColorButton";
+            meshColorButton.Size = new Size(89, 42);
+            meshColorButton.TabIndex = 10;
+            meshColorButton.Text = "Zmień kolor siatki";
+            meshColorButton.UseVisualStyleBackColor = true;
+            meshColorButton.Click += meshColorButton_Click;
             // 
             // meshGroupBox
             // 
             meshGroupBox.Controls.Add(fidelityPanel);
             meshGroupBox.Controls.Add(alphaAnglePanel);
             meshGroupBox.Controls.Add(betaAnglePanel);
-            meshGroupBox.Location = new Point(17, 20);
-            meshGroupBox.Margin = new Padding(4, 5, 4, 5);
+            meshGroupBox.Location = new Point(12, 12);
             meshGroupBox.Name = "meshGroupBox";
-            meshGroupBox.Padding = new Padding(4, 5, 4, 5);
-            meshGroupBox.Size = new Size(834, 190);
+            meshGroupBox.Size = new Size(584, 114);
             meshGroupBox.TabIndex = 11;
             meshGroupBox.TabStop = false;
             meshGroupBox.Text = "Siatka";
@@ -491,10 +457,9 @@
             // textureButton
             // 
             textureButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            textureButton.Location = new Point(144, 740);
-            textureButton.Margin = new Padding(4, 5, 4, 5);
+            textureButton.Location = new Point(101, 444);
             textureButton.Name = "textureButton";
-            textureButton.Size = new Size(127, 70);
+            textureButton.Size = new Size(89, 42);
             textureButton.TabIndex = 12;
             textureButton.Text = "Zmień teskturę";
             textureButton.UseVisualStyleBackColor = true;
@@ -506,28 +471,25 @@
             lightAndColorsGroupBox.Controls.Add(textureButton);
             lightAndColorsGroupBox.Controls.Add(panel1);
             lightAndColorsGroupBox.Controls.Add(panel2);
-            lightAndColorsGroupBox.Controls.Add(colorButton);
+            lightAndColorsGroupBox.Controls.Add(meshColorButton);
             lightAndColorsGroupBox.Controls.Add(panel3);
             lightAndColorsGroupBox.Controls.Add(objectColorPanel);
             lightAndColorsGroupBox.Controls.Add(panel4);
-            lightAndColorsGroupBox.Location = new Point(1157, 220);
-            lightAndColorsGroupBox.Margin = new Padding(4, 5, 4, 5);
+            lightAndColorsGroupBox.Location = new Point(810, 132);
             lightAndColorsGroupBox.Name = "lightAndColorsGroupBox";
-            lightAndColorsGroupBox.Padding = new Padding(4, 5, 4, 5);
-            lightAndColorsGroupBox.Size = new Size(284, 823);
+            lightAndColorsGroupBox.Size = new Size(199, 494);
             lightAndColorsGroupBox.TabIndex = 13;
             lightAndColorsGroupBox.TabStop = false;
             lightAndColorsGroupBox.Text = "Oświetlenie i kolory";
             // 
             // MeshDisplayer
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1459, 1050);
+            ClientSize = new Size(1021, 630);
             Controls.Add(lightAndColorsGroupBox);
             Controls.Add(meshGroupBox);
             Controls.Add(pictureBox);
-            Margin = new Padding(4, 5, 4, 5);
             Name = "MeshDisplayer";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "MeshDisplayer";
@@ -597,7 +559,7 @@
         private RadioButton textureRadioButton;
         private RadioButton fixedColorRadioButton;
         private OpenFileDialog textureOpenFileDialog;
-        private Button colorButton;
+        private Button meshColorButton;
         private GroupBox meshGroupBox;
         private Button textureButton;
         private ColorDialog colorDialog1;
