@@ -10,6 +10,8 @@ namespace Lab2
         private int ControlPointsFirstDimensionCount { get; set; } = 4;
         private int ControlPointsSecondDimensionCount { get; set; } = 4;
         private string ControlPointsPath { get; set; } = "control_points3D.txt";
+        private string TexturePath { get; set; } = "texture.jpg";
+        private Bitmap TextureBitmap { get; set; }
 
         private Vector3[,] ControlPoints { get; set; }
 
@@ -17,11 +19,17 @@ namespace Lab2
         private Mesh? Mesh { get; set; }
         private Graphics G { get; set; }
 
-        Color LightColor { get; set; } = Color.Red;
-        float Kd { get; set; }
-        float Ks { get; set; }
-        float M { get; set; }
-        float LightZAxis { get; set; }
+        private Color LightColor { get; set; } = Color.Red;
+        private float Kd { get; set; }
+        private float Ks { get; set; }
+        private float M { get; set; }
+        private float LightZAxis { get; set; }
+
+        private bool DrawEdges { get; set; } = true;
+        private bool DrawFilling { get; set; } = true;
+
+        private delegate Color GetColorDelegate(float u, float v);
+        private GetColorDelegate GetColor { get; set; }
 
         private Color MeshColor { get; set; } = Color.White;
 
@@ -51,7 +59,8 @@ namespace Lab2
 
 
             Bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
-            pictureBox.Image = Bitmap;
+            TextureBitmap = new(TexturePath);
+            //pictureBox.Image = Bitmap;
 
             G = Graphics.FromImage(Bitmap);
             G.ScaleTransform(1, -1);
@@ -59,6 +68,7 @@ namespace Lab2
 
             LoadControlPoints();
             Mesh = new(ControlPoints!, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
+            GetColor = GetRGBColor;
             //PaintPictureBox();
         }
 
@@ -82,22 +92,22 @@ namespace Lab2
         private void fidelityTrackBar_Scroll(object sender, EventArgs e)
         {
             fidelityTrackBar.Value = (int)Math.Round((double)fidelityTrackBar.Value / fidelityTrackBar.TickFrequency) * fidelityTrackBar.TickFrequency;
-            Mesh?.SetFidelity(fidelityTrackBar.Value, fidelityTrackBar.Value);           
-           
+            Mesh?.SetFidelity(fidelityTrackBar.Value, fidelityTrackBar.Value);
+
             pictureBox.Invalidate();
         }
 
         private void alphaAngleTrackBar_Scroll(object sender, EventArgs e)
         {
-            Mesh?.SetAlphaAngle(alphaAngleTrackBar.Value);           
-           
+            Mesh?.SetAlphaAngle(alphaAngleTrackBar.Value);
+
             pictureBox.Invalidate();
         }
 
         private void betaAngleTrackBar_Scroll(object sender, EventArgs e)
         {
-            Mesh?.SetBetaAngle(betaAngleTrackBar.Value);           
-           
+            Mesh?.SetBetaAngle(betaAngleTrackBar.Value);
+
             pictureBox.Invalidate();
         }
 
@@ -108,21 +118,43 @@ namespace Lab2
 
             G.Clear(Color.White);
 
-
-            foreach (Triangle triangle in Mesh.Triangles)
+            if (DrawFilling)
             {
-                PointF v1 = new(triangle.V1.AfterRotationState.P.X, triangle.V1.AfterRotationState.P.Y);
-                PointF v2 = new(triangle.V2.AfterRotationState.P.X, triangle.V2.AfterRotationState.P.Y);
-                PointF v3 = new(triangle.V3.AfterRotationState.P.X, triangle.V3.AfterRotationState.P.Y);
-
                 BitmapData bitmapData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-                fillTriangle(triangle, bitmapData);
+                foreach (Triangle triangle in Mesh.Triangles)
+                    fillTriangle(triangle, bitmapData);
                 Bitmap.UnlockBits(bitmapData);
-
-                G.DrawLine(Pens.Black, v1, v2);
-                G.DrawLine(Pens.Black, v2, v3);
-                G.DrawLine(Pens.Black, v3, v1);
             }
+
+            if (DrawEdges)
+            {
+                foreach (Triangle triangle in Mesh.Triangles)
+                {
+                    PointF v1 = new(triangle.V1.AfterRotationState.P.X, triangle.V1.AfterRotationState.P.Y);
+                    PointF v2 = new(triangle.V2.AfterRotationState.P.X, triangle.V2.AfterRotationState.P.Y);
+                    PointF v3 = new(triangle.V3.AfterRotationState.P.X, triangle.V3.AfterRotationState.P.Y);
+
+                    G.DrawLine(Pens.Black, v1, v2);
+                    G.DrawLine(Pens.Black, v2, v3);
+                    G.DrawLine(Pens.Black, v3, v1);
+                }
+
+            }
+
+            //foreach (Triangle triangle in Mesh.Triangles)
+            //{
+            //    PointF v1 = new(triangle.V1.AfterRotationState.P.X, triangle.V1.AfterRotationState.P.Y);
+            //    PointF v2 = new(triangle.V2.AfterRotationState.P.X, triangle.V2.AfterRotationState.P.Y);
+            //    PointF v3 = new(triangle.V3.AfterRotationState.P.X, triangle.V3.AfterRotationState.P.Y);
+
+            //    BitmapData bitmapData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            //    fillTriangle(triangle, bitmapData);
+            //    Bitmap.UnlockBits(bitmapData);
+
+            //    G.DrawLine(Pens.Black, v1, v2);
+            //    G.DrawLine(Pens.Black, v2, v3);
+            //    G.DrawLine(Pens.Black, v3, v1);
+            //}
             e.Graphics.DrawImage(Bitmap, 0, 0);
         }
 
@@ -209,7 +241,9 @@ namespace Lab2
                             {
                                 p.X = x;
                                 float[] coords = getBaricentricCoords(p);
-                                byte[] color = getColor([MeshColor.R, MeshColor.G, MeshColor.B], coords);
+                                float u = triangle.V1.U * coords[0] + triangle.V2.U * coords[1] + triangle.V3.U * coords[2];
+                                float v = triangle.V1.V * coords[0] + triangle.V2.V * coords[1] + triangle.V3.V * coords[2];
+                                byte[] color = getColor(GetColor(u,v), coords);
 
                                 // Transformacja uk³adu wspó³rzêdnych
                                 int transformedX = x + bitmapData.Width / 2;
@@ -233,10 +267,10 @@ namespace Lab2
                 }
 
 
-                byte[] getColor(float[] color, float[] cords)
+                byte[] getColor(Color color, float[] cords)
                 {
                     Vector3 Il = new(LightColor.R, LightColor.G, LightColor.B);
-                    Vector3 Io = new(color);
+                    Vector3 Io = new(color.R, color.G, color.B);
                     //Vector3 L = new(0, 0, 1);
                     Vector3 Punkt = triangle.V1.AfterRotationState.P * cords[0] + triangle.V2.AfterRotationState.P * cords[1] + triangle.V3.AfterRotationState.P * cords[2];
                     Vector3 L = new Vector3(0, 0, 200);
@@ -294,7 +328,8 @@ namespace Lab2
             G.ScaleTransform(1, -1);
             G.TranslateTransform(Bitmap.Width / 2, -Bitmap.Height / 2);
 
-            pictureBox.Image = Bitmap;
+            //pictureBox.Image = Bitmap;
+            pictureBox.Invalidate();
 
             oldGraphics.Dispose();
             oldBitmap.Dispose();
@@ -303,32 +338,28 @@ namespace Lab2
         private void kdTrackBar_Scroll(object sender, EventArgs e)
         {
             Kd = scaleTrackBarValueToOne(kdTrackBar);
-           
-           
+
             pictureBox.Invalidate();
         }
 
         private void ksTrackBar_Scroll(object sender, EventArgs e)
         {
             Ks = scaleTrackBarValueToOne(ksTrackBar);
-           
-           
+
             pictureBox.Invalidate();
         }
 
         private void mTrackBar_Scroll(object sender, EventArgs e)
         {
             M = mTrackBar.Value;
-           
-           
+
             pictureBox.Invalidate();
         }
 
         private void lightZAxisTrackBar_Scroll(object sender, EventArgs e)
         {
             LightZAxis = lightZAxisTrackBar.Value;
-           
-           
+
             pictureBox.Invalidate();
         }
 
@@ -338,8 +369,7 @@ namespace Lab2
             if (lightColorDialog.ShowDialog() == DialogResult.OK)
             {
                 LightColor = lightColorDialog.Color;
-               
-               
+
                 pictureBox.Invalidate();
             }
         }
@@ -350,10 +380,48 @@ namespace Lab2
             if (meshColorDialog.ShowDialog() == DialogResult.OK)
             {
                 MeshColor = meshColorDialog.Color;
-               
-               
+
                 pictureBox.Invalidate();
             }
+        }
+
+        private void drawEdgesCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            DrawEdges = drawEdgesCheckBox.Checked;
+            pictureBox.Invalidate();
+        }
+
+        private void drawFillingCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            DrawFilling = drawFillingCheckBox.Checked;
+            pictureBox.Invalidate();
+        }
+
+        private void fixedColorRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            GetColor = GetRGBColor;
+            pictureBox.Invalidate();
+        }
+
+        private void textureRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            GetColor = GetTextureColor;
+            pictureBox.Invalidate();
+        }
+
+        private Color GetRGBColor(float u, float v)
+        {
+            return MeshColor;
+        }
+        private Color GetTextureColor(float u, float v)
+        {
+            u = Math.Clamp(u, 0, 1);
+            v = Math.Clamp(v, 0, 1);
+
+
+            int x = (int)(u * (TextureBitmap.Width - 1));
+            int y = (int)(v * (TextureBitmap.Height - 1));
+            return TextureBitmap.GetPixel(x, y);
         }
     }
 }

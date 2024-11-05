@@ -69,6 +69,9 @@
             colorDialog1 = new ColorDialog();
             meshColorDialog = new ColorDialog();
             lightAndColorsGroupBox = new GroupBox();
+            surfaceGroupBox = new GroupBox();
+            drawFillingCheckBox = new CheckBox();
+            drawEdgesCheckBox = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             fidelityPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)fidelityTrackBar).BeginInit();
@@ -87,6 +90,7 @@
             objectColorPanel.SuspendLayout();
             meshGroupBox.SuspendLayout();
             lightAndColorsGroupBox.SuspendLayout();
+            surfaceGroupBox.SuspendLayout();
             SuspendLayout();
             // 
             // pictureBox
@@ -95,7 +99,7 @@
             pictureBox.BackColor = SystemColors.Control;
             pictureBox.Location = new Point(12, 132);
             pictureBox.Name = "pictureBox";
-            pictureBox.Size = new Size(792, 494);
+            pictureBox.Size = new Size(824, 494);
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = false;
             pictureBox.SizeChanged += pictureBox_SizeChanged;
@@ -400,7 +404,7 @@
             // 
             objectColorPanel.Controls.Add(textureRadioButton);
             objectColorPanel.Controls.Add(fixedColorRadioButton);
-            objectColorPanel.Location = new Point(6, 412);
+            objectColorPanel.Location = new Point(6, 28);
             objectColorPanel.Name = "objectColorPanel";
             objectColorPanel.Size = new Size(187, 26);
             objectColorPanel.TabIndex = 9;
@@ -412,13 +416,14 @@
             textureRadioButton.Name = "textureRadioButton";
             textureRadioButton.Size = new Size(68, 19);
             textureRadioButton.TabIndex = 1;
-            textureRadioButton.TabStop = true;
             textureRadioButton.Text = "Tekstura";
             textureRadioButton.UseVisualStyleBackColor = true;
+            textureRadioButton.CheckedChanged += textureRadioButton_CheckedChanged;
             // 
             // fixedColorRadioButton
             // 
             fixedColorRadioButton.AutoSize = true;
+            fixedColorRadioButton.Checked = true;
             fixedColorRadioButton.Location = new Point(3, 3);
             fixedColorRadioButton.Name = "fixedColorRadioButton";
             fixedColorRadioButton.Size = new Size(80, 19);
@@ -426,6 +431,7 @@
             fixedColorRadioButton.TabStop = true;
             fixedColorRadioButton.Text = "Stały kolor";
             fixedColorRadioButton.UseVisualStyleBackColor = true;
+            fixedColorRadioButton.CheckedChanged += fixedColorRadioButton_CheckedChanged;
             // 
             // textureOpenFileDialog
             // 
@@ -433,8 +439,7 @@
             // 
             // meshColorButton
             // 
-            meshColorButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            meshColorButton.Location = new Point(6, 444);
+            meshColorButton.Location = new Point(6, 66);
             meshColorButton.Name = "meshColorButton";
             meshColorButton.Size = new Size(89, 42);
             meshColorButton.TabIndex = 10;
@@ -456,8 +461,7 @@
             // 
             // textureButton
             // 
-            textureButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            textureButton.Location = new Point(101, 444);
+            textureButton.Location = new Point(104, 66);
             textureButton.Name = "textureButton";
             textureButton.Size = new Size(89, 42);
             textureButton.TabIndex = 12;
@@ -466,27 +470,66 @@
             // 
             // lightAndColorsGroupBox
             // 
-            lightAndColorsGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lightAndColorsGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             lightAndColorsGroupBox.Controls.Add(lightColorButton);
-            lightAndColorsGroupBox.Controls.Add(textureButton);
             lightAndColorsGroupBox.Controls.Add(panel1);
             lightAndColorsGroupBox.Controls.Add(panel2);
-            lightAndColorsGroupBox.Controls.Add(meshColorButton);
             lightAndColorsGroupBox.Controls.Add(panel3);
-            lightAndColorsGroupBox.Controls.Add(objectColorPanel);
             lightAndColorsGroupBox.Controls.Add(panel4);
-            lightAndColorsGroupBox.Location = new Point(810, 132);
+            lightAndColorsGroupBox.Location = new Point(842, 132);
             lightAndColorsGroupBox.Name = "lightAndColorsGroupBox";
             lightAndColorsGroupBox.Size = new Size(199, 494);
             lightAndColorsGroupBox.TabIndex = 13;
             lightAndColorsGroupBox.TabStop = false;
             lightAndColorsGroupBox.Text = "Oświetlenie i kolory";
             // 
+            // surfaceGroupBox
+            // 
+            surfaceGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            surfaceGroupBox.Controls.Add(drawFillingCheckBox);
+            surfaceGroupBox.Controls.Add(drawEdgesCheckBox);
+            surfaceGroupBox.Controls.Add(objectColorPanel);
+            surfaceGroupBox.Controls.Add(textureButton);
+            surfaceGroupBox.Controls.Add(meshColorButton);
+            surfaceGroupBox.Location = new Point(602, 12);
+            surfaceGroupBox.Name = "surfaceGroupBox";
+            surfaceGroupBox.Size = new Size(439, 114);
+            surfaceGroupBox.TabIndex = 14;
+            surfaceGroupBox.TabStop = false;
+            surfaceGroupBox.Text = "Powierzchnia siatki";
+            // 
+            // drawFillingCheckBox
+            // 
+            drawFillingCheckBox.AutoSize = true;
+            drawFillingCheckBox.Checked = true;
+            drawFillingCheckBox.CheckState = CheckState.Checked;
+            drawFillingCheckBox.Location = new Point(314, 26);
+            drawFillingCheckBox.Name = "drawFillingCheckBox";
+            drawFillingCheckBox.Size = new Size(120, 19);
+            drawFillingCheckBox.TabIndex = 14;
+            drawFillingCheckBox.Text = "Rysuj wypełnienie";
+            drawFillingCheckBox.UseVisualStyleBackColor = true;
+            drawFillingCheckBox.CheckedChanged += drawFillingCheckBox_CheckedChanged;
+            // 
+            // drawEdgesCheckBox
+            // 
+            drawEdgesCheckBox.AutoSize = true;
+            drawEdgesCheckBox.Checked = true;
+            drawEdgesCheckBox.CheckState = CheckState.Checked;
+            drawEdgesCheckBox.Location = new Point(199, 26);
+            drawEdgesCheckBox.Name = "drawEdgesCheckBox";
+            drawEdgesCheckBox.Size = new Size(109, 19);
+            drawEdgesCheckBox.TabIndex = 13;
+            drawEdgesCheckBox.Text = "Rysuj krawędzie";
+            drawEdgesCheckBox.UseVisualStyleBackColor = true;
+            drawEdgesCheckBox.CheckedChanged += drawEdgesCheckBox_CheckedChanged;
+            // 
             // MeshDisplayer
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1021, 630);
+            ClientSize = new Size(1053, 630);
+            Controls.Add(surfaceGroupBox);
             Controls.Add(lightAndColorsGroupBox);
             Controls.Add(meshGroupBox);
             Controls.Add(pictureBox);
@@ -519,6 +562,8 @@
             objectColorPanel.PerformLayout();
             meshGroupBox.ResumeLayout(false);
             lightAndColorsGroupBox.ResumeLayout(false);
+            surfaceGroupBox.ResumeLayout(false);
+            surfaceGroupBox.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -565,5 +610,8 @@
         private ColorDialog colorDialog1;
         private ColorDialog meshColorDialog;
         private GroupBox lightAndColorsGroupBox;
+        private GroupBox surfaceGroupBox;
+        private CheckBox drawFillingCheckBox;
+        private CheckBox drawEdgesCheckBox;
     }
 }
