@@ -138,40 +138,52 @@ namespace Lab2
         {
             const int bytesPerPixel = 4;
 
-            List<Point> trianglePoints =
+            Point[] trianglePoints =
             [
                 new Point((int)Math.Round(triangle.V1.AfterRotationState.P.X), (int)Math.Round(triangle.V1.AfterRotationState.P.Y)),
                 new Point((int)Math.Round(triangle.V2.AfterRotationState.P.X), (int)Math.Round(triangle.V2.AfterRotationState.P.Y)),
                 new Point((int)Math.Round(triangle.V3.AfterRotationState.P.X), (int)Math.Round(triangle.V3.AfterRotationState.P.Y))
             ];
 
-            int polygonYMin = trianglePoints.Min(p => p.Y);
-            int polygonYMax = trianglePoints.Max(p => p.Y);
+            int[] indexes = Enumerable.Range(0, trianglePoints.Length).ToArray();
+            Array.Sort(indexes, (i1, i2) => trianglePoints[i1].Y.CompareTo(trianglePoints[i2].Y));
+            Point[] sortedTrianglePoints =  trianglePoints.OrderBy(p => p.Y).ToArray();
+
+
+            int polygonYMin = trianglePoints[indexes[0]].Y; //trianglePoints.Min(p => p.Y);
+            int polygonYMax = trianglePoints[indexes[^1]].Y; //trianglePoints.Max(p => p.Y);
+            int currentIndex = 0;
 
             List<AETElement> AET = [];
 
             for (int scanline = polygonYMin; scanline <= polygonYMax; scanline++)
             {
                 AET.RemoveAll(edge => edge.P1.Y == edge.P2.Y);
-                for (int i = 0; i < trianglePoints.Count; i++)
-                {
-                    Point point = trianglePoints[i];
+                //for (int currentIndex = 0; currentIndex < trianglePoints.Length; currentIndex++)
+                //{
+                    Point point = trianglePoints[indexes[currentIndex]];
+                    //Point point = trianglePoints[currentIndex];
+                    //Point point = trianglePoints[currentIndex];
+                    //int currentY = point.Y;
 
                     // Jeœli punkt by³ na scanline zaktualizuj AET o krawêdzie, które go zawieraj¹
-                    if (point.Y == scanline - 1)
+                    while (point.Y == scanline - 1)
                     {
-                        int previousIndex = i == 0 ? trianglePoints.Count - 1 : i - 1;
-                        int nextIndex = i == trianglePoints.Count - 1 ? 0 : i + 1;
+                        int previousIndex = indexes[currentIndex] == 0 ? trianglePoints.Length - 1 : indexes[currentIndex] - 1;
+                        int nextIndex = indexes[currentIndex] == trianglePoints.Length - 1 ? 0 : indexes[currentIndex] + 1;
 
                         Point previousPoint = trianglePoints[previousIndex];
                         Point nextPoint = trianglePoints[nextIndex];
 
                         checkAndUpdateAET(previousPoint, point);
                         checkAndUpdateAET(nextPoint, point);
+                        //break;
+                        //++currentIndex;
+                        point = trianglePoints[indexes[++currentIndex]];
                     }
-                }
+            //}
 
-                void checkAndUpdateAET(Point p1, Point p2)
+            void checkAndUpdateAET(Point p1, Point p2)
                 {
                     if (p1.Y > p2.Y)
                         AET.Add(new AETElement(p1, p2));
