@@ -96,9 +96,13 @@ namespace Lab2.Model
                     pu *= n;
                     pv *= m;
 
+                    pu = Vector3.Normalize(pu);
+                    pv = Vector3.Normalize(pv);
+
+
                     // Wektor normalny
                     nuv = Vector3.Cross(pv, pu);
-                    nuv = Vector3.Normalize(nuv);
+                    //nuv = Vector3.Normalize(nuv);
 
                     Vertices[ui, vi] = new Vertex(p, pu, pv, nuv, u, v);
                     v += stepV;

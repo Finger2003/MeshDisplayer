@@ -82,25 +82,22 @@ namespace Lab2
         private void fidelityTrackBar_Scroll(object sender, EventArgs e)
         {
             fidelityTrackBar.Value = (int)Math.Round((double)fidelityTrackBar.Value / fidelityTrackBar.TickFrequency) * fidelityTrackBar.TickFrequency;
-            Mesh?.SetFidelity(fidelityTrackBar.Value, fidelityTrackBar.Value);
-            //pictureBox.Refresh();
-            //pictureBox.Refresh();
+            Mesh?.SetFidelity(fidelityTrackBar.Value, fidelityTrackBar.Value);           
+           
             pictureBox.Invalidate();
         }
 
         private void alphaAngleTrackBar_Scroll(object sender, EventArgs e)
         {
-            Mesh?.SetAlphaAngle(alphaAngleTrackBar.Value);
-            //pictureBox.Refresh();
-            //pictureBox.Refresh();
+            Mesh?.SetAlphaAngle(alphaAngleTrackBar.Value);           
+           
             pictureBox.Invalidate();
         }
 
         private void betaAngleTrackBar_Scroll(object sender, EventArgs e)
         {
-            Mesh?.SetBetaAngle(betaAngleTrackBar.Value);
-            //pictureBox.Refresh();
-            //pictureBox.Refresh();
+            Mesh?.SetBetaAngle(betaAngleTrackBar.Value);           
+           
             pictureBox.Invalidate();
         }
 
@@ -128,31 +125,6 @@ namespace Lab2
             }
             e.Graphics.DrawImage(Bitmap, 0, 0);
         }
-
-        //private void PaintPictureBox(PaintEventArgs e)
-        //{
-        //    if (Mesh is null)
-        //        return;
-
-        //    G.Clear(Color.White);
-
-
-        //    foreach (Triangle triangle in Mesh.Triangles)
-        //    {
-        //        PointF v1 = new(triangle.V1.AfterRotationState.P.X, triangle.V1.AfterRotationState.P.Y);
-        //        PointF v2 = new(triangle.V2.AfterRotationState.P.X, triangle.V2.AfterRotationState.P.Y);
-        //        PointF v3 = new(triangle.V3.AfterRotationState.P.X, triangle.V3.AfterRotationState.P.Y);
-
-        //        BitmapData bitmapData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-        //        fillTriangle(triangle, bitmapData);
-        //        Bitmap.UnlockBits(bitmapData);
-
-        //        G.DrawLine(Pens.Black, v1, v2);
-        //        G.DrawLine(Pens.Black, v2, v3);
-        //        G.DrawLine(Pens.Black, v3, v1);
-        //    }
-        //    e.Graphics.DrawImage(Bitmap, 0, 0);
-        //}
 
         private void fillTriangle(Triangle triangle, BitmapData bitmapData)
         {
@@ -331,54 +303,43 @@ namespace Lab2
         private void kdTrackBar_Scroll(object sender, EventArgs e)
         {
             Kd = scaleTrackBarValueToOne(kdTrackBar);
-            //pictureBox.Refresh();
-            //pictureBox.Refresh();
+           
+           
             pictureBox.Invalidate();
         }
 
         private void ksTrackBar_Scroll(object sender, EventArgs e)
         {
             Ks = scaleTrackBarValueToOne(ksTrackBar);
-            //pictureBox.Refresh();
-            //pictureBox.Refresh();
+           
+           
             pictureBox.Invalidate();
         }
 
         private void mTrackBar_Scroll(object sender, EventArgs e)
         {
             M = mTrackBar.Value;
-            //pictureBox.Refresh();
-            //pictureBox.Refresh();
+           
+           
             pictureBox.Invalidate();
         }
 
         private void lightZAxisTrackBar_Scroll(object sender, EventArgs e)
         {
             LightZAxis = lightZAxisTrackBar.Value;
-            //pictureBox.Refresh();
-            //pictureBox.Refresh();
+           
+           
             pictureBox.Invalidate();
         }
 
         private void lightColorButton_Click(object sender, EventArgs e)
         {
-            //ColorDialog lcd = new();
-            //lcd.Color = LightColor;
-            //if (lcd.ShowDialog() == DialogResult.OK)
-            //{
-            //    LightColor = lcd.Color;
-            //    //pictureBox.Refresh();
-            //    //pictureBox.Refresh();
-            //    pictureBox.Invalidate();
-            //}
-            //return;
-
             lightColorDialog.Color = LightColor;
             if (lightColorDialog.ShowDialog() == DialogResult.OK)
             {
                 LightColor = lightColorDialog.Color;
-                //pictureBox.Refresh();
-                //pictureBox.Refresh();
+               
+               
                 pictureBox.Invalidate();
             }
         }
@@ -389,8 +350,8 @@ namespace Lab2
             if (meshColorDialog.ShowDialog() == DialogResult.OK)
             {
                 MeshColor = meshColorDialog.Color;
-                //pictureBox.Refresh();
-                //pictureBox.Refresh();
+               
+               
                 pictureBox.Invalidate();
             }
         }
