@@ -62,7 +62,7 @@
             objectColorPanel = new Panel();
             textureRadioButton = new RadioButton();
             fixedColorRadioButton = new RadioButton();
-            textureOpenFileDialog = new OpenFileDialog();
+            openFileDialog = new OpenFileDialog();
             meshColorButton = new Button();
             meshGroupBox = new GroupBox();
             textureButton = new Button();
@@ -72,6 +72,8 @@
             surfaceGroupBox = new GroupBox();
             drawFillingCheckBox = new CheckBox();
             drawEdgesCheckBox = new CheckBox();
+            normalMapCheckBox = new CheckBox();
+            normalMapButton = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             fidelityPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)fidelityTrackBar).BeginInit();
@@ -433,10 +435,6 @@
             fixedColorRadioButton.UseVisualStyleBackColor = true;
             fixedColorRadioButton.CheckedChanged += fixedColorRadioButton_CheckedChanged;
             // 
-            // textureOpenFileDialog
-            // 
-            textureOpenFileDialog.FileName = "openFileDialog1";
-            // 
             // meshColorButton
             // 
             meshColorButton.Location = new Point(6, 66);
@@ -487,6 +485,8 @@
             // surfaceGroupBox
             // 
             surfaceGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            surfaceGroupBox.Controls.Add(normalMapButton);
+            surfaceGroupBox.Controls.Add(normalMapCheckBox);
             surfaceGroupBox.Controls.Add(drawFillingCheckBox);
             surfaceGroupBox.Controls.Add(drawEdgesCheckBox);
             surfaceGroupBox.Controls.Add(objectColorPanel);
@@ -524,6 +524,27 @@
             drawEdgesCheckBox.Text = "Rysuj krawędzie";
             drawEdgesCheckBox.UseVisualStyleBackColor = true;
             drawEdgesCheckBox.CheckedChanged += drawEdgesCheckBox_CheckedChanged;
+            // 
+            // normalMapCheckBox
+            // 
+            normalMapCheckBox.AutoSize = true;
+            normalMapCheckBox.Location = new Point(199, 66);
+            normalMapCheckBox.Name = "normalMapCheckBox";
+            normalMapCheckBox.Size = new Size(203, 19);
+            normalMapCheckBox.TabIndex = 15;
+            normalMapCheckBox.Text = "Użyj mapy wektorów normalnych";
+            normalMapCheckBox.UseVisualStyleBackColor = true;
+            normalMapCheckBox.CheckedChanged += normalMapCheckBox_CheckedChanged;
+            // 
+            // normalMapButton
+            // 
+            normalMapButton.Location = new Point(199, 85);
+            normalMapButton.Name = "normalMapButton";
+            normalMapButton.Size = new Size(224, 23);
+            normalMapButton.TabIndex = 16;
+            normalMapButton.Text = "Zmień mapę wektorów normalnych";
+            normalMapButton.UseVisualStyleBackColor = true;
+            normalMapButton.Click += normalMapButton_Click;
             // 
             // MeshDisplayer
             // 
@@ -604,7 +625,7 @@
         private Panel objectColorPanel;
         private RadioButton textureRadioButton;
         private RadioButton fixedColorRadioButton;
-        private OpenFileDialog textureOpenFileDialog;
+        private OpenFileDialog openFileDialog;
         private Button meshColorButton;
         private GroupBox meshGroupBox;
         private Button textureButton;
@@ -614,5 +635,7 @@
         private GroupBox surfaceGroupBox;
         private CheckBox drawFillingCheckBox;
         private CheckBox drawEdgesCheckBox;
+        private Button normalMapButton;
+        private CheckBox normalMapCheckBox;
     }
 }

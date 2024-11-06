@@ -11,7 +11,10 @@ namespace Lab2
         private int ControlPointsSecondDimensionCount { get; set; } = 4;
         private string DefaultControlPointsPath { get; } = "control_points3D.txt";
         private string DefaultTexturePath { get; } = "texture.jpg";
+        private string DefaultNormalMapPath { get; } = "normal_map.jpg";
         private Bitmap TextureBitmap { get; set; }
+        private Bitmap NormalMapBitmap { get; set; }
+        private Vector3[] NormalMap { get; set; }
 
         private Vector3[,] ControlPoints { get; set; }
 
@@ -19,7 +22,7 @@ namespace Lab2
         private Mesh? Mesh { get; set; }
         private Graphics G { get; set; }
 
-        private Color LightColor { get; set; } = Color.Red;
+        private Color LightColor { get; set; } = Color.White;
         private float Kd { get; set; }
         private float Ks { get; set; }
         private float M { get; set; }
@@ -28,8 +31,9 @@ namespace Lab2
         private bool DrawEdges { get; set; } = true;
         private bool DrawFilling { get; set; } = true;
 
-        private delegate Color GetColorDelegate(float u, float v);
-        private GetColorDelegate GetColor { get; set; }
+        //private delegate Color GetColorDelegate(float u, float v);
+        private Func<float, float, Color> GetColor { get; set; }
+        private Func<Triangle, float[], float, float, Vector3> GetNormalVector { get; set; }
 
         private Color MeshColor { get; set; } = Color.White;
 
@@ -68,7 +72,7 @@ namespace Lab2
 
             LoadControlPoints();
             Mesh = new(ControlPoints!, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
-            GetColor = GetRGBColor;
+            GetColor = GetMeshRGBColor;
             //PaintPictureBox();
         }
 
@@ -399,7 +403,7 @@ namespace Lab2
 
         private void fixedColorRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            GetColor = GetRGBColor;
+            GetColor = GetMeshRGBColor;
             pictureBox.Invalidate();
         }
 
@@ -409,7 +413,7 @@ namespace Lab2
             pictureBox.Invalidate();
         }
 
-        private Color GetRGBColor(float u, float v)
+        private Color GetMeshRGBColor(float u, float v)
         {
             return MeshColor;
         }
@@ -426,10 +430,66 @@ namespace Lab2
 
         private void textureButton_Click(object sender, EventArgs e)
         {
-            if(textureOpenFileDialog.ShowDialog() == DialogResult.OK)
+            //if (openFileDialog.ShowDialog() == DialogResult.OK)
+            //{
+            //    //TexturePath = textureOpenFileDialog.FileName;
+            //    TextureBitmap = new(openFileDialog.FileName);
+
+            //    pictureBox.Invalidate();
+            //}
+            LoadBitmapFromFile(TextureBitmap);
+        }
+
+        private void normalMapCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (normalMapCheckBox.Checked)
+                GetNormalVector = GetNormalVectorFromNormalMap;
+            else
+                GetNormalVector = GetNormalVectorFromVertices;
+        }
+
+        private Vector3 GetNormalVectorFromNormalMap(Triangle triangle, float[] coords, float u, float v)
+        {
+            Vector3 N = GetNormalVectorFromVertices(triangle, coords, u, v);
+            Color color = NormalMapBitmap.GetPixel((int)(u * (NormalMapBitmap.Width - 1)), (int)(v * (NormalMapBitmap.Height - 1)));
+            Vector3 normalMapN = new Vector3(color.R, color.G, color.B) / 255 * 2 - new Vector3(1, 1, 1);
+            Vector3 Pu = triangle.V1.AfterRotationState.Pu * coords[0] + triangle.V2.AfterRotationState.Pu * coords[1] + triangle.V3.AfterRotationState.Pu * coords[2];
+            Vector3 Pv = triangle.V1.AfterRotationState.Pv * coords[0] + triangle.V2.AfterRotationState.Pv * coords[1] + triangle.V3.AfterRotationState.Pv * coords[2];
+            Matrix4x4 T = new Matrix4x4(
+                Pu.X, Pv.X, N.X, 0,
+                Pu.Y, Pv.Y, N.Y, 0,
+                Pu.Z, Pv.Z, N.Z, 0,
+                0, 0, 0, 1
+            );
+
+            return Vector3.Transform(normalMapN, T);
+
+            //throw new NotImplementedException();
+        }
+
+        private Vector3 GetNormalVectorFromVertices(Triangle triangle, float[] coords, float u, float v)
+        {
+            Vector3 N = triangle.V1.AfterRotationState.N * coords[0] + triangle.V2.AfterRotationState.N * coords[1] + triangle.V3.AfterRotationState.N * coords[2];
+            return Vector3.Normalize(N);
+            //throw new NotImplementedException();
+        }
+
+        private void normalMapButton_Click(object sender, EventArgs e)
+        {
+            //if (openFileDialog.ShowDialog() == DialogResult.OK)
+            //{
+            //    NormalMapBitmap = new(openFileDialog.FileName);
+
+            //    pictureBox.Invalidate();
+            //}
+            LoadBitmapFromFile(NormalMapBitmap);
+        }
+
+        private void LoadBitmapFromFile(Bitmap bitmap)
+        {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                //TexturePath = textureOpenFileDialog.FileName;
-                TextureBitmap = new(textureOpenFileDialog.FileName);
+                bitmap = new(openFileDialog.FileName);
 
                 pictureBox.Invalidate();
             }
