@@ -1,5 +1,6 @@
 using Lab2.Model;
 using Lab2.VertexFileReaders;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.Numerics;
 
@@ -11,10 +12,10 @@ namespace Lab2
         private int ControlPointsSecondDimensionCount { get; set; } = 4;
         private string DefaultControlPointsPath { get; } = "control_points3D.txt";
         private string DefaultTexturePath { get; } = "texture.jpg";
-        private string DefaultNormalMapPath { get; } = "normal_map.jpg";
+        private string DefaultNormalMapPath { get; } = "normal_map.png";
         private Bitmap TextureBitmap { get; set; }
         private Bitmap NormalMapBitmap { get; set; }
-        private Vector3[] NormalMap { get; set; }
+        private Vector3[,] NormalMap { get; set; }
 
         private Vector3[,] ControlPoints { get; set; }
 
@@ -64,6 +65,9 @@ namespace Lab2
 
             Bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
             TextureBitmap = new(DefaultTexturePath);
+
+            //NormalMapBitmap = new(DefaultNormalMapPath);
+            SetNormalMap(new(DefaultNormalMapPath));
             //pictureBox.Image = Bitmap;
 
             G = Graphics.FromImage(Bitmap);
@@ -73,6 +77,7 @@ namespace Lab2
             LoadControlPoints();
             Mesh = new(ControlPoints!, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
             GetColor = GetMeshRGBColor;
+            GetNormalVector = GetNormalVectorFromVertices;
             //PaintPictureBox();
         }
 
@@ -247,7 +252,7 @@ namespace Lab2
                                 float[] coords = getBaricentricCoords(p);
                                 float u = triangle.V1.U * coords[0] + triangle.V2.U * coords[1] + triangle.V3.U * coords[2];
                                 float v = triangle.V1.V * coords[0] + triangle.V2.V * coords[1] + triangle.V3.V * coords[2];
-                                byte[] color = getColor(GetColor(u, v), coords);
+                                byte[] color = getColor(GetColor(u, v), coords, u, v);
 
                                 // Transformacja uk³adu wspó³rzêdnych
                                 int transformedX = x + bitmapData.Width / 2;
@@ -271,16 +276,16 @@ namespace Lab2
                 }
 
 
-                byte[] getColor(Color color, float[] cords)
+                byte[] getColor(Color color, float[] coords, float u, float v)
                 {
                     Vector3 Il = new(LightColor.R, LightColor.G, LightColor.B);
                     Vector3 Io = new(color.R, color.G, color.B);
                     //Vector3 L = new(0, 0, 1);
-                    Vector3 Punkt = triangle.V1.AfterRotationState.P * cords[0] + triangle.V2.AfterRotationState.P * cords[1] + triangle.V3.AfterRotationState.P * cords[2];
+                    Vector3 Punkt = triangle.V1.AfterRotationState.P * coords[0] + triangle.V2.AfterRotationState.P * coords[1] + triangle.V3.AfterRotationState.P * coords[2];
                     Vector3 L = new Vector3(0, 0, 200);
                     L = L - Punkt;
-                    Vector3 N = triangle.V1.AfterRotationState.N * cords[0] + triangle.V2.AfterRotationState.N * cords[1] + triangle.V3.AfterRotationState.N * cords[2];
-                    //Vector3 N = new(0, 0, 1);
+                    //Vector3 N = triangle.V1.AfterRotationState.N * cords[0] + triangle.V2.AfterRotationState.N * cords[1] + triangle.V3.AfterRotationState.N * cords[2];
+                    Vector3 N = GetNormalVector(triangle, coords, u, v);
                     Vector3 V = new(0, 0, 1);
                     //N = Vector3.Abs(N);
 
@@ -437,7 +442,12 @@ namespace Lab2
 
             //    pictureBox.Invalidate();
             //}
-            LoadBitmapFromFile(TextureBitmap);
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                TextureBitmap = new(openFileDialog.FileName);
+
+                pictureBox.Invalidate();
+            }
         }
 
         private void normalMapCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -446,13 +456,19 @@ namespace Lab2
                 GetNormalVector = GetNormalVectorFromNormalMap;
             else
                 GetNormalVector = GetNormalVectorFromVertices;
+
+            pictureBox.Invalidate();
         }
 
         private Vector3 GetNormalVectorFromNormalMap(Triangle triangle, float[] coords, float u, float v)
         {
             Vector3 N = GetNormalVectorFromVertices(triangle, coords, u, v);
-            Color color = NormalMapBitmap.GetPixel((int)(u * (NormalMapBitmap.Width - 1)), (int)(v * (NormalMapBitmap.Height - 1)));
-            Vector3 normalMapN = new Vector3(color.R, color.G, color.B) / 255 * 2 - new Vector3(1, 1, 1);
+
+            u = Math.Clamp(u, 0, 1);
+            v = Math.Clamp(v, 0, 1);
+            //Color color = NormalMapBitmap.GetPixel((int)(u * (NormalMapBitmap.Width - 1)), (int)(v * (NormalMapBitmap.Height - 1)));
+            //Vector3 normalMapN = new Vector3(color.R, color.G, color.B) / 255 * 2 - new Vector3(1, 1, 1);
+            Vector3 normalMapN = NormalMap[(int)(u * (NormalMap.GetLength(0) - 1)), (int)(v * (NormalMap.GetLength(1) - 1))];
             Vector3 Pu = triangle.V1.AfterRotationState.Pu * coords[0] + triangle.V2.AfterRotationState.Pu * coords[1] + triangle.V3.AfterRotationState.Pu * coords[2];
             Vector3 Pv = triangle.V1.AfterRotationState.Pv * coords[0] + triangle.V2.AfterRotationState.Pv * coords[1] + triangle.V3.AfterRotationState.Pv * coords[2];
             Matrix4x4 T = new Matrix4x4(
@@ -482,10 +498,30 @@ namespace Lab2
 
             //    pictureBox.Invalidate();
             //}
-            LoadBitmapFromFile(NormalMapBitmap);
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                //NormalMapBitmap = new(openFileDialog.FileName);
+                Bitmap bitmap = new(openFileDialog.FileName);
+                SetNormalMap(bitmap);
+
+                pictureBox.Invalidate();
+            }
         }
 
-        private void LoadBitmapFromFile(Bitmap bitmap)
+        private void SetNormalMap(Bitmap bitmap)
+        {
+            NormalMap = new Vector3[bitmap.Width, bitmap.Height];
+            for (int i = 0; i < bitmap.Width; i++)
+            {
+                for (int j = 0; j < bitmap.Height; j++)
+                {
+                    Color color = bitmap.GetPixel(i, j);
+                    NormalMap[i, j] = new Vector3(color.R, color.G, color.B) / 255 * 2 - new Vector3(1, 1, 1);
+                }
+            }
+        }
+
+        private void LoadBitmapFromFile(ref Bitmap bitmap)
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
