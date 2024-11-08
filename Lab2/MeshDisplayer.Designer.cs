@@ -277,7 +277,6 @@
             kdTrackBar.Name = "kdTrackBar";
             kdTrackBar.Size = new Size(181, 45);
             kdTrackBar.TabIndex = 0;
-            kdTrackBar.TickFrequency = 10;
             kdTrackBar.Value = 10;
             kdTrackBar.Scroll += kdTrackBar_Scroll;
             // 
@@ -318,7 +317,6 @@
             ksTrackBar.Name = "ksTrackBar";
             ksTrackBar.Size = new Size(181, 45);
             ksTrackBar.TabIndex = 0;
-            ksTrackBar.TickFrequency = 10;
             ksTrackBar.Scroll += ksTrackBar_Scroll;
             // 
             // panel3
