@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MeshDisplayer));
             pictureBox = new PictureBox();
             fidelityPanel = new Panel();
             fideltyValueLabel = new Label();
@@ -41,7 +42,7 @@
             betaAngleValueLabel = new Label();
             betaAngleLabel = new Label();
             betaAngleTrackBar = new TrackBar();
-            lightColorDialog = new ColorDialog();
+            colorDialog = new ColorDialog();
             lightColorButton = new Button();
             kdPanel = new Panel();
             kdValueLabel = new Label();
@@ -67,8 +68,6 @@
             meshColorButton = new Button();
             meshGroupBox = new GroupBox();
             textureButton = new Button();
-            colorDialog1 = new ColorDialog();
-            meshColorDialog = new ColorDialog();
             lightAndColorsGroupBox = new GroupBox();
             resetLightPositionButton = new Button();
             moveLightCheckBox = new CheckBox();
@@ -633,6 +632,7 @@
             Controls.Add(lightAndColorsGroupBox);
             Controls.Add(meshGroupBox);
             Controls.Add(pictureBox);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(1188, 846);
             Name = "MeshDisplayer";
             StartPosition = FormStartPosition.CenterScreen;
@@ -688,7 +688,7 @@
         private Label betaAngleValueLabel;
         private Label betaAngleLabel;
         private TrackBar betaAngleTrackBar;
-        private ColorDialog lightColorDialog;
+        private ColorDialog colorDialog;
         private Button lightColorButton;
         private Panel kdPanel;
         private Label kdValueLabel;
@@ -713,8 +713,6 @@
         private Button meshColorButton;
         private GroupBox meshGroupBox;
         private Button textureButton;
-        private ColorDialog colorDialog1;
-        private ColorDialog meshColorDialog;
         private GroupBox lightAndColorsGroupBox;
         private GroupBox surfaceGroupBox;
         private CheckBox drawFillingCheckBox;

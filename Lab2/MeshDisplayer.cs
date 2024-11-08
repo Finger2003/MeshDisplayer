@@ -409,10 +409,10 @@ namespace Lab2
 
         private void lightColorButton_Click(object sender, EventArgs e)
         {
-            lightColorDialog.Color = LightColor;
-            if (lightColorDialog.ShowDialog() == DialogResult.OK)
+            colorDialog.Color = LightColor;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
             {
-                LightColor = lightColorDialog.Color;
+                LightColor = colorDialog.Color;
                 lightColorPictureBox.BackColor = LightColor;
 
                 pictureBox.Invalidate();
@@ -421,10 +421,10 @@ namespace Lab2
 
         private void meshColorButton_Click(object sender, EventArgs e)
         {
-            meshColorDialog.Color = MeshColor;
-            if (meshColorDialog.ShowDialog() == DialogResult.OK)
+            colorDialog.Color = MeshColor;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
             {
-                MeshColor = meshColorDialog.Color;
+                MeshColor = colorDialog.Color;
                 meshColorPictureBox.BackColor = MeshColor;
 
                 pictureBox.Invalidate();
