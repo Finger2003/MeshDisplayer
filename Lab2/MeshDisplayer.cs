@@ -76,6 +76,8 @@ namespace Lab2
 
             //NormalMapBitmap = new(DefaultNormalMapPath);
             SetNormalMap(new(DefaultNormalMapPath));
+            //colourPictureBox.DataBindings.Add("BackColor", this, "MeshColor");
+            meshColorPictureBox.BackColor = MeshColor;
             //pictureBox.Image = Bitmap;
 
             G = Graphics.FromImage(Bitmap);
@@ -398,6 +400,7 @@ namespace Lab2
             if (lightColorDialog.ShowDialog() == DialogResult.OK)
             {
                 LightColor = lightColorDialog.Color;
+                lightColorPictureBox.BackColor = LightColor;
 
                 pictureBox.Invalidate();
             }
@@ -409,6 +412,7 @@ namespace Lab2
             if (meshColorDialog.ShowDialog() == DialogResult.OK)
             {
                 MeshColor = meshColorDialog.Color;
+                meshColorPictureBox.BackColor = MeshColor;
 
                 pictureBox.Invalidate();
             }
@@ -464,7 +468,9 @@ namespace Lab2
             //}
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                TextureBitmap = new(openFileDialog.FileName);
+                string fileName = openFileDialog.FileName;
+                TextureBitmap = new(fileName);
+                texturePictureBox.Image = Image.FromFile(fileName);
 
                 pictureBox.Invalidate();
             }
@@ -522,8 +528,10 @@ namespace Lab2
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 //NormalMapBitmap = new(openFileDialog.FileName);
-                Bitmap bitmap = new(openFileDialog.FileName);
+                string fileName = openFileDialog.FileName;
+                Bitmap bitmap = new(fileName);
                 SetNormalMap(bitmap);
+                normalMapPictureBox.Image = Image.FromFile(fileName);
 
                 pictureBox.Invalidate();
             }

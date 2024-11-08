@@ -47,6 +47,7 @@
             kdValueLabel = new Label();
             kdLabel = new Label();
             kdTrackBar = new TrackBar();
+            lightColorPictureBox = new PictureBox();
             ksPanel = new Panel();
             ksValueLabel = new Label();
             ksLabel = new Label();
@@ -72,10 +73,13 @@
             resetLightPositionButton = new Button();
             moveLightCheckBox = new CheckBox();
             surfaceGroupBox = new GroupBox();
-            normalMapButton = new Button();
+            texturePictureBox = new PictureBox();
             normalMapCheckBox = new CheckBox();
+            meshColorPictureBox = new PictureBox();
             drawFillingCheckBox = new CheckBox();
+            normalMapPictureBox = new PictureBox();
             drawEdgesCheckBox = new CheckBox();
+            normalMapButton = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             fidelityPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)fidelityTrackBar).BeginInit();
@@ -85,6 +89,7 @@
             ((System.ComponentModel.ISupportInitialize)betaAngleTrackBar).BeginInit();
             kdPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)kdTrackBar).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)lightColorPictureBox).BeginInit();
             ksPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ksTrackBar).BeginInit();
             mPanel.SuspendLayout();
@@ -95,6 +100,9 @@
             meshGroupBox.SuspendLayout();
             lightAndColorsGroupBox.SuspendLayout();
             surfaceGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)texturePictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)meshColorPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)normalMapPictureBox).BeginInit();
             SuspendLayout();
             // 
             // pictureBox
@@ -103,7 +111,7 @@
             pictureBox.BackColor = SystemColors.Control;
             pictureBox.Location = new Point(12, 132);
             pictureBox.Name = "pictureBox";
-            pictureBox.Size = new Size(824, 494);
+            pictureBox.Size = new Size(943, 663);
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = false;
             pictureBox.SizeChanged += pictureBox_SizeChanged;
@@ -157,7 +165,7 @@
             alphaAnglePanel.Controls.Add(alphaAngleValueLabel);
             alphaAnglePanel.Controls.Add(alphaAngleLabel);
             alphaAnglePanel.Controls.Add(alphaAngleTrackBar);
-            alphaAnglePanel.Location = new Point(196, 26);
+            alphaAnglePanel.Location = new Point(6, 120);
             alphaAnglePanel.Name = "alphaAnglePanel";
             alphaAnglePanel.Size = new Size(187, 82);
             alphaAnglePanel.TabIndex = 3;
@@ -196,7 +204,7 @@
             betaAnglePanel.Controls.Add(betaAngleValueLabel);
             betaAnglePanel.Controls.Add(betaAngleLabel);
             betaAnglePanel.Controls.Add(betaAngleTrackBar);
-            betaAnglePanel.Location = new Point(389, 26);
+            betaAnglePanel.Location = new Point(6, 208);
             betaAnglePanel.Name = "betaAnglePanel";
             betaAnglePanel.Size = new Size(187, 82);
             betaAnglePanel.TabIndex = 4;
@@ -232,9 +240,9 @@
             // lightColorButton
             // 
             lightColorButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            lightColorButton.Location = new Point(6, 22);
+            lightColorButton.Location = new Point(7, 22);
             lightColorButton.Name = "lightColorButton";
-            lightColorButton.Size = new Size(187, 23);
+            lightColorButton.Size = new Size(139, 23);
             lightColorButton.TabIndex = 5;
             lightColorButton.Text = "Zmień kolor światła";
             lightColorButton.UseVisualStyleBackColor = true;
@@ -246,7 +254,7 @@
             kdPanel.Controls.Add(kdValueLabel);
             kdPanel.Controls.Add(kdLabel);
             kdPanel.Controls.Add(kdTrackBar);
-            kdPanel.Location = new Point(6, 60);
+            kdPanel.Location = new Point(7, 60);
             kdPanel.Name = "kdPanel";
             kdPanel.Size = new Size(187, 82);
             kdPanel.TabIndex = 3;
@@ -280,13 +288,23 @@
             kdTrackBar.Value = 10;
             kdTrackBar.Scroll += kdTrackBar_Scroll;
             // 
+            // lightColorPictureBox
+            // 
+            lightColorPictureBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lightColorPictureBox.Location = new Point(152, 22);
+            lightColorPictureBox.Name = "lightColorPictureBox";
+            lightColorPictureBox.Size = new Size(42, 23);
+            lightColorPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            lightColorPictureBox.TabIndex = 20;
+            lightColorPictureBox.TabStop = false;
+            // 
             // ksPanel
             // 
             ksPanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             ksPanel.Controls.Add(ksValueLabel);
             ksPanel.Controls.Add(ksLabel);
             ksPanel.Controls.Add(ksTrackBar);
-            ksPanel.Location = new Point(6, 148);
+            ksPanel.Location = new Point(7, 148);
             ksPanel.Name = "ksPanel";
             ksPanel.Size = new Size(187, 82);
             ksPanel.TabIndex = 6;
@@ -325,7 +343,7 @@
             mPanel.Controls.Add(mValueLabel);
             mPanel.Controls.Add(mLabel);
             mPanel.Controls.Add(mTrackBar);
-            mPanel.Location = new Point(6, 236);
+            mPanel.Location = new Point(7, 236);
             mPanel.Name = "mPanel";
             mPanel.Size = new Size(187, 82);
             mPanel.TabIndex = 7;
@@ -365,7 +383,7 @@
             LightZCoordPanel.Controls.Add(lightZCoordValueLabel);
             LightZCoordPanel.Controls.Add(lightZCoordLabel);
             LightZCoordPanel.Controls.Add(lightZCoordTrackBar);
-            LightZCoordPanel.Location = new Point(6, 324);
+            LightZCoordPanel.Location = new Point(7, 324);
             LightZCoordPanel.Name = "LightZCoordPanel";
             LightZCoordPanel.Size = new Size(187, 82);
             LightZCoordPanel.TabIndex = 8;
@@ -400,13 +418,15 @@
             lightZCoordTrackBar.SmallChange = 5;
             lightZCoordTrackBar.TabIndex = 0;
             lightZCoordTrackBar.TickFrequency = 5;
+            lightZCoordTrackBar.Value = 200;
             lightZCoordTrackBar.Scroll += lightZAxisTrackBar_Scroll;
             // 
             // objectColorPanel
             // 
+            objectColorPanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             objectColorPanel.Controls.Add(textureRadioButton);
             objectColorPanel.Controls.Add(fixedColorRadioButton);
-            objectColorPanel.Location = new Point(6, 28);
+            objectColorPanel.Location = new Point(749, 19);
             objectColorPanel.Name = "objectColorPanel";
             objectColorPanel.Size = new Size(187, 26);
             objectColorPanel.TabIndex = 9;
@@ -437,9 +457,9 @@
             // 
             // meshColorButton
             // 
-            meshColorButton.Location = new Point(6, 66);
+            meshColorButton.Location = new Point(226, 19);
             meshColorButton.Name = "meshColorButton";
-            meshColorButton.Size = new Size(89, 42);
+            meshColorButton.Size = new Size(89, 89);
             meshColorButton.TabIndex = 10;
             meshColorButton.Text = "Zmień kolor siatki";
             meshColorButton.UseVisualStyleBackColor = true;
@@ -447,21 +467,22 @@
             // 
             // meshGroupBox
             // 
+            meshGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             meshGroupBox.Controls.Add(fidelityPanel);
             meshGroupBox.Controls.Add(alphaAnglePanel);
             meshGroupBox.Controls.Add(betaAnglePanel);
-            meshGroupBox.Location = new Point(12, 12);
+            meshGroupBox.Location = new Point(960, 12);
             meshGroupBox.Name = "meshGroupBox";
-            meshGroupBox.Size = new Size(584, 114);
+            meshGroupBox.Size = new Size(200, 299);
             meshGroupBox.TabIndex = 11;
             meshGroupBox.TabStop = false;
             meshGroupBox.Text = "Siatka";
             // 
             // textureButton
             // 
-            textureButton.Location = new Point(104, 66);
+            textureButton.Location = new Point(448, 19);
             textureButton.Name = "textureButton";
-            textureButton.Size = new Size(89, 42);
+            textureButton.Size = new Size(89, 89);
             textureButton.TabIndex = 12;
             textureButton.Text = "Zmień teskturę";
             textureButton.UseVisualStyleBackColor = true;
@@ -470,6 +491,7 @@
             // lightAndColorsGroupBox
             // 
             lightAndColorsGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            lightAndColorsGroupBox.Controls.Add(lightColorPictureBox);
             lightAndColorsGroupBox.Controls.Add(resetLightPositionButton);
             lightAndColorsGroupBox.Controls.Add(moveLightCheckBox);
             lightAndColorsGroupBox.Controls.Add(lightColorButton);
@@ -477,9 +499,9 @@
             lightAndColorsGroupBox.Controls.Add(ksPanel);
             lightAndColorsGroupBox.Controls.Add(mPanel);
             lightAndColorsGroupBox.Controls.Add(LightZCoordPanel);
-            lightAndColorsGroupBox.Location = new Point(842, 132);
+            lightAndColorsGroupBox.Location = new Point(960, 317);
             lightAndColorsGroupBox.Name = "lightAndColorsGroupBox";
-            lightAndColorsGroupBox.Size = new Size(199, 494);
+            lightAndColorsGroupBox.Size = new Size(200, 478);
             lightAndColorsGroupBox.TabIndex = 13;
             lightAndColorsGroupBox.TabStop = false;
             lightAndColorsGroupBox.Text = "Oświetlenie i kolory";
@@ -488,7 +510,7 @@
             // 
             resetLightPositionButton.Location = new Point(6, 447);
             resetLightPositionButton.Name = "resetLightPositionButton";
-            resetLightPositionButton.Size = new Size(187, 23);
+            resetLightPositionButton.Size = new Size(188, 23);
             resetLightPositionButton.TabIndex = 18;
             resetLightPositionButton.Text = "Zresetuj pozycję światła";
             resetLightPositionButton.UseVisualStyleBackColor = true;
@@ -497,7 +519,7 @@
             // moveLightCheckBox
             // 
             moveLightCheckBox.AutoSize = true;
-            moveLightCheckBox.Location = new Point(9, 412);
+            moveLightCheckBox.Location = new Point(9, 422);
             moveLightCheckBox.Name = "moveLightCheckBox";
             moveLightCheckBox.Size = new Size(120, 19);
             moveLightCheckBox.TabIndex = 17;
@@ -508,34 +530,37 @@
             // surfaceGroupBox
             // 
             surfaceGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            surfaceGroupBox.Controls.Add(normalMapButton);
+            surfaceGroupBox.Controls.Add(texturePictureBox);
             surfaceGroupBox.Controls.Add(normalMapCheckBox);
-            surfaceGroupBox.Controls.Add(drawFillingCheckBox);
-            surfaceGroupBox.Controls.Add(drawEdgesCheckBox);
-            surfaceGroupBox.Controls.Add(objectColorPanel);
             surfaceGroupBox.Controls.Add(textureButton);
+            surfaceGroupBox.Controls.Add(meshColorPictureBox);
+            surfaceGroupBox.Controls.Add(drawFillingCheckBox);
+            surfaceGroupBox.Controls.Add(normalMapPictureBox);
             surfaceGroupBox.Controls.Add(meshColorButton);
-            surfaceGroupBox.Location = new Point(602, 12);
+            surfaceGroupBox.Controls.Add(drawEdgesCheckBox);
+            surfaceGroupBox.Controls.Add(normalMapButton);
+            surfaceGroupBox.Controls.Add(objectColorPanel);
+            surfaceGroupBox.Location = new Point(12, 12);
             surfaceGroupBox.Name = "surfaceGroupBox";
-            surfaceGroupBox.Size = new Size(439, 114);
+            surfaceGroupBox.Size = new Size(942, 114);
             surfaceGroupBox.TabIndex = 14;
             surfaceGroupBox.TabStop = false;
             surfaceGroupBox.Text = "Powierzchnia siatki";
             // 
-            // normalMapButton
+            // texturePictureBox
             // 
-            normalMapButton.Location = new Point(199, 85);
-            normalMapButton.Name = "normalMapButton";
-            normalMapButton.Size = new Size(224, 23);
-            normalMapButton.TabIndex = 16;
-            normalMapButton.Text = "Zmień mapę wektorów normalnych";
-            normalMapButton.UseVisualStyleBackColor = true;
-            normalMapButton.Click += normalMapButton_Click;
+            texturePictureBox.Location = new Point(543, 19);
+            texturePictureBox.Name = "texturePictureBox";
+            texturePictureBox.Size = new Size(121, 89);
+            texturePictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            texturePictureBox.TabIndex = 19;
+            texturePictureBox.TabStop = false;
             // 
             // normalMapCheckBox
             // 
+            normalMapCheckBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             normalMapCheckBox.AutoSize = true;
-            normalMapCheckBox.Location = new Point(199, 66);
+            normalMapCheckBox.Location = new Point(730, 80);
             normalMapCheckBox.Name = "normalMapCheckBox";
             normalMapCheckBox.Size = new Size(203, 19);
             normalMapCheckBox.TabIndex = 15;
@@ -543,12 +568,22 @@
             normalMapCheckBox.UseVisualStyleBackColor = true;
             normalMapCheckBox.CheckedChanged += normalMapCheckBox_CheckedChanged;
             // 
+            // meshColorPictureBox
+            // 
+            meshColorPictureBox.Location = new Point(321, 19);
+            meshColorPictureBox.Name = "meshColorPictureBox";
+            meshColorPictureBox.Size = new Size(121, 89);
+            meshColorPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            meshColorPictureBox.TabIndex = 18;
+            meshColorPictureBox.TabStop = false;
+            // 
             // drawFillingCheckBox
             // 
+            drawFillingCheckBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             drawFillingCheckBox.AutoSize = true;
             drawFillingCheckBox.Checked = true;
             drawFillingCheckBox.CheckState = CheckState.Checked;
-            drawFillingCheckBox.Location = new Point(314, 26);
+            drawFillingCheckBox.Location = new Point(701, 55);
             drawFillingCheckBox.Name = "drawFillingCheckBox";
             drawFillingCheckBox.Size = new Size(120, 19);
             drawFillingCheckBox.TabIndex = 14;
@@ -556,12 +591,22 @@
             drawFillingCheckBox.UseVisualStyleBackColor = true;
             drawFillingCheckBox.CheckedChanged += drawFillingCheckBox_CheckedChanged;
             // 
+            // normalMapPictureBox
+            // 
+            normalMapPictureBox.Location = new Point(99, 19);
+            normalMapPictureBox.Name = "normalMapPictureBox";
+            normalMapPictureBox.Size = new Size(121, 89);
+            normalMapPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            normalMapPictureBox.TabIndex = 17;
+            normalMapPictureBox.TabStop = false;
+            // 
             // drawEdgesCheckBox
             // 
+            drawEdgesCheckBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             drawEdgesCheckBox.AutoSize = true;
             drawEdgesCheckBox.Checked = true;
             drawEdgesCheckBox.CheckState = CheckState.Checked;
-            drawEdgesCheckBox.Location = new Point(199, 26);
+            drawEdgesCheckBox.Location = new Point(827, 55);
             drawEdgesCheckBox.Name = "drawEdgesCheckBox";
             drawEdgesCheckBox.Size = new Size(109, 19);
             drawEdgesCheckBox.TabIndex = 13;
@@ -569,15 +614,26 @@
             drawEdgesCheckBox.UseVisualStyleBackColor = true;
             drawEdgesCheckBox.CheckedChanged += drawEdgesCheckBox_CheckedChanged;
             // 
+            // normalMapButton
+            // 
+            normalMapButton.Location = new Point(6, 19);
+            normalMapButton.Name = "normalMapButton";
+            normalMapButton.Size = new Size(87, 89);
+            normalMapButton.TabIndex = 16;
+            normalMapButton.Text = "Zmień mapę wektorów normalnych";
+            normalMapButton.UseVisualStyleBackColor = true;
+            normalMapButton.Click += normalMapButton_Click;
+            // 
             // MeshDisplayer
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1053, 630);
+            ClientSize = new Size(1172, 807);
             Controls.Add(surfaceGroupBox);
             Controls.Add(lightAndColorsGroupBox);
             Controls.Add(meshGroupBox);
             Controls.Add(pictureBox);
+            MinimumSize = new Size(1188, 846);
             Name = "MeshDisplayer";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "MeshDisplayer";
@@ -594,6 +650,7 @@
             kdPanel.ResumeLayout(false);
             kdPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)kdTrackBar).EndInit();
+            ((System.ComponentModel.ISupportInitialize)lightColorPictureBox).EndInit();
             ksPanel.ResumeLayout(false);
             ksPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)ksTrackBar).EndInit();
@@ -610,6 +667,9 @@
             lightAndColorsGroupBox.PerformLayout();
             surfaceGroupBox.ResumeLayout(false);
             surfaceGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)texturePictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)meshColorPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)normalMapPictureBox).EndInit();
             ResumeLayout(false);
         }
 
@@ -663,5 +723,9 @@
         private CheckBox normalMapCheckBox;
         private CheckBox moveLightCheckBox;
         private Button resetLightPositionButton;
+        private PictureBox texturePictureBox;
+        private PictureBox meshColorPictureBox;
+        private PictureBox normalMapPictureBox;
+        private PictureBox lightColorPictureBox;
     }
 }

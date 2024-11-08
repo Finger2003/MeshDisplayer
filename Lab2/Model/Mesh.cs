@@ -158,7 +158,7 @@ namespace Lab2.Model
                     {
                         tab[i, j] = binCoeff * powers[i, j] * oneMinusPowers[i, m - j];
                         binCoeff = binCoeff * (m - j) / (j + 1);
-                    }
+                     }
                 }
             }
         }       
