@@ -72,10 +72,23 @@ namespace Lab2
 
 
             Bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
-            TextureBitmap = new(DefaultTexturePath);
+            //TextureBitmap = new(DefaultTexturePath);
 
+            using (MemoryStream ms = new(Properties.Resources.DefaultTexture))
+            {
+                Image img = Image.FromStream(ms);
+                texturePictureBox.Image = img;
+                TextureBitmap = (Bitmap)img;
+            }
+            using (MemoryStream ms = new(Properties.Resources.DefaultNormalMap))
+            {
+                Image img = Image.FromStream(ms);
+                normalMapPictureBox.Image = img;
+                NormalMapBitmap = (Bitmap)img;
+            }
+            //TextureBitmap = (Bitmap)Bitmap.FromStream(new MemoryStream(Properties.Resources.DefaultTexture));
             //NormalMapBitmap = new(DefaultNormalMapPath);
-            SetNormalMap(new(DefaultNormalMapPath));
+            SetNormalMap(NormalMapBitmap);
             //colourPictureBox.DataBindings.Add("BackColor", this, "MeshColor");
             meshColorPictureBox.BackColor = MeshColor;
             //pictureBox.Image = Bitmap;

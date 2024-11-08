@@ -59,5 +59,50 @@ namespace Lab2.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu -280,0 -200,0 0,0
+        ///-93,33 -200,0 0,0
+        ///93,33 -200,0 0,0
+        ///280,0 -200,0 0,0
+        ///-280,0 -66,67 0,0
+        ///-93,33 -66,67 0,0
+        ///93,33 -66,67 0,0
+        ///280,0 -66,67 0,0
+        ///-280,0 66,67 0,0
+        ///-93,33 66,67 0,0
+        ///93,33 66,67 0,0
+        ///280,0 66,67 0,0
+        ///-280,0 200,0 0,0
+        ///-93,33 200,0 0,0
+        ///93,33 200,0 0,0
+        ///280,0 200,0 0,0
+        ///.
+        /// </summary>
+        internal static string DefaultControlPoints {
+            get {
+                return ResourceManager.GetString("DefaultControlPoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Byte[].
+        /// </summary>
+        internal static byte[] DefaultNormalMap {
+            get {
+                object obj = ResourceManager.GetObject("DefaultNormalMap", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Byte[].
+        /// </summary>
+        internal static byte[] DefaultTexture {
+            get {
+                object obj = ResourceManager.GetObject("DefaultTexture", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }
