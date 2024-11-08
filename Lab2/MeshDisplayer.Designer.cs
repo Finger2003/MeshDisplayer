@@ -69,6 +69,7 @@
             colorDialog1 = new ColorDialog();
             meshColorDialog = new ColorDialog();
             lightAndColorsGroupBox = new GroupBox();
+            resetLightPositionButton = new Button();
             moveLightCheckBox = new CheckBox();
             surfaceGroupBox = new GroupBox();
             normalMapButton = new Button();
@@ -392,10 +393,10 @@
             // lightZCoordTrackBar
             // 
             lightZCoordTrackBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            lightZCoordTrackBar.LargeChange = 10;
+            lightZCoordTrackBar.LargeChange = 50;
             lightZCoordTrackBar.Location = new Point(3, 34);
-            lightZCoordTrackBar.Maximum = 100;
-            lightZCoordTrackBar.Minimum = -100;
+            lightZCoordTrackBar.Maximum = 500;
+            lightZCoordTrackBar.Minimum = -500;
             lightZCoordTrackBar.Name = "lightZCoordTrackBar";
             lightZCoordTrackBar.Size = new Size(181, 45);
             lightZCoordTrackBar.SmallChange = 5;
@@ -471,6 +472,7 @@
             // lightAndColorsGroupBox
             // 
             lightAndColorsGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            lightAndColorsGroupBox.Controls.Add(resetLightPositionButton);
             lightAndColorsGroupBox.Controls.Add(moveLightCheckBox);
             lightAndColorsGroupBox.Controls.Add(lightColorButton);
             lightAndColorsGroupBox.Controls.Add(panel1);
@@ -483,6 +485,16 @@
             lightAndColorsGroupBox.TabIndex = 13;
             lightAndColorsGroupBox.TabStop = false;
             lightAndColorsGroupBox.Text = "Oświetlenie i kolory";
+            // 
+            // resetLightPositionButton
+            // 
+            resetLightPositionButton.Location = new Point(6, 447);
+            resetLightPositionButton.Name = "resetLightPositionButton";
+            resetLightPositionButton.Size = new Size(187, 23);
+            resetLightPositionButton.TabIndex = 18;
+            resetLightPositionButton.Text = "Zresetuj pozycję światła";
+            resetLightPositionButton.UseVisualStyleBackColor = true;
+            resetLightPositionButton.Click += resetLightPositionButton_Click;
             // 
             // moveLightCheckBox
             // 
@@ -652,5 +664,6 @@
         private Button normalMapButton;
         private CheckBox normalMapCheckBox;
         private CheckBox moveLightCheckBox;
+        private Button resetLightPositionButton;
     }
 }

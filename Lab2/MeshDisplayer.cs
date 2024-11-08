@@ -147,7 +147,7 @@ namespace Lab2
                 LightPositionMutex.ReleaseMutex();
 
                 foreach (Triangle triangle in Mesh.Triangles)
-                    fillTriangle(triangle, bitmapData);                
+                    fillTriangle(triangle, bitmapData);
 
                 Bitmap.UnlockBits(bitmapData);
             }
@@ -584,10 +584,20 @@ namespace Lab2
 
         private void moveLightCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if(moveLightCheckBox.Checked)
+            if (moveLightCheckBox.Checked)
                 Timer.Start();
             else
                 Timer.Stop();
+        }
+
+        private void resetLightPositionButton_Click(object sender, EventArgs e)
+        {
+            LightPositionMutex.WaitOne();
+            LightPosition = new(0, 0, LightPosition.Z);
+            LightZAxisRadius = 0;
+            LightZAxisAngle = 0;
+            LightPositionMutex.ReleaseMutex();
+            pictureBox.Invalidate();
         }
     }
 }
