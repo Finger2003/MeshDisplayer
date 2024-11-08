@@ -56,9 +56,9 @@
             mLabel = new Label();
             mTrackBar = new TrackBar();
             panel4 = new Panel();
-            lightZAxisValueLabel = new Label();
-            lightZAxisLabel = new Label();
-            lightZAxisTrackBar = new TrackBar();
+            lightZCoordValueLabel = new Label();
+            lightZCoordLabel = new Label();
+            lightZCoordTrackBar = new TrackBar();
             objectColorPanel = new Panel();
             textureRadioButton = new RadioButton();
             fixedColorRadioButton = new RadioButton();
@@ -69,11 +69,12 @@
             colorDialog1 = new ColorDialog();
             meshColorDialog = new ColorDialog();
             lightAndColorsGroupBox = new GroupBox();
+            moveLightCheckBox = new CheckBox();
             surfaceGroupBox = new GroupBox();
+            normalMapButton = new Button();
+            normalMapCheckBox = new CheckBox();
             drawFillingCheckBox = new CheckBox();
             drawEdgesCheckBox = new CheckBox();
-            normalMapCheckBox = new CheckBox();
-            normalMapButton = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             fidelityPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)fidelityTrackBar).BeginInit();
@@ -88,7 +89,7 @@
             panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)mTrackBar).BeginInit();
             panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)lightZAxisTrackBar).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)lightZCoordTrackBar).BeginInit();
             objectColorPanel.SuspendLayout();
             meshGroupBox.SuspendLayout();
             lightAndColorsGroupBox.SuspendLayout();
@@ -362,45 +363,45 @@
             // panel4
             // 
             panel4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            panel4.Controls.Add(lightZAxisValueLabel);
-            panel4.Controls.Add(lightZAxisLabel);
-            panel4.Controls.Add(lightZAxisTrackBar);
+            panel4.Controls.Add(lightZCoordValueLabel);
+            panel4.Controls.Add(lightZCoordLabel);
+            panel4.Controls.Add(lightZCoordTrackBar);
             panel4.Location = new Point(6, 324);
             panel4.Name = "panel4";
             panel4.Size = new Size(187, 82);
             panel4.TabIndex = 8;
             // 
-            // lightZAxisValueLabel
+            // lightZCoordValueLabel
             // 
-            lightZAxisValueLabel.Location = new Point(146, 11);
-            lightZAxisValueLabel.Name = "lightZAxisValueLabel";
-            lightZAxisValueLabel.Size = new Size(38, 15);
-            lightZAxisValueLabel.TabIndex = 2;
-            lightZAxisValueLabel.Text = "000";
-            lightZAxisValueLabel.TextAlign = ContentAlignment.MiddleRight;
+            lightZCoordValueLabel.Location = new Point(146, 11);
+            lightZCoordValueLabel.Name = "lightZCoordValueLabel";
+            lightZCoordValueLabel.Size = new Size(38, 15);
+            lightZCoordValueLabel.TabIndex = 2;
+            lightZCoordValueLabel.Text = "000";
+            lightZCoordValueLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // lightZAxisLabel
+            // lightZCoordLabel
             // 
-            lightZAxisLabel.AutoSize = true;
-            lightZAxisLabel.Location = new Point(3, 11);
-            lightZAxisLabel.Name = "lightZAxisLabel";
-            lightZAxisLabel.Size = new Size(134, 15);
-            lightZAxisLabel.TabIndex = 1;
-            lightZAxisLabel.Text = "Oś obrotu źródła światła";
+            lightZCoordLabel.AutoSize = true;
+            lightZCoordLabel.Location = new Point(3, 11);
+            lightZCoordLabel.Name = "lightZCoordLabel";
+            lightZCoordLabel.Size = new Size(99, 15);
+            lightZCoordLabel.TabIndex = 1;
+            lightZCoordLabel.Text = "Wysokość światła";
             // 
-            // lightZAxisTrackBar
+            // lightZCoordTrackBar
             // 
-            lightZAxisTrackBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            lightZAxisTrackBar.LargeChange = 10;
-            lightZAxisTrackBar.Location = new Point(3, 34);
-            lightZAxisTrackBar.Maximum = 100;
-            lightZAxisTrackBar.Minimum = -100;
-            lightZAxisTrackBar.Name = "lightZAxisTrackBar";
-            lightZAxisTrackBar.Size = new Size(181, 45);
-            lightZAxisTrackBar.SmallChange = 5;
-            lightZAxisTrackBar.TabIndex = 0;
-            lightZAxisTrackBar.TickFrequency = 5;
-            lightZAxisTrackBar.Scroll += lightZAxisTrackBar_Scroll;
+            lightZCoordTrackBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lightZCoordTrackBar.LargeChange = 10;
+            lightZCoordTrackBar.Location = new Point(3, 34);
+            lightZCoordTrackBar.Maximum = 100;
+            lightZCoordTrackBar.Minimum = -100;
+            lightZCoordTrackBar.Name = "lightZCoordTrackBar";
+            lightZCoordTrackBar.Size = new Size(181, 45);
+            lightZCoordTrackBar.SmallChange = 5;
+            lightZCoordTrackBar.TabIndex = 0;
+            lightZCoordTrackBar.TickFrequency = 5;
+            lightZCoordTrackBar.Scroll += lightZAxisTrackBar_Scroll;
             // 
             // objectColorPanel
             // 
@@ -470,6 +471,7 @@
             // lightAndColorsGroupBox
             // 
             lightAndColorsGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            lightAndColorsGroupBox.Controls.Add(moveLightCheckBox);
             lightAndColorsGroupBox.Controls.Add(lightColorButton);
             lightAndColorsGroupBox.Controls.Add(panel1);
             lightAndColorsGroupBox.Controls.Add(panel2);
@@ -481,6 +483,17 @@
             lightAndColorsGroupBox.TabIndex = 13;
             lightAndColorsGroupBox.TabStop = false;
             lightAndColorsGroupBox.Text = "Oświetlenie i kolory";
+            // 
+            // moveLightCheckBox
+            // 
+            moveLightCheckBox.AutoSize = true;
+            moveLightCheckBox.Location = new Point(9, 412);
+            moveLightCheckBox.Name = "moveLightCheckBox";
+            moveLightCheckBox.Size = new Size(120, 19);
+            moveLightCheckBox.TabIndex = 17;
+            moveLightCheckBox.Text = "Poruszaj światłem";
+            moveLightCheckBox.UseVisualStyleBackColor = true;
+            moveLightCheckBox.CheckedChanged += moveLightCheckBox_CheckedChanged;
             // 
             // surfaceGroupBox
             // 
@@ -498,6 +511,27 @@
             surfaceGroupBox.TabIndex = 14;
             surfaceGroupBox.TabStop = false;
             surfaceGroupBox.Text = "Powierzchnia siatki";
+            // 
+            // normalMapButton
+            // 
+            normalMapButton.Location = new Point(199, 85);
+            normalMapButton.Name = "normalMapButton";
+            normalMapButton.Size = new Size(224, 23);
+            normalMapButton.TabIndex = 16;
+            normalMapButton.Text = "Zmień mapę wektorów normalnych";
+            normalMapButton.UseVisualStyleBackColor = true;
+            normalMapButton.Click += normalMapButton_Click;
+            // 
+            // normalMapCheckBox
+            // 
+            normalMapCheckBox.AutoSize = true;
+            normalMapCheckBox.Location = new Point(199, 66);
+            normalMapCheckBox.Name = "normalMapCheckBox";
+            normalMapCheckBox.Size = new Size(203, 19);
+            normalMapCheckBox.TabIndex = 15;
+            normalMapCheckBox.Text = "Użyj mapy wektorów normalnych";
+            normalMapCheckBox.UseVisualStyleBackColor = true;
+            normalMapCheckBox.CheckedChanged += normalMapCheckBox_CheckedChanged;
             // 
             // drawFillingCheckBox
             // 
@@ -524,27 +558,6 @@
             drawEdgesCheckBox.Text = "Rysuj krawędzie";
             drawEdgesCheckBox.UseVisualStyleBackColor = true;
             drawEdgesCheckBox.CheckedChanged += drawEdgesCheckBox_CheckedChanged;
-            // 
-            // normalMapCheckBox
-            // 
-            normalMapCheckBox.AutoSize = true;
-            normalMapCheckBox.Location = new Point(199, 66);
-            normalMapCheckBox.Name = "normalMapCheckBox";
-            normalMapCheckBox.Size = new Size(203, 19);
-            normalMapCheckBox.TabIndex = 15;
-            normalMapCheckBox.Text = "Użyj mapy wektorów normalnych";
-            normalMapCheckBox.UseVisualStyleBackColor = true;
-            normalMapCheckBox.CheckedChanged += normalMapCheckBox_CheckedChanged;
-            // 
-            // normalMapButton
-            // 
-            normalMapButton.Location = new Point(199, 85);
-            normalMapButton.Name = "normalMapButton";
-            normalMapButton.Size = new Size(224, 23);
-            normalMapButton.TabIndex = 16;
-            normalMapButton.Text = "Zmień mapę wektorów normalnych";
-            normalMapButton.UseVisualStyleBackColor = true;
-            normalMapButton.Click += normalMapButton_Click;
             // 
             // MeshDisplayer
             // 
@@ -579,11 +592,12 @@
             ((System.ComponentModel.ISupportInitialize)mTrackBar).EndInit();
             panel4.ResumeLayout(false);
             panel4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)lightZAxisTrackBar).EndInit();
+            ((System.ComponentModel.ISupportInitialize)lightZCoordTrackBar).EndInit();
             objectColorPanel.ResumeLayout(false);
             objectColorPanel.PerformLayout();
             meshGroupBox.ResumeLayout(false);
             lightAndColorsGroupBox.ResumeLayout(false);
+            lightAndColorsGroupBox.PerformLayout();
             surfaceGroupBox.ResumeLayout(false);
             surfaceGroupBox.PerformLayout();
             ResumeLayout(false);
@@ -619,9 +633,9 @@
         private Label mLabel;
         private TrackBar mTrackBar;
         private Panel panel4;
-        private Label lightZAxisValueLabel;
-        private Label lightZAxisLabel;
-        private TrackBar lightZAxisTrackBar;
+        private Label lightZCoordValueLabel;
+        private Label lightZCoordLabel;
+        private TrackBar lightZCoordTrackBar;
         private Panel objectColorPanel;
         private RadioButton textureRadioButton;
         private RadioButton fixedColorRadioButton;
@@ -637,5 +651,6 @@
         private CheckBox drawEdgesCheckBox;
         private Button normalMapButton;
         private CheckBox normalMapCheckBox;
+        private CheckBox moveLightCheckBox;
     }
 }

@@ -3,6 +3,7 @@ using Lab2.VertexFileReaders;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Numerics;
+using System.Timers;
 
 namespace Lab2
 {
@@ -24,10 +25,17 @@ namespace Lab2
         private Graphics G { get; set; }
 
         private Color LightColor { get; set; } = Color.White;
+        private Vector3 LightPosition { get; set; }
+        private Vector3 LightPositionForDrawing { get; set; }
+        private float LightZAxisRadius { get; set; } = 0;
+        private float LightZAxisAngle { get; set; } = 0;
+        private System.Timers.Timer Timer { get; } = new(1000 / 30) { AutoReset = true };
+        private Mutex LightPositionMutex { get; } = new();
+
         private float Kd { get; set; }
         private float Ks { get; set; }
         private float M { get; set; }
-        private float LightZAxis { get; set; }
+        //private float LightZCoord { get; set; }
 
         private bool DrawEdges { get; set; } = true;
         private bool DrawFilling { get; set; } = true;
@@ -55,12 +63,12 @@ namespace Lab2
             ksValueLabel.DataBindings.Add(bind);
 
             mValueLabel.DataBindings.Add("Text", mTrackBar, "Value");
-            lightZAxisValueLabel.DataBindings.Add("Text", lightZAxisTrackBar, "Value");
+            lightZCoordValueLabel.DataBindings.Add("Text", lightZCoordTrackBar, "Value");
 
             Kd = scaleTrackBarValueToOne(kdTrackBar);
             Ks = scaleTrackBarValueToOne(ksTrackBar);
             M = mTrackBar.Value;
-            LightZAxis = lightZAxisTrackBar.Value;
+            //LightZCoord = lightZCoordTrackBar.Value;
 
 
             Bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
@@ -78,6 +86,9 @@ namespace Lab2
             Mesh = new(ControlPoints!, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
             GetColor = GetMeshRGBColor;
             GetNormalVector = GetNormalVectorFromVertices;
+            LightPosition = new Vector3(0, 0, lightZCoordTrackBar.Value);
+
+            Timer.Elapsed += timer_Tick;
             //PaintPictureBox();
         }
 
@@ -130,8 +141,14 @@ namespace Lab2
             if (DrawFilling)
             {
                 BitmapData bitmapData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+
+                LightPositionMutex.WaitOne();
+                LightPositionForDrawing = LightPosition;
+                LightPositionMutex.ReleaseMutex();
+
                 foreach (Triangle triangle in Mesh.Triangles)
-                    fillTriangle(triangle, bitmapData);
+                    fillTriangle(triangle, bitmapData);                
+
                 Bitmap.UnlockBits(bitmapData);
             }
 
@@ -149,6 +166,8 @@ namespace Lab2
                 }
 
             }
+
+            //G.FillEllipse(Brushes.Black, LightPosition.X - 5, LightPosition.Y - 5, 10, 10);
 
             //foreach (Triangle triangle in Mesh.Triangles)
             //{
@@ -282,8 +301,8 @@ namespace Lab2
                     Vector3 Io = new(color.R, color.G, color.B);
                     //Vector3 L = new(0, 0, 1);
                     Vector3 Punkt = triangle.V1.AfterRotationState.P * coords[0] + triangle.V2.AfterRotationState.P * coords[1] + triangle.V3.AfterRotationState.P * coords[2];
-                    Vector3 L = new Vector3(0, 0, 200);
-                    L = L - Punkt;
+                    Vector3 L = LightPositionForDrawing - Punkt;
+                    //L = L - Punkt;
                     //Vector3 N = triangle.V1.AfterRotationState.N * cords[0] + triangle.V2.AfterRotationState.N * cords[1] + triangle.V3.AfterRotationState.N * cords[2];
                     Vector3 N = GetNormalVector(triangle, coords, u, v);
                     Vector3 V = new(0, 0, 1);
@@ -367,8 +386,9 @@ namespace Lab2
 
         private void lightZAxisTrackBar_Scroll(object sender, EventArgs e)
         {
-            LightZAxis = lightZAxisTrackBar.Value;
+            //LightZCoord = lightZCoordTrackBar.Value;
 
+            LightPosition = new Vector3(LightPosition.X, LightPosition.Y, lightZCoordTrackBar.Value);
             pictureBox.Invalidate();
         }
 
@@ -478,7 +498,8 @@ namespace Lab2
                 0, 0, 0, 1
             );
 
-            return Vector3.Transform(normalMapN, T);
+            normalMapN = Vector3.Transform(normalMapN, T);
+            return Vector3.Normalize(normalMapN);
 
             //throw new NotImplementedException();
         }
@@ -529,6 +550,44 @@ namespace Lab2
 
                 pictureBox.Invalidate();
             }
+        }
+
+
+        private int RadiusChange { get; set; } = 2;
+        private float AngleChange { get; set; } = 0.1f;
+        private void MoveLight()
+        {
+            //Timer.Stop();
+            LightPositionMutex.WaitOne();
+
+            LightZAxisRadius += RadiusChange;
+            LightZAxisAngle += AngleChange;
+            float x = LightZAxisRadius * MathF.Cos(LightZAxisAngle);
+            float y = LightZAxisRadius * MathF.Sin(LightZAxisAngle);
+            LightPosition = new Vector3(x, y, LightPosition.Z);
+
+            if (LightZAxisRadius >= 500 || LightZAxisRadius <= 0)
+            {
+                RadiusChange *= -1;
+                AngleChange *= -1;
+            }
+
+            LightPositionMutex.ReleaseMutex();
+            //Timer.Start();
+            pictureBox.Invalidate();
+        }
+
+        private void timer_Tick(object? sender, EventArgs e)
+        {
+            MoveLight();
+        }
+
+        private void moveLightCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if(moveLightCheckBox.Checked)
+                Timer.Start();
+            else
+                Timer.Stop();
         }
     }
 }
