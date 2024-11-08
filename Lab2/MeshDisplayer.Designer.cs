@@ -43,19 +43,19 @@
             betaAngleTrackBar = new TrackBar();
             lightColorDialog = new ColorDialog();
             lightColorButton = new Button();
-            panel1 = new Panel();
+            kdPanel = new Panel();
             kdValueLabel = new Label();
             kdLabel = new Label();
             kdTrackBar = new TrackBar();
-            panel2 = new Panel();
+            ksPanel = new Panel();
             ksValueLabel = new Label();
             ksLabel = new Label();
             ksTrackBar = new TrackBar();
-            panel3 = new Panel();
+            mPanel = new Panel();
             mValueLabel = new Label();
             mLabel = new Label();
             mTrackBar = new TrackBar();
-            panel4 = new Panel();
+            LightZCoordPanel = new Panel();
             lightZCoordValueLabel = new Label();
             lightZCoordLabel = new Label();
             lightZCoordTrackBar = new TrackBar();
@@ -83,13 +83,13 @@
             ((System.ComponentModel.ISupportInitialize)alphaAngleTrackBar).BeginInit();
             betaAnglePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)betaAngleTrackBar).BeginInit();
-            panel1.SuspendLayout();
+            kdPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)kdTrackBar).BeginInit();
-            panel2.SuspendLayout();
+            ksPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ksTrackBar).BeginInit();
-            panel3.SuspendLayout();
+            mPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)mTrackBar).BeginInit();
-            panel4.SuspendLayout();
+            LightZCoordPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)lightZCoordTrackBar).BeginInit();
             objectColorPanel.SuspendLayout();
             meshGroupBox.SuspendLayout();
@@ -240,16 +240,16 @@
             lightColorButton.UseVisualStyleBackColor = true;
             lightColorButton.Click += lightColorButton_Click;
             // 
-            // panel1
+            // kdPanel
             // 
-            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            panel1.Controls.Add(kdValueLabel);
-            panel1.Controls.Add(kdLabel);
-            panel1.Controls.Add(kdTrackBar);
-            panel1.Location = new Point(6, 60);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(187, 82);
-            panel1.TabIndex = 3;
+            kdPanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            kdPanel.Controls.Add(kdValueLabel);
+            kdPanel.Controls.Add(kdLabel);
+            kdPanel.Controls.Add(kdTrackBar);
+            kdPanel.Location = new Point(6, 60);
+            kdPanel.Name = "kdPanel";
+            kdPanel.Size = new Size(187, 82);
+            kdPanel.TabIndex = 3;
             // 
             // kdValueLabel
             // 
@@ -280,16 +280,16 @@
             kdTrackBar.Value = 10;
             kdTrackBar.Scroll += kdTrackBar_Scroll;
             // 
-            // panel2
+            // ksPanel
             // 
-            panel2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            panel2.Controls.Add(ksValueLabel);
-            panel2.Controls.Add(ksLabel);
-            panel2.Controls.Add(ksTrackBar);
-            panel2.Location = new Point(6, 148);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(187, 82);
-            panel2.TabIndex = 6;
+            ksPanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            ksPanel.Controls.Add(ksValueLabel);
+            ksPanel.Controls.Add(ksLabel);
+            ksPanel.Controls.Add(ksTrackBar);
+            ksPanel.Location = new Point(6, 148);
+            ksPanel.Name = "ksPanel";
+            ksPanel.Size = new Size(187, 82);
+            ksPanel.TabIndex = 6;
             // 
             // ksValueLabel
             // 
@@ -319,16 +319,16 @@
             ksTrackBar.TabIndex = 0;
             ksTrackBar.Scroll += ksTrackBar_Scroll;
             // 
-            // panel3
+            // mPanel
             // 
-            panel3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            panel3.Controls.Add(mValueLabel);
-            panel3.Controls.Add(mLabel);
-            panel3.Controls.Add(mTrackBar);
-            panel3.Location = new Point(6, 236);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(187, 82);
-            panel3.TabIndex = 7;
+            mPanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            mPanel.Controls.Add(mValueLabel);
+            mPanel.Controls.Add(mLabel);
+            mPanel.Controls.Add(mTrackBar);
+            mPanel.Location = new Point(6, 236);
+            mPanel.Name = "mPanel";
+            mPanel.Size = new Size(187, 82);
+            mPanel.TabIndex = 7;
             // 
             // mValueLabel
             // 
@@ -359,16 +359,16 @@
             mTrackBar.TabIndex = 0;
             mTrackBar.Scroll += mTrackBar_Scroll;
             // 
-            // panel4
+            // LightZCoordPanel
             // 
-            panel4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            panel4.Controls.Add(lightZCoordValueLabel);
-            panel4.Controls.Add(lightZCoordLabel);
-            panel4.Controls.Add(lightZCoordTrackBar);
-            panel4.Location = new Point(6, 324);
-            panel4.Name = "panel4";
-            panel4.Size = new Size(187, 82);
-            panel4.TabIndex = 8;
+            LightZCoordPanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            LightZCoordPanel.Controls.Add(lightZCoordValueLabel);
+            LightZCoordPanel.Controls.Add(lightZCoordLabel);
+            LightZCoordPanel.Controls.Add(lightZCoordTrackBar);
+            LightZCoordPanel.Location = new Point(6, 324);
+            LightZCoordPanel.Name = "LightZCoordPanel";
+            LightZCoordPanel.Size = new Size(187, 82);
+            LightZCoordPanel.TabIndex = 8;
             // 
             // lightZCoordValueLabel
             // 
@@ -473,10 +473,10 @@
             lightAndColorsGroupBox.Controls.Add(resetLightPositionButton);
             lightAndColorsGroupBox.Controls.Add(moveLightCheckBox);
             lightAndColorsGroupBox.Controls.Add(lightColorButton);
-            lightAndColorsGroupBox.Controls.Add(panel1);
-            lightAndColorsGroupBox.Controls.Add(panel2);
-            lightAndColorsGroupBox.Controls.Add(panel3);
-            lightAndColorsGroupBox.Controls.Add(panel4);
+            lightAndColorsGroupBox.Controls.Add(kdPanel);
+            lightAndColorsGroupBox.Controls.Add(ksPanel);
+            lightAndColorsGroupBox.Controls.Add(mPanel);
+            lightAndColorsGroupBox.Controls.Add(LightZCoordPanel);
             lightAndColorsGroupBox.Location = new Point(842, 132);
             lightAndColorsGroupBox.Name = "lightAndColorsGroupBox";
             lightAndColorsGroupBox.Size = new Size(199, 494);
@@ -591,17 +591,17 @@
             betaAnglePanel.ResumeLayout(false);
             betaAnglePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)betaAngleTrackBar).EndInit();
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
+            kdPanel.ResumeLayout(false);
+            kdPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)kdTrackBar).EndInit();
-            panel2.ResumeLayout(false);
-            panel2.PerformLayout();
+            ksPanel.ResumeLayout(false);
+            ksPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)ksTrackBar).EndInit();
-            panel3.ResumeLayout(false);
-            panel3.PerformLayout();
+            mPanel.ResumeLayout(false);
+            mPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)mTrackBar).EndInit();
-            panel4.ResumeLayout(false);
-            panel4.PerformLayout();
+            LightZCoordPanel.ResumeLayout(false);
+            LightZCoordPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)lightZCoordTrackBar).EndInit();
             objectColorPanel.ResumeLayout(false);
             objectColorPanel.PerformLayout();
@@ -630,19 +630,19 @@
         private TrackBar betaAngleTrackBar;
         private ColorDialog lightColorDialog;
         private Button lightColorButton;
-        private Panel panel1;
+        private Panel kdPanel;
         private Label kdValueLabel;
         private Label kdLabel;
         private TrackBar kdTrackBar;
-        private Panel panel2;
+        private Panel ksPanel;
         private Label ksValueLabel;
         private Label ksLabel;
         private TrackBar ksTrackBar;
-        private Panel panel3;
+        private Panel mPanel;
         private Label mValueLabel;
         private Label mLabel;
         private TrackBar mTrackBar;
-        private Panel panel4;
+        private Panel LightZCoordPanel;
         private Label lightZCoordValueLabel;
         private Label lightZCoordLabel;
         private TrackBar lightZCoordTrackBar;
