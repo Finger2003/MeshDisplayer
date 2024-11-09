@@ -68,7 +68,7 @@
             meshColorButton = new Button();
             meshGroupBox = new GroupBox();
             textureButton = new Button();
-            lightAndColorsGroupBox = new GroupBox();
+            lightGroupBox = new GroupBox();
             resetLightPositionButton = new Button();
             moveLightCheckBox = new CheckBox();
             surfaceGroupBox = new GroupBox();
@@ -98,7 +98,7 @@
             ((System.ComponentModel.ISupportInitialize)lightZCoordTrackBar).BeginInit();
             objectColorPanel.SuspendLayout();
             meshGroupBox.SuspendLayout();
-            lightAndColorsGroupBox.SuspendLayout();
+            lightGroupBox.SuspendLayout();
             surfaceGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)texturePictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)meshColorPictureBox).BeginInit();
@@ -488,23 +488,23 @@
             textureButton.UseVisualStyleBackColor = true;
             textureButton.Click += textureButton_Click;
             // 
-            // lightAndColorsGroupBox
+            // lightGroupBox
             // 
-            lightAndColorsGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            lightAndColorsGroupBox.Controls.Add(lightColorPictureBox);
-            lightAndColorsGroupBox.Controls.Add(resetLightPositionButton);
-            lightAndColorsGroupBox.Controls.Add(moveLightCheckBox);
-            lightAndColorsGroupBox.Controls.Add(lightColorButton);
-            lightAndColorsGroupBox.Controls.Add(kdPanel);
-            lightAndColorsGroupBox.Controls.Add(ksPanel);
-            lightAndColorsGroupBox.Controls.Add(mPanel);
-            lightAndColorsGroupBox.Controls.Add(LightZCoordPanel);
-            lightAndColorsGroupBox.Location = new Point(960, 317);
-            lightAndColorsGroupBox.Name = "lightAndColorsGroupBox";
-            lightAndColorsGroupBox.Size = new Size(200, 478);
-            lightAndColorsGroupBox.TabIndex = 13;
-            lightAndColorsGroupBox.TabStop = false;
-            lightAndColorsGroupBox.Text = "Oświetlenie i kolory";
+            lightGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            lightGroupBox.Controls.Add(lightColorPictureBox);
+            lightGroupBox.Controls.Add(resetLightPositionButton);
+            lightGroupBox.Controls.Add(moveLightCheckBox);
+            lightGroupBox.Controls.Add(lightColorButton);
+            lightGroupBox.Controls.Add(kdPanel);
+            lightGroupBox.Controls.Add(ksPanel);
+            lightGroupBox.Controls.Add(mPanel);
+            lightGroupBox.Controls.Add(LightZCoordPanel);
+            lightGroupBox.Location = new Point(960, 317);
+            lightGroupBox.Name = "lightGroupBox";
+            lightGroupBox.Size = new Size(200, 478);
+            lightGroupBox.TabIndex = 13;
+            lightGroupBox.TabStop = false;
+            lightGroupBox.Text = "Oświetlenie i kolory";
             // 
             // resetLightPositionButton
             // 
@@ -641,7 +641,7 @@
             ClientSize = new Size(1172, 807);
             Controls.Add(fpsLabel);
             Controls.Add(surfaceGroupBox);
-            Controls.Add(lightAndColorsGroupBox);
+            Controls.Add(lightGroupBox);
             Controls.Add(meshGroupBox);
             Controls.Add(pictureBox);
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -675,8 +675,8 @@
             objectColorPanel.ResumeLayout(false);
             objectColorPanel.PerformLayout();
             meshGroupBox.ResumeLayout(false);
-            lightAndColorsGroupBox.ResumeLayout(false);
-            lightAndColorsGroupBox.PerformLayout();
+            lightGroupBox.ResumeLayout(false);
+            lightGroupBox.PerformLayout();
             surfaceGroupBox.ResumeLayout(false);
             surfaceGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)texturePictureBox).EndInit();
@@ -726,7 +726,7 @@
         private Button meshColorButton;
         private GroupBox meshGroupBox;
         private Button textureButton;
-        private GroupBox lightAndColorsGroupBox;
+        private GroupBox lightGroupBox;
         private GroupBox surfaceGroupBox;
         private CheckBox drawFillingCheckBox;
         private CheckBox drawEdgesCheckBox;
