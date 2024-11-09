@@ -328,7 +328,7 @@ namespace Lab2
                 float[] getBaricentricCoords(Point p)
                 {
                     float[] coords = new float[3];
-                    float invertedS = (float) 1 / getDoubledSarea(trianglePoints[0], trianglePoints[1], trianglePoints[2]);
+                    float invertedS = (float)1 / getDoubledSarea(trianglePoints[0], trianglePoints[1], trianglePoints[2]);
                     //float invertedS = 1 / s;
                     coords[0] = getDoubledSarea(p, trianglePoints[1], trianglePoints[2]) * invertedS;
                     coords[1] = getDoubledSarea(trianglePoints[0], p, trianglePoints[2]) * invertedS;
@@ -461,7 +461,7 @@ namespace Lab2
             int x = (int)Math.Round(u * (TextureDirectBitmap.Width - 1));
             int y = (int)Math.Round(v * (TextureDirectBitmap.Height - 1));
 
-            if(x >= TextureDirectBitmap.Width || x < 0 || y >= TextureDirectBitmap.Height || y < 0)
+            if (x >= TextureDirectBitmap.Width || x < 0 || y >= TextureDirectBitmap.Height || y < 0)
             {
 
             }
@@ -480,7 +480,7 @@ namespace Lab2
                 using Graphics g = Graphics.FromImage(TextureDirectBitmap.Bitmap);
                 {
                     g.DrawImage(textureBitmap, 0, 0, TextureDirectBitmap.Width, TextureDirectBitmap.Height);
-                
+
                 }
 
                 texturePictureBox.Image = Image.FromFile(fileName);
@@ -607,6 +607,19 @@ namespace Lab2
             LightZAxisAngle = 0;
             LightPositionMutex.ReleaseMutex();
             pictureBox.Invalidate();
+        }
+
+        private void loadControlPointsButton_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                TxtControlPointsReader reader = new(ControlPointsFirstDimensionCount, ControlPointsSecondDimensionCount);
+                string fileName = openFileDialog.FileName;
+                ControlPoints = reader.Read(fileName);
+                Mesh = new Mesh(ControlPoints, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
+
+                pictureBox.Invalidate();
+            }
         }
     }
 }

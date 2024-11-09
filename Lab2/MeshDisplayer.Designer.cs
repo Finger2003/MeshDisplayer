@@ -81,6 +81,8 @@
             drawEdgesCheckBox = new CheckBox();
             normalMapButton = new Button();
             fpsLabel = new Label();
+            menuStrip1 = new MenuStrip();
+            loadControlPointsButton = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             fidelityPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)fidelityTrackBar).BeginInit();
@@ -113,7 +115,7 @@
             pictureBox.BackColor = SystemColors.Control;
             pictureBox.Location = new Point(12, 132);
             pictureBox.Name = "pictureBox";
-            pictureBox.Size = new Size(925, 662);
+            pictureBox.Size = new Size(925, 709);
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = false;
             pictureBox.SizeChanged += pictureBox_SizeChanged;
@@ -470,12 +472,13 @@
             // meshGroupBox
             // 
             meshGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            meshGroupBox.Controls.Add(loadControlPointsButton);
             meshGroupBox.Controls.Add(fidelityPanel);
             meshGroupBox.Controls.Add(alphaAnglePanel);
             meshGroupBox.Controls.Add(betaAnglePanel);
             meshGroupBox.Location = new Point(943, 12);
             meshGroupBox.Name = "meshGroupBox";
-            meshGroupBox.Size = new Size(220, 299);
+            meshGroupBox.Size = new Size(220, 344);
             meshGroupBox.TabIndex = 11;
             meshGroupBox.TabStop = false;
             meshGroupBox.Text = "Siatka";
@@ -494,9 +497,9 @@
             // 
             lightGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             lightGroupBox.Controls.Add(lightPanel);
-            lightGroupBox.Location = new Point(943, 317);
+            lightGroupBox.Location = new Point(943, 362);
             lightGroupBox.Name = "lightGroupBox";
-            lightGroupBox.Size = new Size(220, 477);
+            lightGroupBox.Size = new Size(220, 479);
             lightGroupBox.TabIndex = 13;
             lightGroupBox.TabStop = false;
             lightGroupBox.Text = "Oświetlenie i kolory";
@@ -515,15 +518,15 @@
             lightPanel.Controls.Add(LightZCoordPanel);
             lightPanel.Location = new Point(3, 19);
             lightPanel.Name = "lightPanel";
-            lightPanel.Size = new Size(214, 455);
+            lightPanel.Size = new Size(214, 457);
             lightPanel.TabIndex = 21;
             // 
             // resetLightPositionButton
             // 
             resetLightPositionButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            resetLightPositionButton.Location = new Point(20, 428);
+            resetLightPositionButton.Location = new Point(21, 428);
             resetLightPositionButton.Name = "resetLightPositionButton";
-            resetLightPositionButton.Size = new Size(188, 23);
+            resetLightPositionButton.Size = new Size(187, 23);
             resetLightPositionButton.TabIndex = 18;
             resetLightPositionButton.Text = "Zresetuj pozycję światła";
             resetLightPositionButton.UseVisualStyleBackColor = true;
@@ -533,7 +536,7 @@
             // 
             moveLightCheckBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             moveLightCheckBox.AutoSize = true;
-            moveLightCheckBox.Location = new Point(23, 403);
+            moveLightCheckBox.Location = new Point(21, 403);
             moveLightCheckBox.Name = "moveLightCheckBox";
             moveLightCheckBox.Size = new Size(120, 19);
             moveLightCheckBox.TabIndex = 17;
@@ -648,17 +651,38 @@
             fpsLabel.TabIndex = 15;
             fpsLabel.Text = "FPS";
             // 
+            // menuStrip1
+            // 
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(1174, 24);
+            menuStrip1.TabIndex = 16;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // loadControlPointsButton
+            // 
+            loadControlPointsButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            loadControlPointsButton.Location = new Point(21, 296);
+            loadControlPointsButton.Name = "loadControlPointsButton";
+            loadControlPointsButton.Size = new Size(187, 40);
+            loadControlPointsButton.TabIndex = 21;
+            loadControlPointsButton.Text = "Wczytaj plik z punktami kontrolnymi";
+            loadControlPointsButton.UseVisualStyleBackColor = true;
+            loadControlPointsButton.Click += loadControlPointsButton_Click;
+            // 
             // MeshDisplayer
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1174, 806);
+            ClientSize = new Size(1174, 853);
             Controls.Add(fpsLabel);
             Controls.Add(surfaceGroupBox);
             Controls.Add(lightGroupBox);
             Controls.Add(meshGroupBox);
             Controls.Add(pictureBox);
+            Controls.Add(menuStrip1);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MainMenuStrip = menuStrip1;
             MinimumSize = new Size(1190, 0);
             Name = "MeshDisplayer";
             StartPosition = FormStartPosition.CenterScreen;
@@ -755,5 +779,7 @@
         private PictureBox lightColorPictureBox;
         private Label fpsLabel;
         private Panel lightPanel;
+        private MenuStrip menuStrip1;
+        private Button loadControlPointsButton;
     }
 }
