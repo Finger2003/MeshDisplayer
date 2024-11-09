@@ -79,6 +79,7 @@
             normalMapPictureBox = new PictureBox();
             drawEdgesCheckBox = new CheckBox();
             normalMapButton = new Button();
+            fpsLabel = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             fidelityPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)fidelityTrackBar).BeginInit();
@@ -623,11 +624,22 @@
             normalMapButton.UseVisualStyleBackColor = true;
             normalMapButton.Click += normalMapButton_Click;
             // 
+            // fpsLabel
+            // 
+            fpsLabel.AutoSize = true;
+            fpsLabel.Font = new Font("Segoe UI", 21.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            fpsLabel.Location = new Point(20, 139);
+            fpsLabel.Name = "fpsLabel";
+            fpsLabel.Size = new Size(62, 40);
+            fpsLabel.TabIndex = 15;
+            fpsLabel.Text = "FPS";
+            // 
             // MeshDisplayer
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1172, 807);
+            Controls.Add(fpsLabel);
             Controls.Add(surfaceGroupBox);
             Controls.Add(lightAndColorsGroupBox);
             Controls.Add(meshGroupBox);
@@ -671,6 +683,7 @@
             ((System.ComponentModel.ISupportInitialize)meshColorPictureBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)normalMapPictureBox).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -725,5 +738,6 @@
         private PictureBox meshColorPictureBox;
         private PictureBox normalMapPictureBox;
         private PictureBox lightColorPictureBox;
+        private Label fpsLabel;
     }
 }

@@ -1,5 +1,6 @@
 using Lab2.Model;
 using Lab2.VertexFileReaders;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Numerics;
@@ -12,15 +13,17 @@ namespace Lab2
         private int ControlPointsFirstDimensionCount { get; set; } = 4;
         private int ControlPointsSecondDimensionCount { get; set; } = 4;
         private string DefaultControlPointsPath { get; } = "control_points3D.txt";
-        private string DefaultTexturePath { get; } = "texture.jpg";
-        private string DefaultNormalMapPath { get; } = "normal_map.png";
-        private Bitmap TextureBitmap { get; set; }
-        private Bitmap NormalMapBitmap { get; set; }
+        //private string DefaultTexturePath { get; } = "texture.jpg";
+        //private string DefaultNormalMapPath { get; } = "normal_map.png";
+        //private Bitmap TextureBitmap { get; set; }
+        //private Bitmap NormalMapBitmap { get; set; }
         private Vector3[,] NormalMap { get; set; }
 
         private Vector3[,] ControlPoints { get; set; }
 
         private Bitmap Bitmap { get; set; }
+        private DirectBitmap DirectBitmap { get; set; }
+        private DirectBitmap TextureDirectBitmap { get; set; }
         private Mesh? Mesh { get; set; }
         private Graphics G { get; set; }
 
@@ -70,25 +73,34 @@ namespace Lab2
             M = mTrackBar.Value;
             //LightZCoord = lightZCoordTrackBar.Value;
 
-
-            Bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
+            DirectBitmap = new(pictureBox.Width, pictureBox.Height);
+            //Bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
+            Bitmap = DirectBitmap.Bitmap;
             //TextureBitmap = new(DefaultTexturePath);
 
             using (MemoryStream ms = new(Properties.Resources.DefaultTexture))
             {
                 Image img = Image.FromStream(ms);
                 texturePictureBox.Image = img;
-                TextureBitmap = (Bitmap)img;
+                TextureDirectBitmap = new(img.Width, img.Height);
+                using Graphics g = Graphics.FromImage(TextureDirectBitmap.Bitmap);
+                g.DrawImage(img, 0, 0, TextureDirectBitmap.Width, TextureDirectBitmap.Height);
+
+
+                //TextureBitmap = (Bitmap)img;
+                //TextureBitmap = new(img.Width, img.Height);
+                //using Graphics g1 = Graphics.FromImage(TextureBitmap);
+                //g1.DrawImage(img, 0, 0, TextureBitmap.Width, TextureBitmap.Height);
             }
             using (MemoryStream ms = new(Properties.Resources.DefaultNormalMap))
             {
                 Image img = Image.FromStream(ms);
                 normalMapPictureBox.Image = img;
-                NormalMapBitmap = (Bitmap)img;
+                Bitmap normalBmp = (Bitmap)img;
+                SetNormalMap(normalBmp);
             }
             //TextureBitmap = (Bitmap)Bitmap.FromStream(new MemoryStream(Properties.Resources.DefaultTexture));
             //NormalMapBitmap = new(DefaultNormalMapPath);
-            SetNormalMap(NormalMapBitmap);
             //colourPictureBox.DataBindings.Add("BackColor", this, "MeshColor");
             meshColorPictureBox.BackColor = MeshColor;
             //pictureBox.Image = Bitmap;
@@ -153,18 +165,21 @@ namespace Lab2
 
             G.Clear(Color.White);
 
+            Stopwatch sw = new();
+            sw.Start();
+
             if (DrawFilling)
             {
-                BitmapData bitmapData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+                //BitmapData bitmapData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
 
                 LightPositionMutex.WaitOne();
                 LightPositionForDrawing = LightPosition;
                 LightPositionMutex.ReleaseMutex();
 
                 foreach (Triangle triangle in Mesh.Triangles)
-                    fillTriangle(triangle, bitmapData);
+                    fillTriangle(triangle);
 
-                Bitmap.UnlockBits(bitmapData);
+                //Bitmap.UnlockBits(bitmapData);
             }
 
             if (DrawEdges)
@@ -181,6 +196,8 @@ namespace Lab2
                 }
 
             }
+
+
 
             //G.FillEllipse(Brushes.Black, LightPosition.X - 5, LightPosition.Y - 5, 10, 10);
 
@@ -199,11 +216,17 @@ namespace Lab2
             //    G.DrawLine(Pens.Black, v3, v1);
             //}
             e.Graphics.DrawImage(Bitmap, 0, 0);
+
+            sw.Stop();
+            float fps = float.PositiveInfinity;
+            if (sw.ElapsedMilliseconds > 0)
+                fps = 1000 / sw.ElapsedMilliseconds;
+            fpsLabel.Text = $"FPS: {fps}";
         }
 
-        private void fillTriangle(Triangle triangle, BitmapData bitmapData)
+        private void fillTriangle(Triangle triangle)
         {
-            const int bytesPerPixel = 4;
+            //const int bytesPerPixel = 4;
 
             Point[] trianglePoints =
             [
@@ -260,10 +283,10 @@ namespace Lab2
                 unsafe
                 {
                     // Transformacja uk³adu wspó³rzêdnych
-                    int transformedY = -scanline + Bitmap.Height / 2;
+                    int transformedY = -scanline + DirectBitmap.Height / 2;
 
                     // WskaŸnik na pierwszy piksel w scanline
-                    byte* row = (byte*)bitmapData.Scan0 + transformedY * bitmapData.Stride;
+                    //byte* row = (byte*)bitmapData.Scan0 + transformedY * bitmapData.Stride;
 
                     // Aktualnie rozwa¿any punkt
                     Point p = new(0, scanline);
@@ -277,7 +300,7 @@ namespace Lab2
                         int x1 = (int)e1.X;
                         int x2 = (int)e2.X;
 
-                        if (transformedY >= 0 && transformedY < bitmapData.Height)
+                        if (transformedY >= 0 && transformedY < DirectBitmap.Height)
                         {
                             // Wype³nianie scanlinii miêdzy krawêdziami
                             for (int x = x1; x < x2; x++)
@@ -286,20 +309,25 @@ namespace Lab2
                                 float[] coords = getBaricentricCoords(p);
                                 float u = triangle.V1.U * coords[0] + triangle.V2.U * coords[1] + triangle.V3.U * coords[2];
                                 float v = triangle.V1.V * coords[0] + triangle.V2.V * coords[1] + triangle.V3.V * coords[2];
-                                byte[] color = getColor(GetColor(u, v), coords, u, v);
+                                //if(u > 0.95 && v > 0.95)
+                                //{
+
+                                //}
+                                Color color = getColor(GetColor(u, v), coords, u, v);
 
                                 // Transformacja uk³adu wspó³rzêdnych
-                                int transformedX = x + bitmapData.Width / 2;
+                                int transformedX = x + DirectBitmap.Width / 2;
 
-                                if (transformedX < 0 || transformedX >= bitmapData.Width)
-                                    continue;
+                                if (transformedX >= 0 && transformedX < DirectBitmap.Width)
+                                    DirectBitmap.SetPixel(transformedX, transformedY, color);
+                                    //continue;
 
-                                int bitmapIndex = transformedX * bytesPerPixel;
+                                //int bitmapIndex = transformedX * bytesPerPixel;
 
-                                row[bitmapIndex] = color[2];
-                                row[bitmapIndex + 1] = color[1];
-                                row[bitmapIndex + 2] = color[0];
-                                row[bitmapIndex + 3] = MeshColor.A;
+                                //row[bitmapIndex] = color[2];
+                                //row[bitmapIndex + 1] = color[1];
+                                //row[bitmapIndex + 2] = color[0];
+                                //row[bitmapIndex + 3] = MeshColor.A;
                             }
                         }
                     }
@@ -310,7 +338,7 @@ namespace Lab2
                 }
 
 
-                byte[] getColor(Color color, float[] coords, float u, float v)
+                Color getColor(Color color, float[] coords, float u, float v)
                 {
                     Vector3 Il = new(LightColor.R, LightColor.G, LightColor.B);
                     Vector3 Io = new(color.R, color.G, color.B);
@@ -336,7 +364,8 @@ namespace Lab2
                     I *= 255;
                     I = Vector3.Clamp(I, new Vector3(0, 0, 0), new Vector3(255, 255, 255));
 
-                    return [(byte)I.X, (byte)I.Y, (byte)I.Z];
+
+                    return Color.FromArgb((int)I.X, (int)I.Y, (int)I.Z);
                 }
 
                 float[] getBaricentricCoords(Point p)
@@ -363,8 +392,11 @@ namespace Lab2
 
             Bitmap oldBitmap = Bitmap;
             Graphics oldGraphics = G;
+            DirectBitmap oldDirectBitmap = DirectBitmap;
 
-            Bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
+            DirectBitmap = new(pictureBox.Width, pictureBox.Height);
+            Bitmap = DirectBitmap.Bitmap;
+            //Bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
             G = Graphics.FromImage(Bitmap);
             G.DrawImage(oldBitmap, 0, 0);
 
@@ -374,6 +406,7 @@ namespace Lab2
             //pictureBox.Image = Bitmap;
             pictureBox.Invalidate();
 
+            oldDirectBitmap.Dispose();
             oldGraphics.Dispose();
             oldBitmap.Dispose();
         }
@@ -464,10 +497,10 @@ namespace Lab2
             u = Math.Clamp(u, 0, 1);
             v = Math.Clamp(v, 0, 1);
 
-            int x = (int)Math.Round(u * (TextureBitmap.Width - 1));
-            int y = (int)Math.Round(v * (TextureBitmap.Height - 1));
+            int x = (int)Math.Round(u * (TextureDirectBitmap.Width - 1));
+            int y = (int)Math.Round(v * (TextureDirectBitmap.Height - 1));
 
-            return TextureBitmap.GetPixel(x, y);
+            return TextureDirectBitmap.GetPixel(x, y);
         }
 
         private void textureButton_Click(object sender, EventArgs e)
@@ -482,7 +515,15 @@ namespace Lab2
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string fileName = openFileDialog.FileName;
-                TextureBitmap = new(fileName);
+                Bitmap textureBitmap = new(fileName);
+                TextureDirectBitmap = new(textureBitmap.Width, textureBitmap.Height);
+
+                using Graphics g = Graphics.FromImage(TextureDirectBitmap.Bitmap);
+                {
+                    g.DrawImage(textureBitmap, 0, 0, TextureDirectBitmap.Width, TextureDirectBitmap.Height);
+                
+                }
+
                 texturePictureBox.Image = Image.FromFile(fileName);
 
                 pictureBox.Invalidate();
