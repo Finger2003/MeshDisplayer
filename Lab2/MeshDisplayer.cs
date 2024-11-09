@@ -1,3 +1,4 @@
+using Lab2.CoordinatesTransformers;
 using Lab2.Model;
 using Lab2.VertexFileReaders;
 using System.Diagnostics;
@@ -49,6 +50,8 @@ namespace Lab2
 
         private Color MeshColor { get; set; } = Color.White;
 
+        private CenterCoordinateTransformer2D CoordinateTransformer { get; set; }
+
         public MeshDisplayer()
         {
             InitializeComponent();
@@ -75,6 +78,7 @@ namespace Lab2
 
             DirectBitmap = new(pictureBox.Width, pictureBox.Height);
             Bitmap = DirectBitmap.Bitmap;
+            CoordinateTransformer = new(Bitmap.Width, Bitmap.Height);
 
             using (MemoryStream ms = new(Properties.Resources.DefaultTexture))
             {
@@ -247,7 +251,8 @@ namespace Lab2
                 unsafe
                 {
                     // Transformacja uk³adu wspó³rzêdnych
-                    int transformedY = -scanline + DirectBitmap.Height / 2;
+                    //int transformedY = -scanline + DirectBitmap.Height / 2;
+                    int transformedY = CoordinateTransformer.TransformY(scanline);
 
                     // Aktualnie rozwa¿any punkt
                     Point p = new(0, scanline);
@@ -278,7 +283,8 @@ namespace Lab2
                                 Color color = getColor(coords, u, v);
 
                                 // Transformacja uk³adu wspó³rzêdnych
-                                int transformedX = x + DirectBitmap.Width / 2;
+                                //int transformedX = x + DirectBitmap.Width / 2;
+                                int transformedX = CoordinateTransformer.TransformX(x);
 
                                 if (transformedX >= 0 && transformedX < DirectBitmap.Width)
                                     DirectBitmap.SetPixel(transformedX, transformedY, color);
@@ -349,6 +355,8 @@ namespace Lab2
 
             DirectBitmap = new(pictureBox.Width, pictureBox.Height);
             Bitmap = DirectBitmap.Bitmap;
+            CoordinateTransformer.Width = Bitmap.Width;
+            CoordinateTransformer.Height = Bitmap.Height;
 
             G = Graphics.FromImage(Bitmap);
             G.DrawImage(oldBitmap, 0, 0);
