@@ -268,6 +268,10 @@ namespace Lab2
                             {
                                 p.X = x;
                                 float[] coords = getBaricentricCoords(p);
+
+                                if (coords.Contains(float.NaN))
+                                    continue;
+
                                 float u = triangle.V1.U * coords[0] + triangle.V2.U * coords[1] + triangle.V3.U * coords[2];
                                 float v = triangle.V1.V * coords[0] + triangle.V2.V * coords[1] + triangle.V3.V * coords[2];
 
@@ -321,6 +325,7 @@ namespace Lab2
                     coords[0] = getDoubledSarea(p, trianglePoints[1], trianglePoints[2]) / s;
                     coords[1] = getDoubledSarea(trianglePoints[0], p, trianglePoints[2]) / s;
                     coords[2] = getDoubledSarea(trianglePoints[0], trianglePoints[1], p) / s;
+
                     return coords;
                 }
 
@@ -444,6 +449,11 @@ namespace Lab2
 
             int x = (int)Math.Round(u * (TextureDirectBitmap.Width - 1));
             int y = (int)Math.Round(v * (TextureDirectBitmap.Height - 1));
+
+            if(x >= TextureDirectBitmap.Width || x < 0 || y >= TextureDirectBitmap.Height || y < 0)
+            {
+
+            }
 
             return TextureDirectBitmap.GetPixel(x, y);
         }
