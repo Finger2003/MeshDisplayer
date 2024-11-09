@@ -323,6 +323,7 @@ namespace Lab2
                 {
                     float[] coords = new float[3];
                     float invertedS = (float) 1 / getDoubledSarea(trianglePoints[0], trianglePoints[1], trianglePoints[2]);
+                    //float invertedS = 1 / s;
                     coords[0] = getDoubledSarea(p, trianglePoints[1], trianglePoints[2]) * invertedS;
                     coords[1] = getDoubledSarea(trianglePoints[0], p, trianglePoints[2]) * invertedS;
                     coords[2] = getDoubledSarea(trianglePoints[0], trianglePoints[1], p) * invertedS;
@@ -386,8 +387,9 @@ namespace Lab2
         private void lightZAxisTrackBar_Scroll(object sender, EventArgs e)
         {
             //LightZCoord = lightZCoordTrackBar.Value;
-
+            LightPositionMutex.WaitOne();
             LightPosition = new Vector3(LightPosition.X, LightPosition.Y, lightZCoordTrackBar.Value);
+            LightPositionMutex.ReleaseMutex();
             pictureBox.Invalidate();
         }
 
