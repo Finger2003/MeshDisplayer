@@ -275,7 +275,7 @@ namespace Lab2
                                 float u = triangle.V1.U * coords[0] + triangle.V2.U * coords[1] + triangle.V3.U * coords[2];
                                 float v = triangle.V1.V * coords[0] + triangle.V2.V * coords[1] + triangle.V3.V * coords[2];
 
-                                Color color = getColor(GetColor(u, v), coords, u, v);
+                                Color color = getColor(coords, u, v);
 
                                 // Transformacja uk³adu wspó³rzêdnych
                                 int transformedX = x + DirectBitmap.Width / 2;
@@ -292,12 +292,14 @@ namespace Lab2
                 }
 
 
-                Color getColor(Color color, float[] coords, float u, float v)
+                Color getColor(float[] coords, float u, float v)
                 {
+                    Color color = GetColor(u, v);
+
                     Vector3 Il = new(LightColor.R, LightColor.G, LightColor.B);
                     Vector3 Io = new(color.R, color.G, color.B);
-                    Vector3 Punkt = triangle.V1.AfterRotationState.P * coords[0] + triangle.V2.AfterRotationState.P * coords[1] + triangle.V3.AfterRotationState.P * coords[2];
-                    Vector3 L = LightPositionForDrawing - Punkt;
+                    Vector3 P = triangle.V1.AfterRotationState.P * coords[0] + triangle.V2.AfterRotationState.P * coords[1] + triangle.V3.AfterRotationState.P * coords[2];
+                    Vector3 L = LightPositionForDrawing - P;
                     Vector3 N = GetNormalVector(triangle, coords, u, v);
                     Vector3 V = new(0, 0, 1);
 
@@ -311,9 +313,8 @@ namespace Lab2
 
                     Vector3 I = Kd * Il * Io * Math.Max(0, Vector3.Dot(L, N)) + Ks * Il * Io * MathF.Pow(Math.Max(0, Vector3.Dot(R, V)), M);
 
+                    I = Vector3.Clamp(I, new Vector3(0, 0, 0), new Vector3(1, 1, 1));
                     I *= 255;
-                    I = Vector3.Clamp(I, new Vector3(0, 0, 0), new Vector3(255, 255, 255));
-
 
                     return Color.FromArgb((int)I.X, (int)I.Y, (int)I.Z);
                 }
@@ -321,10 +322,10 @@ namespace Lab2
                 float[] getBaricentricCoords(Point p)
                 {
                     float[] coords = new float[3];
-                    float s = getDoubledSarea(trianglePoints[0], trianglePoints[1], trianglePoints[2]);
-                    coords[0] = getDoubledSarea(p, trianglePoints[1], trianglePoints[2]) / s;
-                    coords[1] = getDoubledSarea(trianglePoints[0], p, trianglePoints[2]) / s;
-                    coords[2] = getDoubledSarea(trianglePoints[0], trianglePoints[1], p) / s;
+                    float invertedS = (float) 1 / getDoubledSarea(trianglePoints[0], trianglePoints[1], trianglePoints[2]);
+                    coords[0] = getDoubledSarea(p, trianglePoints[1], trianglePoints[2]) * invertedS;
+                    coords[1] = getDoubledSarea(trianglePoints[0], p, trianglePoints[2]) * invertedS;
+                    coords[2] = getDoubledSarea(trianglePoints[0], trianglePoints[1], p) * invertedS;
 
                     return coords;
                 }
