@@ -124,10 +124,10 @@
   <data name="DefaultNormalMap" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\normal_map.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="DefaultControlPoints" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\control_points.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
   <data name="Icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DefaultControlPointsPath" xml:space="preserve">
+    <value>control_points.txt</value>
   </data>
 </root>

@@ -103,7 +103,7 @@ namespace Lab2
             G.ScaleTransform(1, -1);
             G.TranslateTransform(Bitmap.Width / 2, -Bitmap.Height / 2);
 
-            LoadControlPoints();
+            LoadControlPoints(Properties.Resources.DefaultControlPointsPath);
             Mesh = new(ControlPoints!, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
             GetColor = GetMeshRGBColor;
             GetNormalVector = GetNormalVectorFromVertices;
@@ -123,10 +123,10 @@ namespace Lab2
             return (float)trackbar.Value / trackbar.Maximum;
         }
 
-        private void LoadControlPoints()
+        private void LoadControlPoints(string path)
         {
             TxtControlPointsReader reader = new(ControlPointsFirstDimensionCount, ControlPointsSecondDimensionCount);
-            ControlPoints = reader.Read(DefaultControlPointsPath);
+            ControlPoints = reader.Read(path);
         }
 
         private void fidelityTrackBar_Scroll(object sender, EventArgs e)

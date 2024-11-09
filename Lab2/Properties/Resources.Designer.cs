@@ -61,27 +61,11 @@ namespace Lab2.Properties {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu -280,0 -200,0 0,0
-        ///-93,33 -200,0 0,0
-        ///93,33 -200,0 0,0
-        ///280,0 -200,0 0,0
-        ///-280,0 -66,67 0,0
-        ///-93,33 -66,67 0,0
-        ///93,33 -66,67 0,0
-        ///280,0 -66,67 0,0
-        ///-280,0 66,67 0,0
-        ///-93,33 66,67 0,0
-        ///93,33 66,67 0,0
-        ///280,0 66,67 0,0
-        ///-280,0 200,0 0,0
-        ///-93,33 200,0 0,0
-        ///93,33 200,0 0,0
-        ///280,0 200,0 0,0
-        ///.
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu control_points.txt.
         /// </summary>
-        internal static string DefaultControlPoints {
+        internal static string DefaultControlPointsPath {
             get {
-                return ResourceManager.GetString("DefaultControlPoints", resourceCulture);
+                return ResourceManager.GetString("DefaultControlPointsPath", resourceCulture);
             }
         }
         
