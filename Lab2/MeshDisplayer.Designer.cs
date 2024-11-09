@@ -69,6 +69,7 @@
             meshGroupBox = new GroupBox();
             textureButton = new Button();
             lightGroupBox = new GroupBox();
+            lightPanel = new Panel();
             resetLightPositionButton = new Button();
             moveLightCheckBox = new CheckBox();
             surfaceGroupBox = new GroupBox();
@@ -99,6 +100,7 @@
             objectColorPanel.SuspendLayout();
             meshGroupBox.SuspendLayout();
             lightGroupBox.SuspendLayout();
+            lightPanel.SuspendLayout();
             surfaceGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)texturePictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)meshColorPictureBox).BeginInit();
@@ -111,7 +113,7 @@
             pictureBox.BackColor = SystemColors.Control;
             pictureBox.Location = new Point(12, 132);
             pictureBox.Name = "pictureBox";
-            pictureBox.Size = new Size(943, 663);
+            pictureBox.Size = new Size(925, 662);
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = false;
             pictureBox.SizeChanged += pictureBox_SizeChanged;
@@ -122,7 +124,7 @@
             fidelityPanel.Controls.Add(fideltyValueLabel);
             fidelityPanel.Controls.Add(fidelityLabel);
             fidelityPanel.Controls.Add(fidelityTrackBar);
-            fidelityPanel.Location = new Point(6, 26);
+            fidelityPanel.Location = new Point(21, 26);
             fidelityPanel.Name = "fidelityPanel";
             fidelityPanel.Size = new Size(187, 82);
             fidelityPanel.TabIndex = 1;
@@ -165,7 +167,7 @@
             alphaAnglePanel.Controls.Add(alphaAngleValueLabel);
             alphaAnglePanel.Controls.Add(alphaAngleLabel);
             alphaAnglePanel.Controls.Add(alphaAngleTrackBar);
-            alphaAnglePanel.Location = new Point(6, 120);
+            alphaAnglePanel.Location = new Point(21, 120);
             alphaAnglePanel.Name = "alphaAnglePanel";
             alphaAnglePanel.Size = new Size(187, 82);
             alphaAnglePanel.TabIndex = 3;
@@ -204,7 +206,7 @@
             betaAnglePanel.Controls.Add(betaAngleValueLabel);
             betaAnglePanel.Controls.Add(betaAngleLabel);
             betaAnglePanel.Controls.Add(betaAngleTrackBar);
-            betaAnglePanel.Location = new Point(6, 208);
+            betaAnglePanel.Location = new Point(21, 208);
             betaAnglePanel.Name = "betaAnglePanel";
             betaAnglePanel.Size = new Size(187, 82);
             betaAnglePanel.TabIndex = 4;
@@ -240,7 +242,7 @@
             // lightColorButton
             // 
             lightColorButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            lightColorButton.Location = new Point(7, 22);
+            lightColorButton.Location = new Point(21, 3);
             lightColorButton.Name = "lightColorButton";
             lightColorButton.Size = new Size(139, 23);
             lightColorButton.TabIndex = 5;
@@ -254,7 +256,7 @@
             kdPanel.Controls.Add(kdValueLabel);
             kdPanel.Controls.Add(kdLabel);
             kdPanel.Controls.Add(kdTrackBar);
-            kdPanel.Location = new Point(7, 60);
+            kdPanel.Location = new Point(21, 41);
             kdPanel.Name = "kdPanel";
             kdPanel.Size = new Size(187, 82);
             kdPanel.TabIndex = 3;
@@ -291,7 +293,7 @@
             // lightColorPictureBox
             // 
             lightColorPictureBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            lightColorPictureBox.Location = new Point(152, 22);
+            lightColorPictureBox.Location = new Point(166, 3);
             lightColorPictureBox.Name = "lightColorPictureBox";
             lightColorPictureBox.Size = new Size(42, 23);
             lightColorPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
@@ -304,7 +306,7 @@
             ksPanel.Controls.Add(ksValueLabel);
             ksPanel.Controls.Add(ksLabel);
             ksPanel.Controls.Add(ksTrackBar);
-            ksPanel.Location = new Point(7, 148);
+            ksPanel.Location = new Point(21, 129);
             ksPanel.Name = "ksPanel";
             ksPanel.Size = new Size(187, 82);
             ksPanel.TabIndex = 6;
@@ -343,7 +345,7 @@
             mPanel.Controls.Add(mValueLabel);
             mPanel.Controls.Add(mLabel);
             mPanel.Controls.Add(mTrackBar);
-            mPanel.Location = new Point(7, 236);
+            mPanel.Location = new Point(21, 217);
             mPanel.Name = "mPanel";
             mPanel.Size = new Size(187, 82);
             mPanel.TabIndex = 7;
@@ -383,7 +385,7 @@
             LightZCoordPanel.Controls.Add(lightZCoordValueLabel);
             LightZCoordPanel.Controls.Add(lightZCoordLabel);
             LightZCoordPanel.Controls.Add(lightZCoordTrackBar);
-            LightZCoordPanel.Location = new Point(7, 324);
+            LightZCoordPanel.Location = new Point(21, 305);
             LightZCoordPanel.Name = "LightZCoordPanel";
             LightZCoordPanel.Size = new Size(187, 82);
             LightZCoordPanel.TabIndex = 8;
@@ -426,7 +428,7 @@
             objectColorPanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             objectColorPanel.Controls.Add(textureRadioButton);
             objectColorPanel.Controls.Add(fixedColorRadioButton);
-            objectColorPanel.Location = new Point(749, 19);
+            objectColorPanel.Location = new Point(731, 19);
             objectColorPanel.Name = "objectColorPanel";
             objectColorPanel.Size = new Size(187, 26);
             objectColorPanel.TabIndex = 9;
@@ -471,9 +473,9 @@
             meshGroupBox.Controls.Add(fidelityPanel);
             meshGroupBox.Controls.Add(alphaAnglePanel);
             meshGroupBox.Controls.Add(betaAnglePanel);
-            meshGroupBox.Location = new Point(960, 12);
+            meshGroupBox.Location = new Point(943, 12);
             meshGroupBox.Name = "meshGroupBox";
-            meshGroupBox.Size = new Size(200, 299);
+            meshGroupBox.Size = new Size(220, 299);
             meshGroupBox.TabIndex = 11;
             meshGroupBox.TabStop = false;
             meshGroupBox.Text = "Siatka";
@@ -491,24 +493,35 @@
             // lightGroupBox
             // 
             lightGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            lightGroupBox.Controls.Add(lightColorPictureBox);
-            lightGroupBox.Controls.Add(resetLightPositionButton);
-            lightGroupBox.Controls.Add(moveLightCheckBox);
-            lightGroupBox.Controls.Add(lightColorButton);
-            lightGroupBox.Controls.Add(kdPanel);
-            lightGroupBox.Controls.Add(ksPanel);
-            lightGroupBox.Controls.Add(mPanel);
-            lightGroupBox.Controls.Add(LightZCoordPanel);
-            lightGroupBox.Location = new Point(960, 317);
+            lightGroupBox.Controls.Add(lightPanel);
+            lightGroupBox.Location = new Point(943, 317);
             lightGroupBox.Name = "lightGroupBox";
-            lightGroupBox.Size = new Size(200, 478);
+            lightGroupBox.Size = new Size(220, 477);
             lightGroupBox.TabIndex = 13;
             lightGroupBox.TabStop = false;
             lightGroupBox.Text = "Oświetlenie i kolory";
             // 
+            // lightPanel
+            // 
+            lightPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lightPanel.AutoScroll = true;
+            lightPanel.Controls.Add(lightColorPictureBox);
+            lightPanel.Controls.Add(resetLightPositionButton);
+            lightPanel.Controls.Add(moveLightCheckBox);
+            lightPanel.Controls.Add(lightColorButton);
+            lightPanel.Controls.Add(kdPanel);
+            lightPanel.Controls.Add(ksPanel);
+            lightPanel.Controls.Add(mPanel);
+            lightPanel.Controls.Add(LightZCoordPanel);
+            lightPanel.Location = new Point(3, 19);
+            lightPanel.Name = "lightPanel";
+            lightPanel.Size = new Size(214, 455);
+            lightPanel.TabIndex = 21;
+            // 
             // resetLightPositionButton
             // 
-            resetLightPositionButton.Location = new Point(6, 447);
+            resetLightPositionButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            resetLightPositionButton.Location = new Point(20, 428);
             resetLightPositionButton.Name = "resetLightPositionButton";
             resetLightPositionButton.Size = new Size(188, 23);
             resetLightPositionButton.TabIndex = 18;
@@ -518,8 +531,9 @@
             // 
             // moveLightCheckBox
             // 
+            moveLightCheckBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             moveLightCheckBox.AutoSize = true;
-            moveLightCheckBox.Location = new Point(9, 422);
+            moveLightCheckBox.Location = new Point(23, 403);
             moveLightCheckBox.Name = "moveLightCheckBox";
             moveLightCheckBox.Size = new Size(120, 19);
             moveLightCheckBox.TabIndex = 17;
@@ -542,7 +556,7 @@
             surfaceGroupBox.Controls.Add(objectColorPanel);
             surfaceGroupBox.Location = new Point(12, 12);
             surfaceGroupBox.Name = "surfaceGroupBox";
-            surfaceGroupBox.Size = new Size(942, 114);
+            surfaceGroupBox.Size = new Size(924, 114);
             surfaceGroupBox.TabIndex = 14;
             surfaceGroupBox.TabStop = false;
             surfaceGroupBox.Text = "Powierzchnia siatki";
@@ -560,7 +574,7 @@
             // 
             normalMapCheckBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             normalMapCheckBox.AutoSize = true;
-            normalMapCheckBox.Location = new Point(730, 80);
+            normalMapCheckBox.Location = new Point(712, 80);
             normalMapCheckBox.Name = "normalMapCheckBox";
             normalMapCheckBox.Size = new Size(203, 19);
             normalMapCheckBox.TabIndex = 15;
@@ -583,7 +597,7 @@
             drawFillingCheckBox.AutoSize = true;
             drawFillingCheckBox.Checked = true;
             drawFillingCheckBox.CheckState = CheckState.Checked;
-            drawFillingCheckBox.Location = new Point(701, 55);
+            drawFillingCheckBox.Location = new Point(683, 55);
             drawFillingCheckBox.Name = "drawFillingCheckBox";
             drawFillingCheckBox.Size = new Size(120, 19);
             drawFillingCheckBox.TabIndex = 14;
@@ -606,7 +620,7 @@
             drawEdgesCheckBox.AutoSize = true;
             drawEdgesCheckBox.Checked = true;
             drawEdgesCheckBox.CheckState = CheckState.Checked;
-            drawEdgesCheckBox.Location = new Point(827, 55);
+            drawEdgesCheckBox.Location = new Point(809, 55);
             drawEdgesCheckBox.Name = "drawEdgesCheckBox";
             drawEdgesCheckBox.Size = new Size(109, 19);
             drawEdgesCheckBox.TabIndex = 13;
@@ -638,14 +652,14 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1172, 807);
+            ClientSize = new Size(1174, 806);
             Controls.Add(fpsLabel);
             Controls.Add(surfaceGroupBox);
             Controls.Add(lightGroupBox);
             Controls.Add(meshGroupBox);
             Controls.Add(pictureBox);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            MinimumSize = new Size(1188, 846);
+            MinimumSize = new Size(1190, 0);
             Name = "MeshDisplayer";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "MeshDisplayer";
@@ -676,7 +690,8 @@
             objectColorPanel.PerformLayout();
             meshGroupBox.ResumeLayout(false);
             lightGroupBox.ResumeLayout(false);
-            lightGroupBox.PerformLayout();
+            lightPanel.ResumeLayout(false);
+            lightPanel.PerformLayout();
             surfaceGroupBox.ResumeLayout(false);
             surfaceGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)texturePictureBox).EndInit();
@@ -739,5 +754,6 @@
         private PictureBox normalMapPictureBox;
         private PictureBox lightColorPictureBox;
         private Label fpsLabel;
+        private Panel lightPanel;
     }
 }
