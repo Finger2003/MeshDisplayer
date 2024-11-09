@@ -74,9 +74,7 @@ namespace Lab2
             //LightZCoord = lightZCoordTrackBar.Value;
 
             DirectBitmap = new(pictureBox.Width, pictureBox.Height);
-            //Bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
             Bitmap = DirectBitmap.Bitmap;
-            //TextureBitmap = new(DefaultTexturePath);
 
             using (MemoryStream ms = new(Properties.Resources.DefaultTexture))
             {
@@ -85,12 +83,6 @@ namespace Lab2
                 TextureDirectBitmap = new(img.Width, img.Height);
                 using Graphics g = Graphics.FromImage(TextureDirectBitmap.Bitmap);
                 g.DrawImage(img, 0, 0, TextureDirectBitmap.Width, TextureDirectBitmap.Height);
-
-
-                //TextureBitmap = (Bitmap)img;
-                //TextureBitmap = new(img.Width, img.Height);
-                //using Graphics g1 = Graphics.FromImage(TextureBitmap);
-                //g1.DrawImage(img, 0, 0, TextureBitmap.Width, TextureBitmap.Height);
             }
             using (MemoryStream ms = new(Properties.Resources.DefaultNormalMap))
             {
@@ -99,11 +91,9 @@ namespace Lab2
                 Bitmap normalBmp = (Bitmap)img;
                 SetNormalMap(normalBmp);
             }
-            //TextureBitmap = (Bitmap)Bitmap.FromStream(new MemoryStream(Properties.Resources.DefaultTexture));
-            //NormalMapBitmap = new(DefaultNormalMapPath);
-            //colourPictureBox.DataBindings.Add("BackColor", this, "MeshColor");
+
             meshColorPictureBox.BackColor = MeshColor;
-            //pictureBox.Image = Bitmap;
+            lightColorPictureBox.BackColor = LightColor;
 
             G = Graphics.FromImage(Bitmap);
             G.ScaleTransform(1, -1);
@@ -116,7 +106,6 @@ namespace Lab2
             LightPosition = new Vector3(0, 0, lightZCoordTrackBar.Value);
 
             Timer.Elapsed += timer_Tick;
-            //PaintPictureBox();
         }
 
         private void bindFormat(object sender, ConvertEventArgs e)
@@ -170,16 +159,11 @@ namespace Lab2
 
             if (DrawFilling)
             {
-                //BitmapData bitmapData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-
                 LightPositionMutex.WaitOne();
                 LightPositionForDrawing = LightPosition;
                 LightPositionMutex.ReleaseMutex();
 
-                foreach (Triangle triangle in Mesh.Triangles)
-                    fillTriangle(triangle);
-
-                //Bitmap.UnlockBits(bitmapData);
+                Parallel.ForEach(Mesh.Triangles, fillTriangle);
             }
 
             if (DrawEdges)
@@ -194,27 +178,8 @@ namespace Lab2
                     G.DrawLine(Pens.Black, v2, v3);
                     G.DrawLine(Pens.Black, v3, v1);
                 }
-
             }
 
-
-
-            //G.FillEllipse(Brushes.Black, LightPosition.X - 5, LightPosition.Y - 5, 10, 10);
-
-            //foreach (Triangle triangle in Mesh.Triangles)
-            //{
-            //    PointF v1 = new(triangle.V1.AfterRotationState.P.X, triangle.V1.AfterRotationState.P.Y);
-            //    PointF v2 = new(triangle.V2.AfterRotationState.P.X, triangle.V2.AfterRotationState.P.Y);
-            //    PointF v3 = new(triangle.V3.AfterRotationState.P.X, triangle.V3.AfterRotationState.P.Y);
-
-            //    BitmapData bitmapData = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-            //    fillTriangle(triangle, bitmapData);
-            //    Bitmap.UnlockBits(bitmapData);
-
-            //    G.DrawLine(Pens.Black, v1, v2);
-            //    G.DrawLine(Pens.Black, v2, v3);
-            //    G.DrawLine(Pens.Black, v3, v1);
-            //}
             e.Graphics.DrawImage(Bitmap, 0, 0);
 
             sw.Stop();
@@ -226,7 +191,6 @@ namespace Lab2
 
         private void fillTriangle(Triangle triangle)
         {
-            //const int bytesPerPixel = 4;
 
             Point[] trianglePoints =
             [
@@ -285,9 +249,6 @@ namespace Lab2
                     // Transformacja uk³adu wspó³rzêdnych
                     int transformedY = -scanline + DirectBitmap.Height / 2;
 
-                    // WskaŸnik na pierwszy piksel w scanline
-                    //byte* row = (byte*)bitmapData.Scan0 + transformedY * bitmapData.Stride;
-
                     // Aktualnie rozwa¿any punkt
                     Point p = new(0, scanline);
 
@@ -309,10 +270,7 @@ namespace Lab2
                                 float[] coords = getBaricentricCoords(p);
                                 float u = triangle.V1.U * coords[0] + triangle.V2.U * coords[1] + triangle.V3.U * coords[2];
                                 float v = triangle.V1.V * coords[0] + triangle.V2.V * coords[1] + triangle.V3.V * coords[2];
-                                //if(u > 0.95 && v > 0.95)
-                                //{
 
-                                //}
                                 Color color = getColor(GetColor(u, v), coords, u, v);
 
                                 // Transformacja uk³adu wspó³rzêdnych
@@ -320,14 +278,6 @@ namespace Lab2
 
                                 if (transformedX >= 0 && transformedX < DirectBitmap.Width)
                                     DirectBitmap.SetPixel(transformedX, transformedY, color);
-                                    //continue;
-
-                                //int bitmapIndex = transformedX * bytesPerPixel;
-
-                                //row[bitmapIndex] = color[2];
-                                //row[bitmapIndex + 1] = color[1];
-                                //row[bitmapIndex + 2] = color[0];
-                                //row[bitmapIndex + 3] = MeshColor.A;
                             }
                         }
                     }
@@ -342,14 +292,10 @@ namespace Lab2
                 {
                     Vector3 Il = new(LightColor.R, LightColor.G, LightColor.B);
                     Vector3 Io = new(color.R, color.G, color.B);
-                    //Vector3 L = new(0, 0, 1);
                     Vector3 Punkt = triangle.V1.AfterRotationState.P * coords[0] + triangle.V2.AfterRotationState.P * coords[1] + triangle.V3.AfterRotationState.P * coords[2];
                     Vector3 L = LightPositionForDrawing - Punkt;
-                    //L = L - Punkt;
-                    //Vector3 N = triangle.V1.AfterRotationState.N * cords[0] + triangle.V2.AfterRotationState.N * cords[1] + triangle.V3.AfterRotationState.N * cords[2];
                     Vector3 N = GetNormalVector(triangle, coords, u, v);
                     Vector3 V = new(0, 0, 1);
-                    //N = Vector3.Abs(N);
 
                     Il = Vector3.Normalize(Il);
                     Io = Vector3.Normalize(Io);
@@ -396,14 +342,13 @@ namespace Lab2
 
             DirectBitmap = new(pictureBox.Width, pictureBox.Height);
             Bitmap = DirectBitmap.Bitmap;
-            //Bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
+
             G = Graphics.FromImage(Bitmap);
             G.DrawImage(oldBitmap, 0, 0);
 
             G.ScaleTransform(1, -1);
             G.TranslateTransform(Bitmap.Width / 2, -Bitmap.Height / 2);
 
-            //pictureBox.Image = Bitmap;
             pictureBox.Invalidate();
 
             oldDirectBitmap.Dispose();
@@ -505,13 +450,6 @@ namespace Lab2
 
         private void textureButton_Click(object sender, EventArgs e)
         {
-            //if (openFileDialog.ShowDialog() == DialogResult.OK)
-            //{
-            //    //TexturePath = textureOpenFileDialog.FileName;
-            //    TextureBitmap = new(openFileDialog.FileName);
-
-            //    pictureBox.Invalidate();
-            //}
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string fileName = openFileDialog.FileName;
@@ -546,11 +484,11 @@ namespace Lab2
 
             u = Math.Clamp(u, 0, 1);
             v = Math.Clamp(v, 0, 1);
-            //Color color = NormalMapBitmap.GetPixel((int)(u * (NormalMapBitmap.Width - 1)), (int)(v * (NormalMapBitmap.Height - 1)));
-            //Vector3 normalMapN = new Vector3(color.R, color.G, color.B) / 255 * 2 - new Vector3(1, 1, 1);
+
             Vector3 normalMapN = NormalMap[(int)(u * (NormalMap.GetLength(0) - 1)), (int)(v * (NormalMap.GetLength(1) - 1))];
             Vector3 Pu = triangle.V1.AfterRotationState.Pu * coords[0] + triangle.V2.AfterRotationState.Pu * coords[1] + triangle.V3.AfterRotationState.Pu * coords[2];
             Vector3 Pv = triangle.V1.AfterRotationState.Pv * coords[0] + triangle.V2.AfterRotationState.Pv * coords[1] + triangle.V3.AfterRotationState.Pv * coords[2];
+
             Matrix4x4 T = new Matrix4x4(
                 Pu.X, Pv.X, N.X, 0,
                 Pu.Y, Pv.Y, N.Y, 0,
@@ -560,28 +498,18 @@ namespace Lab2
 
             normalMapN = Vector3.Transform(normalMapN, T);
             return Vector3.Normalize(normalMapN);
-
-            //throw new NotImplementedException();
         }
 
         private Vector3 GetNormalVectorFromVertices(Triangle triangle, float[] coords, float u, float v)
         {
             Vector3 N = triangle.V1.AfterRotationState.N * coords[0] + triangle.V2.AfterRotationState.N * coords[1] + triangle.V3.AfterRotationState.N * coords[2];
             return Vector3.Normalize(N);
-            //throw new NotImplementedException();
         }
 
         private void normalMapButton_Click(object sender, EventArgs e)
         {
-            //if (openFileDialog.ShowDialog() == DialogResult.OK)
-            //{
-            //    NormalMapBitmap = new(openFileDialog.FileName);
-
-            //    pictureBox.Invalidate();
-            //}
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                //NormalMapBitmap = new(openFileDialog.FileName);
                 string fileName = openFileDialog.FileName;
                 Bitmap bitmap = new(fileName);
                 SetNormalMap(bitmap);
@@ -619,7 +547,6 @@ namespace Lab2
         private float AngleChange { get; set; } = 0.1f;
         private void MoveLight()
         {
-            //Timer.Stop();
             LightPositionMutex.WaitOne();
 
             LightZAxisRadius += RadiusChange;
@@ -635,7 +562,6 @@ namespace Lab2
             }
 
             LightPositionMutex.ReleaseMutex();
-            //Timer.Start();
             pictureBox.Invalidate();
         }
 
