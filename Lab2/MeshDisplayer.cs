@@ -325,7 +325,7 @@ namespace Lab2
             {
                 string fileName = openFileDialog.FileName;
                 Bitmap bitmap = new(fileName);
-                GetNormalMap(bitmap);
+                MeshRenderer.NormalMap = GetNormalMap(bitmap);
                 normalMapPictureBox.Image = Image.FromFile(fileName);
 
                 pictureBox.Invalidate();
