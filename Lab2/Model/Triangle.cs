@@ -6,17 +6,10 @@ using System.Threading.Tasks;
 
 namespace Lab2.Model
 {
-    public class Triangle
+    public class Triangle(Vertex v1, Vertex v2, Vertex v3)
     {
-        public Vertex V1 { get; set; }
-        public Vertex V2 { get; set; }
-        public Vertex V3 { get; set; }
-
-        public Triangle(Vertex v1, Vertex v2, Vertex v3)
-        {
-            V1 = v1;
-            V2 = v2;
-            V3 = v3;
-        }
+        public Vertex V1 { get; } = v1;
+        public Vertex V2 { get; } = v2;
+        public Vertex V3 { get; } = v3;
     }
 }

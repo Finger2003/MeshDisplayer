@@ -7,15 +7,9 @@ using System.Threading.Tasks;
 
 namespace Lab2.SceneModel
 {
-    public class LightSource
+    public class LightSource(Vector3 position, Color color)
     {
-        public Vector3 Position { get; set; }
-        public Color Color { get; set; }
-
-        public LightSource(Vector3 position, Color color)
-        {
-            Position = position;
-            Color = color;
-        }
+        public Vector3 Position { get; set; } = position;
+        public Color Color { get; set; } = color;
     }
 }

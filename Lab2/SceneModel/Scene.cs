@@ -4,18 +4,11 @@ using System.Numerics;
 
 namespace Lab2.SceneModel
 {
-    public class Scene
+    public class Scene(Mesh mesh, LightSource lightSource, IMeshRenderer meshRenderer)
     {
-        public Mesh Mesh { get; set; }
-        public LightSource LightSource { get; set; }
-        public IMeshRenderer MeshRenderer { get; set; }
-
-        public Scene(Mesh mesh, LightSource lightSource, IMeshRenderer meshRenderer)
-        {
-            Mesh = mesh;
-            LightSource = lightSource;
-            MeshRenderer = meshRenderer;
-        }
+        public Mesh Mesh { get; set; } = mesh;
+        public LightSource LightSource { get; set; } = lightSource;
+        public IMeshRenderer MeshRenderer { get; set; } = meshRenderer;
 
         public void RenderScene()
         {

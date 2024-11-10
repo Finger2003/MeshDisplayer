@@ -1,18 +1,10 @@
 ﻿namespace Lab2.Utils
 {
-    public class AETElement
+    public class AETElement(Point p1, Point p2)
     {
-        public Point P1 { get; set; }
-        public Point P2 { get; set; }
-        public float X { get; set; }
-        public float InverseSlope { get; set; } = 0;
-
-        public AETElement(Point p1, Point p2)
-        {
-            P1 = p1;
-            P2 = p2;
-            X = p2.X;
-            InverseSlope = (float)(p2.X - p1.X) / (p2.Y - p1.Y);
-        }
+        public Point P1 { get; set; } = p1;
+        public Point P2 { get; set; } = p2;
+        public float X { get; set; } = p2.X;
+        public float InverseSlope { get; set; } = (float)(p2.X - p1.X) / (p2.Y - p1.Y);
     }
 }

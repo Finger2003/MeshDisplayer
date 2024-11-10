@@ -8,8 +8,8 @@ namespace Lab2.Renderers
 {
     public class MeshRenderer : IMeshRenderer
     {
-        public bool DrawFilling { get; set; }
-        public bool DrawEdges { get; set; }
+        public bool DrawFilling { get; set; } = true;
+        public bool DrawEdges { get; set; } = true;
         public ICoordinateTransformer2D CoordinateTransformer { get; set; }
         public DirectBitmap DirectBitmap { get; set; }
         public Graphics G { get; set; }
