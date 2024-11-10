@@ -1,5 +1,6 @@
 using Lab2.CoordinatesTransformers;
 using Lab2.Model;
+using Lab2.Renderers;
 using Lab2.VertexFileReaders;
 using System.Diagnostics;
 using System.Drawing;
@@ -25,7 +26,84 @@ namespace Lab2
         public MeshDisplayer()
         {
             InitializeComponent();
+            BindLabels();
 
+            float kd = scaleTrackBarValueToOne(kdTrackBar);
+            float ks = scaleTrackBarValueToOne(ksTrackBar);
+            float m = mTrackBar.Value;
+
+            DirectBitmap = new(pictureBox.Width, pictureBox.Height);
+            Bitmap = DirectBitmap.Bitmap;
+            CoordinateTransformer = new(Bitmap.Width, Bitmap.Height);
+
+            DirectBitmap textureDirectBitmap = LoadDefaultTexture();
+            Vector3[,] normalMap = LoadDefaultNormalMap();
+
+
+            Color meshColor = Color.FromName(Properties.Resources.DefaultMeshColor);
+            Color lightColor = Color.FromName(Properties.Resources.DefaultLightColor);
+            meshColorPictureBox.BackColor = meshColor;
+            lightColorPictureBox.BackColor = lightColor;
+
+            G = Graphics.FromImage(Bitmap);
+            SetGraphicsTransformation();
+
+            ICoordinateTransformer2D transformer = new CenterCoordinateTransformer2D(Bitmap.Width, Bitmap.Height);
+            ReflectionCoefficients reflectionCoefficients = new(ks, kd, m);
+
+            MeshRenderer = new(DirectBitmap, G, transformer, reflectionCoefficients, textureDirectBitmap, normalMap);
+            MeshRenderer.GetColor = MeshRenderer.GetMeshRGBColor;
+            MeshRenderer.GetNormalVector = MeshRenderer.GetNormalVectorFromVertices;
+            MeshRenderer.DrawEdges = drawEdgesCheckBox.Checked;
+            MeshRenderer.DrawFilling = drawFillingCheckBox.Checked;
+            MeshRenderer.MeshColor = meshColor;
+
+            Vector3[,] controlPoints = GetControlPointsFromFile(Properties.Resources.DefaultControlPointsPath);
+            Vector3 lightPosition = new(0, 0, lightZCoordTrackBar.Value);
+
+            Mesh mesh = new(controlPoints, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
+            Scene = new(mesh, new LightSource(lightPosition, lightColor), MeshRenderer);
+
+            Timer.Elapsed += timer_Tick;
+        }
+
+        private void SetGraphicsTransformation()
+        {
+            G.ScaleTransform(1, -1);
+            G.TranslateTransform(Bitmap.Width / 2, -Bitmap.Height / 2);
+        }
+
+        private Vector3[,] LoadDefaultNormalMap()
+        {
+            Vector3[,] normalMap;
+            using (MemoryStream ms = new(Properties.Resources.DefaultNormalMap))
+            {
+                Image img = Image.FromStream(ms);
+                normalMapPictureBox.Image = img;
+                Bitmap normalBmp = (Bitmap)img;
+                normalMap = GetNormalMap(normalBmp);
+            }
+
+            return normalMap;
+        }
+
+        private DirectBitmap LoadDefaultTexture()
+        {
+            DirectBitmap textureDirectBitmap;
+            using (MemoryStream ms = new(Properties.Resources.DefaultTexture))
+            {
+                Image img = Image.FromStream(ms);
+                texturePictureBox.Image = img;
+                textureDirectBitmap = new(img.Width, img.Height);
+                using Graphics g = Graphics.FromImage(textureDirectBitmap.Bitmap);
+                g.DrawImage(img, 0, 0, textureDirectBitmap.Width, textureDirectBitmap.Height);
+            }
+
+            return textureDirectBitmap;
+        }
+
+        private void BindLabels()
+        {
             fideltyValueLabel.DataBindings.Add("Text", fidelityTrackBar, "Value");
             alphaAngleValueLabel.DataBindings.Add("Text", alphaAngleTrackBar, "Value");
             betaAngleValueLabel.DataBindings.Add("Text", betaAngleTrackBar, "Value");
@@ -40,62 +118,6 @@ namespace Lab2
 
             mValueLabel.DataBindings.Add("Text", mTrackBar, "Value");
             lightZCoordValueLabel.DataBindings.Add("Text", lightZCoordTrackBar, "Value");
-
-            float kd = scaleTrackBarValueToOne(kdTrackBar);
-            float ks = scaleTrackBarValueToOne(ksTrackBar);
-            float m = mTrackBar.Value;
-
-            DirectBitmap = new(pictureBox.Width, pictureBox.Height);
-            Bitmap = DirectBitmap.Bitmap;
-            CoordinateTransformer = new(Bitmap.Width, Bitmap.Height);
-
-            DirectBitmap textureDirectBitmap;
-            using (MemoryStream ms = new(Properties.Resources.DefaultTexture))
-            {
-                Image img = Image.FromStream(ms);
-                texturePictureBox.Image = img;
-                textureDirectBitmap = new(img.Width, img.Height);
-                using Graphics g = Graphics.FromImage(textureDirectBitmap.Bitmap);
-                g.DrawImage(img, 0, 0, textureDirectBitmap.Width, textureDirectBitmap.Height);
-            }
-            Vector3[,] normalMap;
-            using (MemoryStream ms = new(Properties.Resources.DefaultNormalMap))
-            {
-                Image img = Image.FromStream(ms);
-                normalMapPictureBox.Image = img;
-                Bitmap normalBmp = (Bitmap)img;
-                normalMap = GetNormalMap(normalBmp);
-            }
-
-            Color meshColor = Color.FromName(Properties.Resources.DefaultMeshColor);
-            Color lightColor = Color.FromName(Properties.Resources.DefaultLightColor);
-            meshColorPictureBox.BackColor = meshColor;
-            lightColorPictureBox.BackColor = lightColor;
-
-            G = Graphics.FromImage(Bitmap);
-            G.ScaleTransform(1, -1);
-            G.TranslateTransform(Bitmap.Width / 2, -Bitmap.Height / 2);
-
-
-            ICoordinateTransformer2D transformer = new CenterCoordinateTransformer2D(Bitmap.Width, Bitmap.Height);
-            ReflectionCoefficients reflectionCoefficients = new(ks, kd, m);
-
-            MeshRenderer = new(DirectBitmap, transformer, reflectionCoefficients, textureDirectBitmap, normalMap);
-            MeshRenderer.GetColor = MeshRenderer.GetMeshRGBColor;
-            MeshRenderer.GetNormalVector = MeshRenderer.GetNormalVectorFromVertices;
-            MeshRenderer.DrawEdges = true;
-            MeshRenderer.DrawFilling = true;
-            MeshRenderer.MeshColor = meshColor;
-            MeshRenderer.G = G;
-
-            Vector3[,] controlPoints = GetControlPointsFromFile(Properties.Resources.DefaultControlPointsPath);
-
-            Vector3 lightPosition = new(0, 0, lightZCoordTrackBar.Value);
-
-            Mesh mesh = new(controlPoints, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
-            Scene = new(mesh, new LightSource(lightPosition, lightColor), MeshRenderer);
-
-            Timer.Elapsed += timer_Tick;
         }
 
         private void bindFormat(object sender, ConvertEventArgs e)
@@ -172,8 +194,7 @@ namespace Lab2
             G = Graphics.FromImage(Bitmap);
             G.DrawImage(oldBitmap, 0, 0);
 
-            G.ScaleTransform(1, -1);
-            G.TranslateTransform(Bitmap.Width / 2, -Bitmap.Height / 2);
+            SetGraphicsTransformation();
 
             MeshRenderer.DirectBitmap = DirectBitmap;
             MeshRenderer.G = G;
@@ -257,7 +278,7 @@ namespace Lab2
         private void fixedColorRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             MeshRenderer.GetColor = MeshRenderer.GetMeshRGBColor;
-            //GetColor = GetMeshRGBColor;
+            
             pictureBox.Invalidate();
         }
 
@@ -279,7 +300,6 @@ namespace Lab2
                 using Graphics g = Graphics.FromImage(MeshRenderer.TextureDirectBitmap.Bitmap);
                 {
                     g.DrawImage(textureBitmap, 0, 0, MeshRenderer.TextureDirectBitmap.Width, MeshRenderer.TextureDirectBitmap.Height);
-
                 }
 
                 texturePictureBox.Image = Image.FromFile(fileName);
@@ -355,7 +375,8 @@ namespace Lab2
                 TxtControlPointsReader reader = new(ControlPointsFirstDimensionCount, ControlPointsSecondDimensionCount);
                 string fileName = openFileDialog.FileName;
                 Vector3[,] controlPoints = reader.Read(fileName);
-                Scene.Mesh = new Mesh(controlPoints, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
+                Scene.Mesh.ControlPoints = controlPoints;
+                Scene.Mesh.InterPolateVertices();
 
                 pictureBox.Invalidate();
             }

@@ -17,6 +17,8 @@ namespace Lab2.Model
 
         private float AlphaRadians { get; set; }
         private float BetaRadians { get; set; }
+        private int FidelityU { get; set; }
+        private int FidelityV { get; set; }
 
         public Mesh(Vector3[,] controlPoints, int fidelityU, int fidelityV, int alphaAngle, int betaAngle)
         {
@@ -26,23 +28,22 @@ namespace Lab2.Model
             SetFidelity(fidelityU, fidelityV);
         }
 
-
-        public void SetFidelity(int fidelityU, int fidelityV)
+        public void InterPolateVertices()
         {
-            Vertices = new Vertex[fidelityU, fidelityV];
+            Vertices = new Vertex[FidelityU, FidelityV];
 
 
-            float stepU = 1.0f / (fidelityU - 1);
-            float stepV = 1.0f / (fidelityV - 1);
+            float stepU = 1.0f / (FidelityU - 1);
+            float stepV = 1.0f / (FidelityV - 1);
 
             int n = ControlPoints.GetLength(0) - 1;
             int m = ControlPoints.GetLength(1) - 1;
 
             // Potęgi u i v oraz 1-u i 1-v - pierwszy wymiar: kolejne u i v oraz 1-u i 1-v, drugi wymiar: kolejne potęgi
-            float[,] uPowers = new float[fidelityU, n + 1];
-            float[,] vPowers = new float[fidelityV, m + 1];
-            float[,] oneMinusUPowers = new float[fidelityU, n + 1];
-            float[,] oneMinusVPowers = new float[fidelityV, m + 1];
+            float[,] uPowers = new float[FidelityU, n + 1];
+            float[,] vPowers = new float[FidelityV, m + 1];
+            float[,] oneMinusUPowers = new float[FidelityU, n + 1];
+            float[,] oneMinusVPowers = new float[FidelityV, m + 1];
 
             fillWithPowers(uPowers, 0, stepU);
             fillWithPowers(vPowers, 0, stepV);
@@ -51,14 +52,14 @@ namespace Lab2.Model
 
 
             // B_i_n(u) Pierwszy wymiar: kolejne u, drugi wymiar: kolejne i
-            float[,] Bu = new float[fidelityU, n + 1];
+            float[,] Bu = new float[FidelityU, n + 1];
             // B_j_m(v) Pierwszy wymiar: kolejne v, drugi wymiar: kolejne i
-            float[,] Bv = new float[fidelityV, m + 1];
+            float[,] Bv = new float[FidelityV, m + 1];
 
             // B_i_(n-1)(u) Pierwszy wymiar: kolejne u, drugi wymiar: kolejne i
-            float[,] BuTan = new float[fidelityU, n];
+            float[,] BuTan = new float[FidelityU, n];
             // B_j_(m-1)(v) Pierwszy wymiar: kolejne v, drugi wymiar: kolejne i
-            float[,] BvTan = new float[fidelityV, m];
+            float[,] BvTan = new float[FidelityV, m];
 
 
             fillWithBernstein(Bu, uPowers, oneMinusUPowers);
@@ -68,10 +69,10 @@ namespace Lab2.Model
 
             float v, u = 0;
             // Wyznaczanie wierzchołków
-            for (int ui = 0; ui < fidelityU; ui++)
+            for (int ui = 0; ui < FidelityU; ui++)
             {
                 v = 0;
-                for (int vi = 0; vi < fidelityV; vi++)
+                for (int vi = 0; vi < FidelityV; vi++)
                 {
                     Vector3 p = new(0, 0, 0);
                     Vector3 pu = new(0, 0, 0);
@@ -112,9 +113,9 @@ namespace Lab2.Model
 
             // Łączenie w trójkąty
             Triangles.Clear();
-            for (int ui = 0; ui < fidelityU - 1; ui++)
+            for (int ui = 0; ui < FidelityU - 1; ui++)
             {
-                for (int vi = 0; vi < fidelityV - 1; vi++)
+                for (int vi = 0; vi < FidelityV - 1; vi++)
                 {
                     Triangle t1 = new Triangle(Vertices[ui, vi], Vertices[ui + 1, vi], Vertices[ui, vi + 1]);
                     Triangle t2 = new Triangle(Vertices[ui + 1, vi], Vertices[ui + 1, vi + 1], Vertices[ui, vi + 1]);
@@ -158,9 +159,16 @@ namespace Lab2.Model
                     {
                         tab[i, j] = binCoeff * powers[i, j] * oneMinusPowers[i, m - j];
                         binCoeff = binCoeff * (m - j) / (j + 1);
-                     }
+                    }
                 }
             }
+        }
+
+        public void SetFidelity(int fidelityU, int fidelityV)
+        {
+            FidelityU = fidelityU;
+            FidelityV = fidelityV;
+            InterPolateVertices();
         }       
 
 

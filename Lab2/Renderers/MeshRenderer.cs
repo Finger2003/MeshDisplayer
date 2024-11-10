@@ -23,9 +23,10 @@ namespace Lab2.Renderers
         public Vector3[,] NormalMap { get; set; }
         public Color MeshColor { get; set; }
 
-        public MeshRenderer(DirectBitmap directBitmap, ICoordinateTransformer2D coordinateTransformer, ReflectionCoefficients reflectionCoefficients, DirectBitmap textureDirectBitmap, Vector3[,] normalMap)
+        public MeshRenderer(DirectBitmap directBitmap, Graphics bitmapGraphics, ICoordinateTransformer2D coordinateTransformer, ReflectionCoefficients reflectionCoefficients, DirectBitmap textureDirectBitmap, Vector3[,] normalMap)
         {
             DirectBitmap = directBitmap;
+            G = bitmapGraphics;
             CoordinateTransformer = coordinateTransformer;
             ReflectionCoefficients = reflectionCoefficients;
             TextureDirectBitmap = textureDirectBitmap;
