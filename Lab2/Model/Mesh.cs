@@ -23,8 +23,10 @@ namespace Lab2.Model
         public Mesh(Vector3[,] controlPoints, int fidelityU, int fidelityV, int alphaAngle, int betaAngle)
         {
             ControlPoints = controlPoints;
-            AlphaRadians = alphaAngle * MathF.PI / 180;
-            BetaRadians = betaAngle * MathF.PI / 180;
+            AlphaRadians = MathHelper.DegreesToRadians(alphaAngle);
+            BetaRadians = MathHelper.DegreesToRadians(betaAngle);
+            //AlphaRadians = alphaAngle * MathF.PI / 180;
+            //BetaRadians = betaAngle * MathF.PI / 180;
             SetFidelity(fidelityU, fidelityV);
         }
 
@@ -97,8 +99,8 @@ namespace Lab2.Model
                     pu *= n;
                     pv *= m;
 
-                    pu = Vector3.Normalize(pu);
-                    pv = Vector3.Normalize(pv);
+                    //pu = Vector3.Normalize(pu);
+                    //pv = Vector3.Normalize(pv);
 
 
                     // Wektor normalny
@@ -150,7 +152,7 @@ namespace Lab2.Model
                 int rows = tab.GetLength(0);
                 int cols = tab.GetLength(1);
                 int m = cols - 1;
-                int basebinCoeff = GetBinCoeff(m, 0);
+                int basebinCoeff = MathHelper.GetBinCoeff(m, 0);
 
                 for (int i = 0; i < rows; i++)
                 {
@@ -174,12 +176,14 @@ namespace Lab2.Model
 
         public void SetAlphaAngle(int alphaAngle)
         {
-            AlphaRadians = alphaAngle * MathF.PI / 180;
+            AlphaRadians = MathHelper.DegreesToRadians(alphaAngle);
+            //AlphaRadians = alphaAngle * MathF.PI / 180;
             RotateVertices();
         }
         public void SetBetaAngle(int betaAngle)
         {
-            BetaRadians = betaAngle * MathF.PI / 180;
+            BetaRadians = MathHelper.DegreesToRadians(betaAngle);
+            //BetaRadians = betaAngle * MathF.PI / 180;
             RotateVertices();
         }
 
@@ -196,23 +200,6 @@ namespace Lab2.Model
 
                 vertex.AfterRotationState = new Vertex.State(p, pu, pv, n);
             }
-        }
-
-
-        private int GetBinCoeff(int n, int k)
-        {
-            int r = 1;
-            int d;
-            if(k > n)
-                return 0;
-
-            for(d = 1; d<=k;d++)
-            {
-                r *= n--;
-                r /= d;
-            }
-
-            return r;
         }
     }
 }

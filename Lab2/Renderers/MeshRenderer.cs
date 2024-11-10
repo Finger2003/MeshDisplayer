@@ -150,15 +150,16 @@ namespace Lab2.Renderers
                         for (int x = x1; x < x2; x++)
                         {
                             p.X = x;
-                            float[] coords = getBaricentricCoords(p);
+                            float[] coords = MathHelper.GetBaricentricCoordinates(p, trianglePoints[0], trianglePoints[1], trianglePoints[2]);
+                            //float[] coords = getBaricentricCoords(p);
 
                             if (coords.Contains(float.NaN))
                                 continue;
 
-                            float u = triangle.V1.U * coords[0] + triangle.V2.U * coords[1] + triangle.V3.U * coords[2];
-                            float v = triangle.V1.V * coords[0] + triangle.V2.V * coords[1] + triangle.V3.V * coords[2];
+                            float u = MathHelper.InterpolateFloatFromBaricentric(triangle.V1.U, triangle.V2.U, triangle.V3.U, coords);
+                            float v = MathHelper.InterpolateFloatFromBaricentric(triangle.V1.V, triangle.V2.V, triangle.V3.V, coords);
 
-                            Color color = getColor(coords, u, v);
+                            Color color = getInterpolatedColor(coords, u, v);
 
                             // Transformacja układu współrzędnych
                             int transformedX = CoordinateTransformer.TransformX(x);
@@ -174,7 +175,7 @@ namespace Lab2.Renderers
                     AET[i].X += AET[i].InverseSlope;
 
 
-                Color getColor(float[] coords, float u, float v)
+                Color getInterpolatedColor(float[] coords, float u, float v)
                 {
                     Color color = GetColor(u, v);
                     Color lightColor = LightSource.Color;
@@ -183,10 +184,10 @@ namespace Lab2.Renderers
 
                     Vector3 Il = new(lightColor.R, lightColor.G, lightColor.B);
                     Vector3 Io = new(color.R, color.G, color.B);
-                    Vector3 P = triangle.V1.AfterRotationState.P * coords[0] + triangle.V2.AfterRotationState.P * coords[1] + triangle.V3.AfterRotationState.P * coords[2];
+                    Vector3 P = MathHelper.InterpolateVectorFromBaricentric(triangle.V1.AfterRotationState.P, triangle.V2.AfterRotationState.P, triangle.V3.AfterRotationState.P, coords);
                     Vector3 L = lightPosition - P;
                     Vector3 N = GetNormalVector(triangle, coords, u, v);
-                    Vector3 V = new(0, 0, 1);
+                    Vector3 V = Vector3.UnitZ;
 
                     Il = Vector3.Normalize(Il);
                     Io = Vector3.Normalize(Io);
@@ -201,29 +202,12 @@ namespace Lab2.Renderers
                     float ks = ReflectionCoefficients.Ks;
                     float m = ReflectionCoefficients.M;
 
-                    Vector3 I = kd * Il * Io * Math.Max(0, Vector3.Dot(L, N)) + ks * Il * Io * MathF.Pow(Math.Max(0, Vector3.Dot(R, V)), m);
+                    Vector3 I = Il * Io * (kd * Math.Max(0, Vector3.Dot(L, N)) + ks * MathF.Pow(Math.Max(0, Vector3.Dot(R, V)), m));
 
-                    I = Vector3.Clamp(I, new Vector3(0, 0, 0), new Vector3(1, 1, 1));
+                    I = Vector3.Clamp(I, Vector3.Zero, Vector3.One);
                     I *= 255;
 
                     return Color.FromArgb((int)I.X, (int)I.Y, (int)I.Z);
-                }
-
-                float[] getBaricentricCoords(Point p)
-                {
-                    float[] coords = new float[3];
-                    float invertedS = (float)1 / getDoubledSarea(trianglePoints[0], trianglePoints[1], trianglePoints[2]);
-                    //float invertedS = 1 / s;
-                    coords[0] = getDoubledSarea(p, trianglePoints[1], trianglePoints[2]) * invertedS;
-                    coords[1] = getDoubledSarea(trianglePoints[0], p, trianglePoints[2]) * invertedS;
-                    coords[2] = getDoubledSarea(trianglePoints[0], trianglePoints[1], p) * invertedS;
-
-                    return coords;
-                }
-
-                int getDoubledSarea(Point p1, Point p2, Point p3)
-                {
-                    return (p1.X - p3.X) * (p2.Y - p3.Y) - (p2.X - p3.X) * (p1.Y - p3.Y);
                 }
             }
         }
@@ -240,26 +224,25 @@ namespace Lab2.Renderers
             int x = (int)Math.Round(u * (TextureDirectBitmap.Width - 1));
             int y = (int)Math.Round(v * (TextureDirectBitmap.Height - 1));
 
-            if (x >= TextureDirectBitmap.Width || x < 0 || y >= TextureDirectBitmap.Height || y < 0)
-            {
-
-            }
-
             return TextureDirectBitmap.GetPixel(x, y);
         }
 
         public Vector3 GetNormalVectorFromNormalMap(Triangle triangle, float[] coords, float u, float v)
         {
-            Vector3 N = GetNormalVectorFromVertices(triangle, coords, u, v);
-
             u = Math.Clamp(u, 0, 1);
             v = Math.Clamp(v, 0, 1);
 
             Vector3 normalMapN = NormalMap[(int)(u * (NormalMap.GetLength(0) - 1)), (int)(v * (NormalMap.GetLength(1) - 1))];
-            Vector3 Pu = triangle.V1.AfterRotationState.Pu * coords[0] + triangle.V2.AfterRotationState.Pu * coords[1] + triangle.V3.AfterRotationState.Pu * coords[2];
-            Vector3 Pv = triangle.V1.AfterRotationState.Pv * coords[0] + triangle.V2.AfterRotationState.Pv * coords[1] + triangle.V3.AfterRotationState.Pv * coords[2];
 
-            Matrix4x4 T = new Matrix4x4(
+            Vector3 Pu = MathHelper.InterpolateVectorFromBaricentric(triangle.V1.AfterRotationState.Pu, triangle.V2.AfterRotationState.Pu, triangle.V3.AfterRotationState.Pu, coords);
+            Vector3 Pv = MathHelper.InterpolateVectorFromBaricentric(triangle.V1.AfterRotationState.Pv, triangle.V2.AfterRotationState.Pv, triangle.V3.AfterRotationState.Pv, coords);
+            Vector3 N = MathHelper.InterpolateVectorFromBaricentric(triangle.V1.AfterRotationState.N, triangle.V2.AfterRotationState.N, triangle.V3.AfterRotationState.N, coords);
+
+            Pu = Vector3.Normalize(Pu);
+            Pv = Vector3.Normalize(Pv);
+            N = Vector3.Normalize(N);
+
+            Matrix4x4 T = new(
                 Pu.X, Pv.X, N.X, 0,
                 Pu.Y, Pv.Y, N.Y, 0,
                 Pu.Z, Pv.Z, N.Z, 0,
@@ -272,7 +255,7 @@ namespace Lab2.Renderers
 
         public Vector3 GetNormalVectorFromVertices(Triangle triangle, float[] coords, float u, float v)
         {
-            Vector3 N = triangle.V1.AfterRotationState.N * coords[0] + triangle.V2.AfterRotationState.N * coords[1] + triangle.V3.AfterRotationState.N * coords[2];
+            Vector3 N = MathHelper.InterpolateVectorFromBaricentric(triangle.V1.AfterRotationState.N, triangle.V2.AfterRotationState.N, triangle.V3.AfterRotationState.N, coords);
             return Vector3.Normalize(N);
         }
     }
