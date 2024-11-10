@@ -194,7 +194,8 @@ namespace Lab2.Renderers
                     L = Vector3.Normalize(L);
                     N = Vector3.Normalize(N);
 
-                    Vector3 R = 2 * Vector3.Dot(N, L) * N - L;
+                    float NLDot = Vector3.Dot(N, L);
+                    Vector3 R = 2 * NLDot * N - L;
                     R = Vector3.Normalize(R);
 
 
@@ -202,7 +203,7 @@ namespace Lab2.Renderers
                     float ks = ReflectionCoefficients.Ks;
                     float m = ReflectionCoefficients.M;
 
-                    Vector3 I = Il * Io * (kd * Math.Max(0, Vector3.Dot(L, N)) + ks * MathF.Pow(Math.Max(0, Vector3.Dot(R, V)), m));
+                    Vector3 I = Il * Io * (kd * Math.Max(0, NLDot) + ks * MathF.Pow(Math.Max(0, Vector3.Dot(V, R)), m));
 
                     I = Vector3.Clamp(I, Vector3.Zero, Vector3.One);
                     I *= 255;
