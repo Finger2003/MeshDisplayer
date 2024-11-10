@@ -292,6 +292,7 @@ namespace Lab2
 
         private void textureButton_Click(object sender, EventArgs e)
         {
+            openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;...";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string fileName = openFileDialog.FileName;
@@ -321,6 +322,7 @@ namespace Lab2
 
         private void normalMapButton_Click(object sender, EventArgs e)
         {
+            openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;...";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string fileName = openFileDialog.FileName;
@@ -371,6 +373,7 @@ namespace Lab2
 
         private void loadControlPointsButton_Click(object sender, EventArgs e)
         {
+            openFileDialog.Filter = "Text|*.txt";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 TxtControlPointsReader reader = new(ControlPointsFirstDimensionCount, ControlPointsSecondDimensionCount);
