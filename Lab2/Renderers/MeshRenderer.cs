@@ -38,15 +38,7 @@ namespace Lab2.Renderers
 
         public void RenderMesh(Mesh mesh, LightSource lightSource)
         {
-            //if (mesh is null)
-            //    return;
-
-            //using Graphics G = Graphics.FromImage(DirectBitmap.Bitmap);
-            //G.ScaleTransform(1, -1);
-            //G.TranslateTransform(DirectBitmap.Bitmap.Width / 2, -DirectBitmap.Bitmap.Height / 2);
-
             G.Clear(Color.White);
-
 
             if (DrawFilling)
             {

@@ -25,8 +25,6 @@ namespace Lab2.Model
             ControlPoints = controlPoints;
             AlphaRadians = MathHelper.DegreesToRadians(alphaAngle);
             BetaRadians = MathHelper.DegreesToRadians(betaAngle);
-            //AlphaRadians = alphaAngle * MathF.PI / 180;
-            //BetaRadians = betaAngle * MathF.PI / 180;
             SetFidelity(fidelityU, fidelityV);
         }
 
@@ -98,10 +96,6 @@ namespace Lab2.Model
 
                     pu *= n;
                     pv *= m;
-
-                    //pu = Vector3.Normalize(pu);
-                    //pv = Vector3.Normalize(pv);
-
 
                     // Wektor normalny
                     nuv = Vector3.Cross(pv, pu);
@@ -177,13 +171,11 @@ namespace Lab2.Model
         public void SetAlphaAngle(int alphaAngle)
         {
             AlphaRadians = MathHelper.DegreesToRadians(alphaAngle);
-            //AlphaRadians = alphaAngle * MathF.PI / 180;
             RotateVertices();
         }
         public void SetBetaAngle(int betaAngle)
         {
             BetaRadians = MathHelper.DegreesToRadians(betaAngle);
-            //BetaRadians = betaAngle * MathF.PI / 180;
             RotateVertices();
         }
 
