@@ -70,6 +70,24 @@ namespace Lab2.Properties {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu White.
+        /// </summary>
+        internal static string DefaultLightColor {
+            get {
+                return ResourceManager.GetString("DefaultLightColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu White.
+        /// </summary>
+        internal static string DefaultMeshColor {
+            get {
+                return ResourceManager.GetString("DefaultMeshColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Byte[].
         /// </summary>
         internal static byte[] DefaultNormalMap {

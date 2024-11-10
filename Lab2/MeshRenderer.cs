@@ -30,7 +30,7 @@ namespace Lab2
         public Vector3[,] NormalMap { get; set; }
         public Color MeshColor { get; set; }
 
-        public MeshRenderer(DirectBitmap directBitmap, ICoordinateTransformer2D coordinateTransformer, ReflectionCoefficients reflectionCoefficients, DirectBitmap textureDirectBitmap, Vector3[,] normalMap)//, Func<float, float, Color> getColor, Func<Triangle, float[], float, float, Vector3> getNormalVector)
+        public MeshRenderer(DirectBitmap directBitmap, ICoordinateTransformer2D coordinateTransformer, ReflectionCoefficients reflectionCoefficients, DirectBitmap textureDirectBitmap, Vector3[,] normalMap)
         {
             DirectBitmap = directBitmap;
             CoordinateTransformer = coordinateTransformer;

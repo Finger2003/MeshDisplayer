@@ -130,4 +130,10 @@
   <data name="DefaultControlPointsPath" xml:space="preserve">
     <value>control_points.txt</value>
   </data>
+  <data name="DefaultLightColor" xml:space="preserve">
+    <value>White</value>
+  </data>
+  <data name="DefaultMeshColor" xml:space="preserve">
+    <value>White</value>
+  </data>
 </root>

@@ -13,42 +13,42 @@ namespace Lab2
     {
         private int ControlPointsFirstDimensionCount { get; set; } = 4;
         private int ControlPointsSecondDimensionCount { get; set; } = 4;
-        private string DefaultControlPointsPath { get; } = "control_points3D.txt";
+        //private string DefaultControlPointsPath { get; } = "control_points3D.txt";
         //private string DefaultTexturePath { get; } = "texture.jpg";
         //private string DefaultNormalMapPath { get; } = "normal_map.png";
         //private Bitmap TextureBitmap { get; set; }
         //private Bitmap NormalMapBitmap { get; set; }
-        private Vector3[,] NormalMap { get; set; }
+        //private Vector3[,] NormalMap { get; set; }
 
-        private Vector3[,] ControlPoints { get; set; }
+        //private Vector3[,] ControlPoints { get; set; }
 
         private Bitmap Bitmap { get; set; }
         private DirectBitmap DirectBitmap { get; set; }
-        private DirectBitmap TextureDirectBitmap { get; set; }
-        private Mesh? Mesh { get; set; }
+        //private DirectBitmap TextureDirectBitmap { get; set; }
+        //private Mesh? Mesh { get; set; }
         private Graphics G { get; set; }
 
-        private Color LightColor { get; set; } = Color.White;
-        private Vector3 LightPosition { get; set; }
-        private Vector3 LightPositionForDrawing { get; set; }
-        private float LightZAxisRadius { get; set; } = 0;
-        private float LightZAxisAngle { get; set; } = 0;
+        //private Color LightColor { get; set; } = Color.White;
+        //private Vector3 LightPosition { get; set; }
+        //private Vector3 LightPositionForDrawing { get; set; }
+        //private float LightZAxisRadius { get; set; } = 0;
+        //private float LightZAxisAngle { get; set; } = 0;
         private System.Timers.Timer Timer { get; } = new(1000 / 30) { AutoReset = true };
-        private Mutex LightPositionMutex { get; } = new();
+        //private Mutex LightPositionMutex { get; } = new();
 
-        private float Kd { get; set; }
-        private float Ks { get; set; }
-        private float M { get; set; }
+        //private float Kd { get; set; }
+        //private float Ks { get; set; }
+        //private float M { get; set; }
         //private float LightZCoord { get; set; }
 
-        private bool DrawEdges { get; set; } = true;
-        private bool DrawFilling { get; set; } = true;
+        //private bool DrawEdges { get; set; } = true;
+        //private bool DrawFilling { get; set; } = true;
 
         //private delegate Color GetColorDelegate(float u, float v);
-        private Func<float, float, Color> GetColor { get; set; }
-        private Func<Triangle, float[], float, float, Vector3> GetNormalVector { get; set; }
+        //private Func<float, float, Color> GetColor { get; set; }
+        //private Func<Triangle, float[], float, float, Vector3> GetNormalVector { get; set; }
 
-        private Color MeshColor { get; set; } = Color.White;
+        //private Color MeshColor { get; set; } = Color.White;
 
         private CenterCoordinateTransformer2D CoordinateTransformer { get; set; }
 
@@ -74,22 +74,23 @@ namespace Lab2
             mValueLabel.DataBindings.Add("Text", mTrackBar, "Value");
             lightZCoordValueLabel.DataBindings.Add("Text", lightZCoordTrackBar, "Value");
 
-            Kd = scaleTrackBarValueToOne(kdTrackBar);
-            Ks = scaleTrackBarValueToOne(ksTrackBar);
-            M = mTrackBar.Value;
+            float kd = scaleTrackBarValueToOne(kdTrackBar);
+            float ks = scaleTrackBarValueToOne(ksTrackBar);
+            float m = mTrackBar.Value;
             //LightZCoord = lightZCoordTrackBar.Value;
 
             DirectBitmap = new(pictureBox.Width, pictureBox.Height);
             Bitmap = DirectBitmap.Bitmap;
             CoordinateTransformer = new(Bitmap.Width, Bitmap.Height);
 
+            DirectBitmap textureDirectBitmap;
             using (MemoryStream ms = new(Properties.Resources.DefaultTexture))
             {
                 Image img = Image.FromStream(ms);
                 texturePictureBox.Image = img;
-                TextureDirectBitmap = new(img.Width, img.Height);
-                using Graphics g = Graphics.FromImage(TextureDirectBitmap.Bitmap);
-                g.DrawImage(img, 0, 0, TextureDirectBitmap.Width, TextureDirectBitmap.Height);
+                textureDirectBitmap = new(img.Width, img.Height);
+                using Graphics g = Graphics.FromImage(textureDirectBitmap.Bitmap);
+                g.DrawImage(img, 0, 0, textureDirectBitmap.Width, textureDirectBitmap.Height);
             }
             Vector3[,] normalMap;
             using (MemoryStream ms = new(Properties.Resources.DefaultNormalMap))
@@ -100,8 +101,10 @@ namespace Lab2
                 normalMap = GetNormalMap(normalBmp);
             }
 
-            meshColorPictureBox.BackColor = MeshColor;
-            lightColorPictureBox.BackColor = LightColor;
+            Color meshColor = Color.FromName(Properties.Resources.DefaultMeshColor);
+            Color lightColor = Color.FromName(Properties.Resources.DefaultLightColor);
+            meshColorPictureBox.BackColor = meshColor;
+            lightColorPictureBox.BackColor = lightColor;
 
             G = Graphics.FromImage(Bitmap);
             G.ScaleTransform(1, -1);
@@ -109,25 +112,25 @@ namespace Lab2
 
 
             ICoordinateTransformer2D transformer = new CenterCoordinateTransformer2D(Bitmap.Width, Bitmap.Height);
-            ReflectionCoefficients reflectionCoefficients = new(Ks, Kd, M);
+            ReflectionCoefficients reflectionCoefficients = new(ks, kd, m);
 
-            MeshRenderer = new(DirectBitmap, transformer, reflectionCoefficients, TextureDirectBitmap, normalMap);//, meshRenderer.GetMeshRGBColor, MeshRenderer.GetNormalVectorFromVertices);
+            MeshRenderer = new(DirectBitmap, transformer, reflectionCoefficients, textureDirectBitmap, normalMap);//, meshRenderer.GetMeshRGBColor, MeshRenderer.GetNormalVectorFromVertices);
             MeshRenderer.GetColor = MeshRenderer.GetMeshRGBColor;
             MeshRenderer.GetNormalVector = MeshRenderer.GetNormalVectorFromVertices;
             MeshRenderer.DrawEdges = true;
             MeshRenderer.DrawFilling = true;
-            MeshRenderer.MeshColor = MeshColor;
+            MeshRenderer.MeshColor = meshColor;
             MeshRenderer.G = G;
 
-            LoadControlPoints(Properties.Resources.DefaultControlPointsPath);
+            Vector3[,] controlPoints = GetControlPointsFromFile(Properties.Resources.DefaultControlPointsPath);
 
 
-            GetColor = GetMeshRGBColor;
-            GetNormalVector = GetNormalVectorFromVertices;
-            LightPosition = new Vector3(0, 0, lightZCoordTrackBar.Value);
+            //GetColor = GetMeshRGBColor;
+            //GetNormalVector = GetNormalVectorFromVertices;
+            Vector3 lightPosition = new(0, 0, lightZCoordTrackBar.Value);
 
-            Mesh mesh = new(ControlPoints!, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
-            Scene = new(mesh, new LightSource(LightPosition, LightColor), MeshRenderer);
+            Mesh mesh = new(controlPoints, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
+            Scene = new(mesh, new LightSource(lightPosition, lightColor), MeshRenderer);
 
             Timer.Elapsed += timer_Tick;
         }
@@ -143,10 +146,10 @@ namespace Lab2
             return (float)trackbar.Value / trackbar.Maximum;
         }
 
-        private void LoadControlPoints(string path)
+        private Vector3[,] GetControlPointsFromFile(string path)
         {
             TxtControlPointsReader reader = new(ControlPointsFirstDimensionCount, ControlPointsSecondDimensionCount);
-            ControlPoints = reader.Read(path);
+            return reader.Read(path);
         }
 
         private void fidelityTrackBar_Scroll(object sender, EventArgs e)
@@ -370,7 +373,7 @@ namespace Lab2
 
         private void pictureBox_SizeChanged(object sender, EventArgs e)
         {
-            if (pictureBox.Width <= 0 || pictureBox.Height <= 0 || Bitmap is null)
+            if (pictureBox.Width <= 0 || pictureBox.Height <= 0 || Bitmap is null || (Bitmap.Width == pictureBox.Width && Bitmap.Height == pictureBox.Height))
                 return;
 
             Bitmap oldBitmap = Bitmap;
@@ -488,25 +491,25 @@ namespace Lab2
             pictureBox.Invalidate();
         }
 
-        private Color GetMeshRGBColor(float u, float v)
-        {
-            return MeshColor;
-        }
-        private Color GetTextureColor(float u, float v)
-        {
-            u = Math.Clamp(u, 0, 1);
-            v = Math.Clamp(v, 0, 1);
+        //private Color GetMeshRGBColor(float u, float v)
+        //{
+        //    return MeshColor;
+        //}
+        //private Color GetTextureColor(float u, float v)
+        //{
+        //    u = Math.Clamp(u, 0, 1);
+        //    v = Math.Clamp(v, 0, 1);
 
-            int x = (int)Math.Round(u * (TextureDirectBitmap.Width - 1));
-            int y = (int)Math.Round(v * (TextureDirectBitmap.Height - 1));
+        //    int x = (int)Math.Round(u * (TextureDirectBitmap.Width - 1));
+        //    int y = (int)Math.Round(v * (TextureDirectBitmap.Height - 1));
 
-            if (x >= TextureDirectBitmap.Width || x < 0 || y >= TextureDirectBitmap.Height || y < 0)
-            {
+        //    if (x >= TextureDirectBitmap.Width || x < 0 || y >= TextureDirectBitmap.Height || y < 0)
+        //    {
 
-            }
+        //    }
 
-            return TextureDirectBitmap.GetPixel(x, y);
-        }
+        //    return TextureDirectBitmap.GetPixel(x, y);
+        //}
 
         private void textureButton_Click(object sender, EventArgs e)
         {
@@ -539,33 +542,33 @@ namespace Lab2
             pictureBox.Invalidate();
         }
 
-        private Vector3 GetNormalVectorFromNormalMap(Triangle triangle, float[] coords, float u, float v)
-        {
-            Vector3 N = GetNormalVectorFromVertices(triangle, coords, u, v);
+        //private Vector3 GetNormalVectorFromNormalMap(Triangle triangle, float[] coords, float u, float v)
+        //{
+        //    Vector3 N = GetNormalVectorFromVertices(triangle, coords, u, v);
 
-            u = Math.Clamp(u, 0, 1);
-            v = Math.Clamp(v, 0, 1);
+        //    u = Math.Clamp(u, 0, 1);
+        //    v = Math.Clamp(v, 0, 1);
 
-            Vector3 normalMapN = NormalMap[(int)(u * (NormalMap.GetLength(0) - 1)), (int)(v * (NormalMap.GetLength(1) - 1))];
-            Vector3 Pu = triangle.V1.AfterRotationState.Pu * coords[0] + triangle.V2.AfterRotationState.Pu * coords[1] + triangle.V3.AfterRotationState.Pu * coords[2];
-            Vector3 Pv = triangle.V1.AfterRotationState.Pv * coords[0] + triangle.V2.AfterRotationState.Pv * coords[1] + triangle.V3.AfterRotationState.Pv * coords[2];
+        //    Vector3 normalMapN = NormalMap[(int)(u * (NormalMap.GetLength(0) - 1)), (int)(v * (NormalMap.GetLength(1) - 1))];
+        //    Vector3 Pu = triangle.V1.AfterRotationState.Pu * coords[0] + triangle.V2.AfterRotationState.Pu * coords[1] + triangle.V3.AfterRotationState.Pu * coords[2];
+        //    Vector3 Pv = triangle.V1.AfterRotationState.Pv * coords[0] + triangle.V2.AfterRotationState.Pv * coords[1] + triangle.V3.AfterRotationState.Pv * coords[2];
 
-            Matrix4x4 T = new Matrix4x4(
-                Pu.X, Pv.X, N.X, 0,
-                Pu.Y, Pv.Y, N.Y, 0,
-                Pu.Z, Pv.Z, N.Z, 0,
-                0, 0, 0, 1
-            );
+        //    Matrix4x4 T = new Matrix4x4(
+        //        Pu.X, Pv.X, N.X, 0,
+        //        Pu.Y, Pv.Y, N.Y, 0,
+        //        Pu.Z, Pv.Z, N.Z, 0,
+        //        0, 0, 0, 1
+        //    );
 
-            normalMapN = Vector3.Transform(normalMapN, T);
-            return Vector3.Normalize(normalMapN);
-        }
+        //    normalMapN = Vector3.Transform(normalMapN, T);
+        //    return Vector3.Normalize(normalMapN);
+        //}
 
-        private Vector3 GetNormalVectorFromVertices(Triangle triangle, float[] coords, float u, float v)
-        {
-            Vector3 N = triangle.V1.AfterRotationState.N * coords[0] + triangle.V2.AfterRotationState.N * coords[1] + triangle.V3.AfterRotationState.N * coords[2];
-            return Vector3.Normalize(N);
-        }
+        //private Vector3 GetNormalVectorFromVertices(Triangle triangle, float[] coords, float u, float v)
+        //{
+        //    Vector3 N = triangle.V1.AfterRotationState.N * coords[0] + triangle.V2.AfterRotationState.N * coords[1] + triangle.V3.AfterRotationState.N * coords[2];
+        //    return Vector3.Normalize(N);
+        //}
 
         private void normalMapButton_Click(object sender, EventArgs e)
         {
@@ -595,42 +598,43 @@ namespace Lab2
             return normalMap;
         }
 
-        private void LoadBitmapFromFile(ref Bitmap bitmap)
-        {
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                bitmap = new(openFileDialog.FileName);
+        //private void LoadBitmapFromFile(ref Bitmap bitmap)
+        //{
+        //    if (openFileDialog.ShowDialog() == DialogResult.OK)
+        //    {
+        //        bitmap = new(openFileDialog.FileName);
 
-                pictureBox.Invalidate();
-            }
-        }
+        //        pictureBox.Invalidate();
+        //    }
+        //}
 
 
-        private int RadiusChange { get; set; } = 2;
-        private float AngleChange { get; set; } = 0.1f;
-        private void MoveLight()
-        {
-            LightPositionMutex.WaitOne();
+        //private int RadiusChange { get; set; } = 2;
+        //private float AngleChange { get; set; } = 0.1f;
+        //private void MoveLight()
+        //{
+        //    LightPositionMutex.WaitOne();
 
-            LightZAxisRadius += RadiusChange;
-            LightZAxisAngle += AngleChange;
-            float x = LightZAxisRadius * MathF.Cos(LightZAxisAngle);
-            float y = LightZAxisRadius * MathF.Sin(LightZAxisAngle);
-            LightPosition = new Vector3(x, y, LightPosition.Z);
+        //    LightZAxisRadius += RadiusChange;
+        //    LightZAxisAngle += AngleChange;
+        //    float x = LightZAxisRadius * MathF.Cos(LightZAxisAngle);
+        //    float y = LightZAxisRadius * MathF.Sin(LightZAxisAngle);
+        //    LightPosition = new Vector3(x, y, LightPosition.Z);
 
-            if (LightZAxisRadius >= 500 || LightZAxisRadius <= 0)
-            {
-                RadiusChange *= -1;
-                AngleChange *= -1;
-            }
+        //    if (LightZAxisRadius >= 500 || LightZAxisRadius <= 0)
+        //    {
+        //        RadiusChange *= -1;
+        //        AngleChange *= -1;
+        //    }
 
-            LightPositionMutex.ReleaseMutex();
-            pictureBox.Invalidate();
-        }
+        //    LightPositionMutex.ReleaseMutex();
+        //    pictureBox.Invalidate();
+        //}
 
         private void timer_Tick(object? sender, EventArgs e)
         {
             Scene.MoveLightSource();
+            pictureBox.Invalidate();
             //MoveLight();
         }
 
@@ -644,11 +648,12 @@ namespace Lab2
 
         private void resetLightPositionButton_Click(object sender, EventArgs e)
         {
-            LightPositionMutex.WaitOne();
-            LightPosition = new(0, 0, LightPosition.Z);
-            LightZAxisRadius = 0;
-            LightZAxisAngle = 0;
-            LightPositionMutex.ReleaseMutex();
+            Scene.ResetLightSourcePosition();
+            //LightPositionMutex.WaitOne();
+            //LightPosition = new(0, 0, LightPosition.Z);
+            //LightZAxisRadius = 0;
+            //LightZAxisAngle = 0;
+            //LightPositionMutex.ReleaseMutex();
             pictureBox.Invalidate();
         }
 
@@ -658,8 +663,8 @@ namespace Lab2
             {
                 TxtControlPointsReader reader = new(ControlPointsFirstDimensionCount, ControlPointsSecondDimensionCount);
                 string fileName = openFileDialog.FileName;
-                ControlPoints = reader.Read(fileName);
-                Scene.Mesh = new Mesh(ControlPoints, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
+                Vector3[,] controlPoints = reader.Read(fileName);
+                Scene.Mesh = new Mesh(controlPoints, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
 
                 pictureBox.Invalidate();
             }
