@@ -2,7 +2,7 @@
 using Lab2.Renderers;
 using System.Numerics;
 
-namespace Lab2
+namespace Lab2.SceneModel
 {
     public class Scene
     {
@@ -53,7 +53,7 @@ namespace Lab2
         {
             LightRadius = 0;
             LightAngle = 0;
-            lock(LightSource)
+            lock (LightSource)
                 LightSource.Position = new Vector3(0, 0, LightSource.Position.Z);
         }
     }

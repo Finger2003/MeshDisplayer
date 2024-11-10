@@ -1,6 +1,8 @@
 using Lab2.CoordinatesTransformers;
 using Lab2.Model;
 using Lab2.Renderers;
+using Lab2.SceneModel;
+using Lab2.Utils;
 using Lab2.VertexFileReaders;
 using System.Diagnostics;
 using System.Drawing;

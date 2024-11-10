@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Lab2.Utils;
 
 namespace Lab2.Model
 {

@@ -1,5 +1,7 @@
 ﻿using Lab2.CoordinatesTransformers;
 using Lab2.Model;
+using Lab2.SceneModel;
+using Lab2.Utils;
 using System.Numerics;
 
 namespace Lab2.Renderers

@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Lab2
+namespace Lab2.Utils
 {
     public static class MathHelper
     {
