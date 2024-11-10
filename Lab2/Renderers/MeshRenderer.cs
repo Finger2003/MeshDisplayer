@@ -147,7 +147,7 @@ namespace Lab2.Renderers
                             float[] coords = MathHelper.GetBaricentricCoordinates(p, trianglePoints[0], trianglePoints[1], trianglePoints[2]);
                             //float[] coords = getBaricentricCoords(p);
 
-                            if (coords.Contains(float.NaN))
+                            if (coords.Any(x => float.IsNaN(x) || float.IsPositiveInfinity(x) || float.IsNegativeInfinity(x)))
                                 continue;
 
                             float u = MathHelper.InterpolateFloatFromBaricentric(triangle.V1.U, triangle.V2.U, triangle.V3.U, coords);
