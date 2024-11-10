@@ -25,6 +25,7 @@ namespace Lab2.Renderers
         public Vector3[,] NormalMap { get; set; }
         public Color MeshColor { get; set; }
 
+        float[,] PaintedPixelsZ{ get; set; }
         public MeshRenderer(DirectBitmap directBitmap, Graphics bitmapGraphics, ICoordinateTransformer2D coordinateTransformer, ReflectionCoefficients reflectionCoefficients, DirectBitmap textureDirectBitmap, Vector3[,] normalMap)
         {
             DirectBitmap = directBitmap;
@@ -42,6 +43,13 @@ namespace Lab2.Renderers
         {
             G.Clear(Color.White);
 
+            PaintedPixelsZ = new float[DirectBitmap.Width, DirectBitmap.Height];
+
+            for(int i = 0; i < DirectBitmap.Width; i++)
+                for (int j = 0; j < DirectBitmap.Height; j++)
+                    PaintedPixelsZ[i, j] = float.PositiveInfinity;
+
+
             if (DrawFilling)
             {
                 lock (lightSource)
@@ -55,6 +63,8 @@ namespace Lab2.Renderers
 
             if (DrawEdges)
             {
+
+
                 foreach (Triangle triangle in mesh.Triangles)
                 {
                     PointF v1 = new(triangle.V1.AfterRotationState.P.X, triangle.V1.AfterRotationState.P.Y);
@@ -143,20 +153,28 @@ namespace Lab2.Renderers
                         // Wypełnianie scanlinii między krawędziami
                         for (int x = x1; x < x2; x++)
                         {
+                            // Transformacja układu współrzędnych
+                            int transformedX = CoordinateTransformer.TransformX(x);
+                            if(transformedX < 0 || transformedX >= DirectBitmap.Width)
+                                continue;
+
                             p.X = x;
                             float[] coords = MathHelper.GetBaricentricCoordinates(p, trianglePoints[0], trianglePoints[1], trianglePoints[2]);
-                            //float[] coords = getBaricentricCoords(p);
 
                             if (coords.Any(x => float.IsNaN(x) || float.IsPositiveInfinity(x) || float.IsNegativeInfinity(x)))
                                 continue;
 
                             float u = MathHelper.InterpolateFloatFromBaricentric(triangle.V1.U, triangle.V2.U, triangle.V3.U, coords);
                             float v = MathHelper.InterpolateFloatFromBaricentric(triangle.V1.V, triangle.V2.V, triangle.V3.V, coords);
+                            Vector3 P = MathHelper.InterpolateVectorFromBaricentric(triangle.V1.AfterRotationState.P, triangle.V2.AfterRotationState.P, triangle.V3.AfterRotationState.P, coords);
 
-                            Color color = getInterpolatedColor(coords, u, v);
+                            if (PaintedPixelsZ[transformedX, transformedY] < P.Z)
+                                continue;
 
-                            // Transformacja układu współrzędnych
-                            int transformedX = CoordinateTransformer.TransformX(x);
+                            PaintedPixelsZ[transformedX, transformedY] = P.Z;
+
+                            Color color = getInterpolatedColor(coords, u, v, P);
+
 
                             if (transformedX >= 0 && transformedX < DirectBitmap.Width)
                                 DirectBitmap.SetPixel(transformedX, transformedY, color);
@@ -169,7 +187,7 @@ namespace Lab2.Renderers
                     AET[i].X += AET[i].InverseSlope;
 
 
-                Color getInterpolatedColor(float[] coords, float u, float v)
+                Color getInterpolatedColor(float[] coords, float u, float v, Vector3 P)
                 {
                     Color color = GetColor(u, v);
                     Color lightColor = LightSource.Color;
@@ -178,7 +196,6 @@ namespace Lab2.Renderers
 
                     Vector3 Il = new(lightColor.R, lightColor.G, lightColor.B);
                     Vector3 Io = new(color.R, color.G, color.B);
-                    Vector3 P = MathHelper.InterpolateVectorFromBaricentric(triangle.V1.AfterRotationState.P, triangle.V2.AfterRotationState.P, triangle.V3.AfterRotationState.P, coords);
                     Vector3 L = lightPosition - P;
                     Vector3 N = GetNormalVector(triangle, coords, u, v);
                     Vector3 V = Vector3.UnitZ;
@@ -196,6 +213,9 @@ namespace Lab2.Renderers
                     float kd = ReflectionCoefficients.Kd;
                     float ks = ReflectionCoefficients.Ks;
                     float m = ReflectionCoefficients.M;
+                    //float VRDot = Vector3.Dot(V, R);
+
+
 
                     Vector3 I = Il * Io * (kd * Math.Max(0, NLDot) + ks * MathF.Pow(Math.Max(0, Vector3.Dot(V, R)), m));
 
