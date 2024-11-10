@@ -52,6 +52,9 @@ namespace Lab2
 
         private CenterCoordinateTransformer2D CoordinateTransformer { get; set; }
 
+        private Scene Scene { get; set; }
+        private MeshRenderer MeshRenderer { get; set; }
+
         public MeshDisplayer()
         {
             InitializeComponent();
@@ -88,12 +91,13 @@ namespace Lab2
                 using Graphics g = Graphics.FromImage(TextureDirectBitmap.Bitmap);
                 g.DrawImage(img, 0, 0, TextureDirectBitmap.Width, TextureDirectBitmap.Height);
             }
+            Vector3[,] normalMap;
             using (MemoryStream ms = new(Properties.Resources.DefaultNormalMap))
             {
                 Image img = Image.FromStream(ms);
                 normalMapPictureBox.Image = img;
                 Bitmap normalBmp = (Bitmap)img;
-                SetNormalMap(normalBmp);
+                normalMap = GetNormalMap(normalBmp);
             }
 
             meshColorPictureBox.BackColor = MeshColor;
@@ -103,11 +107,27 @@ namespace Lab2
             G.ScaleTransform(1, -1);
             G.TranslateTransform(Bitmap.Width / 2, -Bitmap.Height / 2);
 
+
+            ICoordinateTransformer2D transformer = new CenterCoordinateTransformer2D(Bitmap.Width, Bitmap.Height);
+            ReflectionCoefficients reflectionCoefficients = new(Ks, Kd, M);
+
+            MeshRenderer = new(DirectBitmap, transformer, reflectionCoefficients, TextureDirectBitmap, normalMap);//, meshRenderer.GetMeshRGBColor, MeshRenderer.GetNormalVectorFromVertices);
+            MeshRenderer.GetColor = MeshRenderer.GetMeshRGBColor;
+            MeshRenderer.GetNormalVector = MeshRenderer.GetNormalVectorFromVertices;
+            MeshRenderer.DrawEdges = true;
+            MeshRenderer.DrawFilling = true;
+            MeshRenderer.MeshColor = MeshColor;
+            MeshRenderer.G = G;
+
             LoadControlPoints(Properties.Resources.DefaultControlPointsPath);
-            Mesh = new(ControlPoints!, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
+
+
             GetColor = GetMeshRGBColor;
             GetNormalVector = GetNormalVectorFromVertices;
             LightPosition = new Vector3(0, 0, lightZCoordTrackBar.Value);
+
+            Mesh mesh = new(ControlPoints!, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
+            Scene = new(mesh, new LightSource(LightPosition, LightColor), MeshRenderer);
 
             Timer.Elapsed += timer_Tick;
         }
@@ -132,57 +152,61 @@ namespace Lab2
         private void fidelityTrackBar_Scroll(object sender, EventArgs e)
         {
             fidelityTrackBar.Value = (int)Math.Round((double)fidelityTrackBar.Value / fidelityTrackBar.TickFrequency) * fidelityTrackBar.TickFrequency;
-            Mesh?.SetFidelity(fidelityTrackBar.Value, fidelityTrackBar.Value);
+            Scene.Mesh.SetFidelity(fidelityTrackBar.Value, fidelityTrackBar.Value);
 
             pictureBox.Invalidate();
         }
 
         private void alphaAngleTrackBar_Scroll(object sender, EventArgs e)
         {
-            Mesh?.SetAlphaAngle(alphaAngleTrackBar.Value);
+            Scene.Mesh.SetAlphaAngle(alphaAngleTrackBar.Value);
 
             pictureBox.Invalidate();
         }
 
         private void betaAngleTrackBar_Scroll(object sender, EventArgs e)
         {
-            Mesh?.SetBetaAngle(betaAngleTrackBar.Value);
+            Scene.Mesh.SetBetaAngle(betaAngleTrackBar.Value);
 
             pictureBox.Invalidate();
         }
 
         private void pictureBox_Paint(object sender, PaintEventArgs e)
         {
-            if (Mesh is null)
-                return;
+            //if (Mesh is null)
+            //    return;
 
             G.Clear(Color.White);
 
             Stopwatch sw = new();
             sw.Start();
 
-            if (DrawFilling)
-            {
-                LightPositionMutex.WaitOne();
-                LightPositionForDrawing = LightPosition;
-                LightPositionMutex.ReleaseMutex();
+            //Scene.RenderScene();
+            //Bitmap bitmap = Scene.GetRenderedBitmap();
+            Scene.RenderScene();
 
-                Parallel.ForEach(Mesh.Triangles, fillTriangle);
-            }
+            //if (DrawFilling)
+            //{
+            //    LightPositionMutex.WaitOne();
+            //    LightPositionForDrawing = LightPosition;
+            //    LightPositionMutex.ReleaseMutex();
 
-            if (DrawEdges)
-            {
-                foreach (Triangle triangle in Mesh.Triangles)
-                {
-                    PointF v1 = new(triangle.V1.AfterRotationState.P.X, triangle.V1.AfterRotationState.P.Y);
-                    PointF v2 = new(triangle.V2.AfterRotationState.P.X, triangle.V2.AfterRotationState.P.Y);
-                    PointF v3 = new(triangle.V3.AfterRotationState.P.X, triangle.V3.AfterRotationState.P.Y);
+            //    Parallel.ForEach(Mesh.Triangles, fillTriangle);
+            //}
 
-                    G.DrawLine(Pens.Black, v1, v2);
-                    G.DrawLine(Pens.Black, v2, v3);
-                    G.DrawLine(Pens.Black, v3, v1);
-                }
-            }
+            //if (DrawEdges)
+            //{
+            //    foreach (Triangle triangle in Mesh.Triangles)
+            //    {
+            //        PointF v1 = new(triangle.V1.AfterRotationState.P.X, triangle.V1.AfterRotationState.P.Y);
+            //        PointF v2 = new(triangle.V2.AfterRotationState.P.X, triangle.V2.AfterRotationState.P.Y);
+            //        PointF v3 = new(triangle.V3.AfterRotationState.P.X, triangle.V3.AfterRotationState.P.Y);
+
+            //        G.DrawLine(Pens.Black, v1, v2);
+            //        G.DrawLine(Pens.Black, v2, v3);
+            //        G.DrawLine(Pens.Black, v3, v1);
+            //    }
+            //}
 
             e.Graphics.DrawImage(Bitmap, 0, 0);
 
@@ -193,156 +217,156 @@ namespace Lab2
             fpsLabel.Text = $"FPS: {fps}";
         }
 
-        private void fillTriangle(Triangle triangle)
-        {
+        //private void fillTriangle(Triangle triangle)
+        //{
 
-            Point[] trianglePoints =
-            [
-                new Point((int)Math.Round(triangle.V1.AfterRotationState.P.X), (int)Math.Round(triangle.V1.AfterRotationState.P.Y)),
-                new Point((int)Math.Round(triangle.V2.AfterRotationState.P.X), (int)Math.Round(triangle.V2.AfterRotationState.P.Y)),
-                new Point((int)Math.Round(triangle.V3.AfterRotationState.P.X), (int)Math.Round(triangle.V3.AfterRotationState.P.Y))
-            ];
+        //    Point[] trianglePoints =
+        //    [
+        //        new Point((int)Math.Round(triangle.V1.AfterRotationState.P.X), (int)Math.Round(triangle.V1.AfterRotationState.P.Y)),
+        //        new Point((int)Math.Round(triangle.V2.AfterRotationState.P.X), (int)Math.Round(triangle.V2.AfterRotationState.P.Y)),
+        //        new Point((int)Math.Round(triangle.V3.AfterRotationState.P.X), (int)Math.Round(triangle.V3.AfterRotationState.P.Y))
+        //    ];
 
-            int[] sortedIndexes = Enumerable.Range(0, trianglePoints.Length).ToArray();
-            Array.Sort(sortedIndexes, (i1, i2) => trianglePoints[i1].Y.CompareTo(trianglePoints[i2].Y));
-
-
-            int polygonYMin = trianglePoints[sortedIndexes[0]].Y; //trianglePoints.Min(p => p.Y);
-            int polygonYMax = trianglePoints[sortedIndexes[^1]].Y; //trianglePoints.Max(p => p.Y);
-            int sortedIndex = 0;
-
-            List<AETElement> AET = [];
-
-            for (int scanline = polygonYMin; scanline <= polygonYMax; scanline++)
-            {
-                AET.RemoveAll(edge => edge.P1.Y == edge.P2.Y);
-
-                int index = sortedIndexes[sortedIndex];
-                Point point = trianglePoints[index];
+        //    int[] sortedIndexes = Enumerable.Range(0, trianglePoints.Length).ToArray();
+        //    Array.Sort(sortedIndexes, (i1, i2) => trianglePoints[i1].Y.CompareTo(trianglePoints[i2].Y));
 
 
-                // Jeœli punkt by³ na scanline zaktualizuj AET o krawêdzie, które go zawieraj¹
-                while (point.Y == scanline - 1)
-                {
-                    int previousIndex = index == 0 ? trianglePoints.Length - 1 : index - 1;
-                    int nextIndex = index == trianglePoints.Length - 1 ? 0 : index + 1;
+        //    int polygonYMin = trianglePoints[sortedIndexes[0]].Y; //trianglePoints.Min(p => p.Y);
+        //    int polygonYMax = trianglePoints[sortedIndexes[^1]].Y; //trianglePoints.Max(p => p.Y);
+        //    int sortedIndex = 0;
 
-                    Point previousPoint = trianglePoints[previousIndex];
-                    Point nextPoint = trianglePoints[nextIndex];
+        //    List<AETElement> AET = [];
 
-                    checkAndUpdateAET(previousPoint, point);
-                    checkAndUpdateAET(nextPoint, point);
+        //    for (int scanline = polygonYMin; scanline <= polygonYMax; scanline++)
+        //    {
+        //        AET.RemoveAll(edge => edge.P1.Y == edge.P2.Y);
 
-                    index = sortedIndexes[++sortedIndex];
-                    point = trianglePoints[index];
-                }
-
-                void checkAndUpdateAET(Point p1, Point p2)
-                {
-                    if (p1.Y > p2.Y)
-                        AET.Add(new AETElement(p1, p2));
-                    else
-                        AET.RemoveAll(edge => edge.P1 == p2 && edge.P2 == p1);
-                }
-
-                // Posortowanie AET w kierunku rosn¹cych X
-                AET.Sort((e1, e2) => e1.X.CompareTo(e2.X));
-
-                unsafe
-                {
-                    // Transformacja uk³adu wspó³rzêdnych
-                    //int transformedY = -scanline + DirectBitmap.Height / 2;
-                    int transformedY = CoordinateTransformer.TransformY(scanline);
-
-                    // Aktualnie rozwa¿any punkt
-                    Point p = new(0, scanline);
-
-                    // Dla kolejnych par krawêdzi 0-1, 2-3
-                    for (int i = 0; i < AET.Count - 1; i += 2)
-                    {
-                        AETElement e1 = AET[i];
-                        AETElement e2 = AET[i + 1];
-
-                        int x1 = (int)e1.X;
-                        int x2 = (int)e2.X;
-
-                        if (transformedY >= 0 && transformedY < DirectBitmap.Height)
-                        {
-                            // Wype³nianie scanlinii miêdzy krawêdziami
-                            for (int x = x1; x < x2; x++)
-                            {
-                                p.X = x;
-                                float[] coords = getBaricentricCoords(p);
-
-                                if (coords.Contains(float.NaN))
-                                    continue;
-
-                                float u = triangle.V1.U * coords[0] + triangle.V2.U * coords[1] + triangle.V3.U * coords[2];
-                                float v = triangle.V1.V * coords[0] + triangle.V2.V * coords[1] + triangle.V3.V * coords[2];
-
-                                Color color = getColor(coords, u, v);
-
-                                // Transformacja uk³adu wspó³rzêdnych
-                                //int transformedX = x + DirectBitmap.Width / 2;
-                                int transformedX = CoordinateTransformer.TransformX(x);
-
-                                if (transformedX >= 0 && transformedX < DirectBitmap.Width)
-                                    DirectBitmap.SetPixel(transformedX, transformedY, color);
-                            }
-                        }
-                    }
-
-                    // Aktualizacja wartoœci x dla nowej scanlinii
-                    for (int i = 0; i < AET.Count; i++)
-                        AET[i].X += AET[i].InverseSlope;
-                }
+        //        int index = sortedIndexes[sortedIndex];
+        //        Point point = trianglePoints[index];
 
 
-                Color getColor(float[] coords, float u, float v)
-                {
-                    Color color = GetColor(u, v);
+        //        // Jeœli punkt by³ na scanline zaktualizuj AET o krawêdzie, które go zawieraj¹
+        //        while (point.Y == scanline - 1)
+        //        {
+        //            int previousIndex = index == 0 ? trianglePoints.Length - 1 : index - 1;
+        //            int nextIndex = index == trianglePoints.Length - 1 ? 0 : index + 1;
 
-                    Vector3 Il = new(LightColor.R, LightColor.G, LightColor.B);
-                    Vector3 Io = new(color.R, color.G, color.B);
-                    Vector3 P = triangle.V1.AfterRotationState.P * coords[0] + triangle.V2.AfterRotationState.P * coords[1] + triangle.V3.AfterRotationState.P * coords[2];
-                    Vector3 L = LightPositionForDrawing - P;
-                    Vector3 N = GetNormalVector(triangle, coords, u, v);
-                    Vector3 V = new(0, 0, 1);
+        //            Point previousPoint = trianglePoints[previousIndex];
+        //            Point nextPoint = trianglePoints[nextIndex];
 
-                    Il = Vector3.Normalize(Il);
-                    Io = Vector3.Normalize(Io);
-                    L = Vector3.Normalize(L);
-                    N = Vector3.Normalize(N);
+        //            checkAndUpdateAET(previousPoint, point);
+        //            checkAndUpdateAET(nextPoint, point);
 
-                    Vector3 R = 2 * Vector3.Dot(N, L) * N - L;
-                    R = Vector3.Normalize(R);
+        //            index = sortedIndexes[++sortedIndex];
+        //            point = trianglePoints[index];
+        //        }
 
-                    Vector3 I = Kd * Il * Io * Math.Max(0, Vector3.Dot(L, N)) + Ks * Il * Io * MathF.Pow(Math.Max(0, Vector3.Dot(R, V)), M);
+        //        void checkAndUpdateAET(Point p1, Point p2)
+        //        {
+        //            if (p1.Y > p2.Y)
+        //                AET.Add(new AETElement(p1, p2));
+        //            else
+        //                AET.RemoveAll(edge => edge.P1 == p2 && edge.P2 == p1);
+        //        }
 
-                    I = Vector3.Clamp(I, new Vector3(0, 0, 0), new Vector3(1, 1, 1));
-                    I *= 255;
+        //        // Posortowanie AET w kierunku rosn¹cych X
+        //        AET.Sort((e1, e2) => e1.X.CompareTo(e2.X));
 
-                    return Color.FromArgb((int)I.X, (int)I.Y, (int)I.Z);
-                }
+        //        unsafe
+        //        {
+        //            // Transformacja uk³adu wspó³rzêdnych
+        //            //int transformedY = -scanline + DirectBitmap.Height / 2;
+        //            int transformedY = CoordinateTransformer.TransformY(scanline);
 
-                float[] getBaricentricCoords(Point p)
-                {
-                    float[] coords = new float[3];
-                    float invertedS = (float)1 / getDoubledSarea(trianglePoints[0], trianglePoints[1], trianglePoints[2]);
-                    //float invertedS = 1 / s;
-                    coords[0] = getDoubledSarea(p, trianglePoints[1], trianglePoints[2]) * invertedS;
-                    coords[1] = getDoubledSarea(trianglePoints[0], p, trianglePoints[2]) * invertedS;
-                    coords[2] = getDoubledSarea(trianglePoints[0], trianglePoints[1], p) * invertedS;
+        //            // Aktualnie rozwa¿any punkt
+        //            Point p = new(0, scanline);
 
-                    return coords;
-                }
+        //            // Dla kolejnych par krawêdzi 0-1, 2-3
+        //            for (int i = 0; i < AET.Count - 1; i += 2)
+        //            {
+        //                AETElement e1 = AET[i];
+        //                AETElement e2 = AET[i + 1];
 
-                int getDoubledSarea(Point p1, Point p2, Point p3)
-                {
-                    return (p1.X - p3.X) * (p2.Y - p3.Y) - (p2.X - p3.X) * (p1.Y - p3.Y);
-                }
-            }
-        }
+        //                int x1 = (int)e1.X;
+        //                int x2 = (int)e2.X;
+
+        //                if (transformedY >= 0 && transformedY < DirectBitmap.Height)
+        //                {
+        //                    // Wype³nianie scanlinii miêdzy krawêdziami
+        //                    for (int x = x1; x < x2; x++)
+        //                    {
+        //                        p.X = x;
+        //                        float[] coords = getBaricentricCoords(p);
+
+        //                        if (coords.Contains(float.NaN))
+        //                            continue;
+
+        //                        float u = triangle.V1.U * coords[0] + triangle.V2.U * coords[1] + triangle.V3.U * coords[2];
+        //                        float v = triangle.V1.V * coords[0] + triangle.V2.V * coords[1] + triangle.V3.V * coords[2];
+
+        //                        Color color = getColor(coords, u, v);
+
+        //                        // Transformacja uk³adu wspó³rzêdnych
+        //                        //int transformedX = x + DirectBitmap.Width / 2;
+        //                        int transformedX = CoordinateTransformer.TransformX(x);
+
+        //                        if (transformedX >= 0 && transformedX < DirectBitmap.Width)
+        //                            DirectBitmap.SetPixel(transformedX, transformedY, color);
+        //                    }
+        //                }
+        //            }
+
+        //            // Aktualizacja wartoœci x dla nowej scanlinii
+        //            for (int i = 0; i < AET.Count; i++)
+        //                AET[i].X += AET[i].InverseSlope;
+        //        }
+
+
+        //        Color getColor(float[] coords, float u, float v)
+        //        {
+        //            Color color = GetColor(u, v);
+
+        //            Vector3 Il = new(LightColor.R, LightColor.G, LightColor.B);
+        //            Vector3 Io = new(color.R, color.G, color.B);
+        //            Vector3 P = triangle.V1.AfterRotationState.P * coords[0] + triangle.V2.AfterRotationState.P * coords[1] + triangle.V3.AfterRotationState.P * coords[2];
+        //            Vector3 L = LightPositionForDrawing - P;
+        //            Vector3 N = GetNormalVector(triangle, coords, u, v);
+        //            Vector3 V = new(0, 0, 1);
+
+        //            Il = Vector3.Normalize(Il);
+        //            Io = Vector3.Normalize(Io);
+        //            L = Vector3.Normalize(L);
+        //            N = Vector3.Normalize(N);
+
+        //            Vector3 R = 2 * Vector3.Dot(N, L) * N - L;
+        //            R = Vector3.Normalize(R);
+
+        //            Vector3 I = Kd * Il * Io * Math.Max(0, Vector3.Dot(L, N)) + Ks * Il * Io * MathF.Pow(Math.Max(0, Vector3.Dot(R, V)), M);
+
+        //            I = Vector3.Clamp(I, new Vector3(0, 0, 0), new Vector3(1, 1, 1));
+        //            I *= 255;
+
+        //            return Color.FromArgb((int)I.X, (int)I.Y, (int)I.Z);
+        //        }
+
+        //        float[] getBaricentricCoords(Point p)
+        //        {
+        //            float[] coords = new float[3];
+        //            float invertedS = (float)1 / getDoubledSarea(trianglePoints[0], trianglePoints[1], trianglePoints[2]);
+        //            //float invertedS = 1 / s;
+        //            coords[0] = getDoubledSarea(p, trianglePoints[1], trianglePoints[2]) * invertedS;
+        //            coords[1] = getDoubledSarea(trianglePoints[0], p, trianglePoints[2]) * invertedS;
+        //            coords[2] = getDoubledSarea(trianglePoints[0], trianglePoints[1], p) * invertedS;
+
+        //            return coords;
+        //        }
+
+        //        int getDoubledSarea(Point p1, Point p2, Point p3)
+        //        {
+        //            return (p1.X - p3.X) * (p2.Y - p3.Y) - (p2.X - p3.X) * (p1.Y - p3.Y);
+        //        }
+        //    }
+        //}
 
         private void pictureBox_SizeChanged(object sender, EventArgs e)
         {
@@ -364,6 +388,9 @@ namespace Lab2
             G.ScaleTransform(1, -1);
             G.TranslateTransform(Bitmap.Width / 2, -Bitmap.Height / 2);
 
+            MeshRenderer.DirectBitmap = DirectBitmap;
+            MeshRenderer.G = G;
+
             pictureBox.Invalidate();
 
             oldDirectBitmap.Dispose();
@@ -373,21 +400,24 @@ namespace Lab2
 
         private void kdTrackBar_Scroll(object sender, EventArgs e)
         {
-            Kd = scaleTrackBarValueToOne(kdTrackBar);
+            MeshRenderer.ReflectionCoefficients.Kd = scaleTrackBarValueToOne(kdTrackBar);
+            //Kd = scaleTrackBarValueToOne(kdTrackBar);
 
             pictureBox.Invalidate();
         }
 
         private void ksTrackBar_Scroll(object sender, EventArgs e)
         {
-            Ks = scaleTrackBarValueToOne(ksTrackBar);
+            MeshRenderer.ReflectionCoefficients.Ks = scaleTrackBarValueToOne(ksTrackBar);
+            //Ks = scaleTrackBarValueToOne(ksTrackBar);
 
             pictureBox.Invalidate();
         }
 
         private void mTrackBar_Scroll(object sender, EventArgs e)
         {
-            M = mTrackBar.Value;
+            MeshRenderer.ReflectionCoefficients.M = mTrackBar.Value;
+            //M = mTrackBar.Value;
 
             pictureBox.Invalidate();
         }
@@ -395,19 +425,24 @@ namespace Lab2
         private void lightZAxisTrackBar_Scroll(object sender, EventArgs e)
         {
             //LightZCoord = lightZCoordTrackBar.Value;
-            LightPositionMutex.WaitOne();
-            LightPosition = new Vector3(LightPosition.X, LightPosition.Y, lightZCoordTrackBar.Value);
-            LightPositionMutex.ReleaseMutex();
+            lock (Scene.LightSource)
+                Scene.LightSource.Position = new(Scene.LightSource.Position.X, Scene.LightSource.Position.Y, lightZCoordTrackBar.Value);
+
+            //LightPositionMutex.WaitOne();
+            //LightPosition = new Vector3(LightPosition.X, LightPosition.Y, lightZCoordTrackBar.Value);
+            //LightPositionMutex.ReleaseMutex();
             pictureBox.Invalidate();
         }
 
         private void lightColorButton_Click(object sender, EventArgs e)
         {
-            colorDialog.Color = LightColor;
+            colorDialog.Color = Scene.LightSource.Color;
             if (colorDialog.ShowDialog() == DialogResult.OK)
             {
-                LightColor = colorDialog.Color;
-                lightColorPictureBox.BackColor = LightColor;
+                lock (Scene.LightSource)
+                    Scene.LightSource.Color = colorDialog.Color;
+                //LightColor = colorDialog.Color;
+                lightColorPictureBox.BackColor = colorDialog.Color;
 
                 pictureBox.Invalidate();
             }
@@ -415,11 +450,11 @@ namespace Lab2
 
         private void meshColorButton_Click(object sender, EventArgs e)
         {
-            colorDialog.Color = MeshColor;
+            colorDialog.Color = MeshRenderer.MeshColor;
             if (colorDialog.ShowDialog() == DialogResult.OK)
             {
-                MeshColor = colorDialog.Color;
-                meshColorPictureBox.BackColor = MeshColor;
+                MeshRenderer.MeshColor = colorDialog.Color;
+                meshColorPictureBox.BackColor = colorDialog.Color;
 
                 pictureBox.Invalidate();
             }
@@ -427,25 +462,29 @@ namespace Lab2
 
         private void drawEdgesCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            DrawEdges = drawEdgesCheckBox.Checked;
+            MeshRenderer.DrawEdges = drawEdgesCheckBox.Checked;
+            //DrawEdges = drawEdgesCheckBox.Checked;
             pictureBox.Invalidate();
         }
 
         private void drawFillingCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            DrawFilling = drawFillingCheckBox.Checked;
+            MeshRenderer.DrawFilling = drawFillingCheckBox.Checked;
+            //DrawFilling = drawFillingCheckBox.Checked;
             pictureBox.Invalidate();
         }
 
         private void fixedColorRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            GetColor = GetMeshRGBColor;
+            MeshRenderer.GetColor = MeshRenderer.GetMeshRGBColor;
+            //GetColor = GetMeshRGBColor;
             pictureBox.Invalidate();
         }
 
         private void textureRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            GetColor = GetTextureColor;
+            MeshRenderer.GetColor = MeshRenderer.GetTextureColor;
+            //GetColor = GetTextureColor;
             pictureBox.Invalidate();
         }
 
@@ -475,11 +514,11 @@ namespace Lab2
             {
                 string fileName = openFileDialog.FileName;
                 Bitmap textureBitmap = new(fileName);
-                TextureDirectBitmap = new(textureBitmap.Width, textureBitmap.Height);
+                MeshRenderer.TextureDirectBitmap = new(textureBitmap.Width, textureBitmap.Height);
 
-                using Graphics g = Graphics.FromImage(TextureDirectBitmap.Bitmap);
+                using Graphics g = Graphics.FromImage(MeshRenderer.TextureDirectBitmap.Bitmap);
                 {
-                    g.DrawImage(textureBitmap, 0, 0, TextureDirectBitmap.Width, TextureDirectBitmap.Height);
+                    g.DrawImage(textureBitmap, 0, 0, MeshRenderer.TextureDirectBitmap.Width, MeshRenderer.TextureDirectBitmap.Height);
 
                 }
 
@@ -492,9 +531,10 @@ namespace Lab2
         private void normalMapCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (normalMapCheckBox.Checked)
-                GetNormalVector = GetNormalVectorFromNormalMap;
+                MeshRenderer.GetNormalVector = MeshRenderer.GetNormalVectorFromNormalMap;
+            //GetNormalVector = GetNormalVectorFromNormalMap;
             else
-                GetNormalVector = GetNormalVectorFromVertices;
+                MeshRenderer.GetNormalVector = MeshRenderer.GetNormalVectorFromVertices;
 
             pictureBox.Invalidate();
         }
@@ -533,24 +573,26 @@ namespace Lab2
             {
                 string fileName = openFileDialog.FileName;
                 Bitmap bitmap = new(fileName);
-                SetNormalMap(bitmap);
+                GetNormalMap(bitmap);
                 normalMapPictureBox.Image = Image.FromFile(fileName);
 
                 pictureBox.Invalidate();
             }
         }
 
-        private void SetNormalMap(Bitmap bitmap)
+        private Vector3[,] GetNormalMap(Bitmap bitmap)
         {
-            NormalMap = new Vector3[bitmap.Width, bitmap.Height];
+            Vector3[,] normalMap = new Vector3[bitmap.Width, bitmap.Height];
             for (int i = 0; i < bitmap.Width; i++)
             {
                 for (int j = 0; j < bitmap.Height; j++)
                 {
                     Color color = bitmap.GetPixel(i, j);
-                    NormalMap[i, j] = new Vector3(color.R, color.G, color.B) / 255 * 2 - new Vector3(1, 1, 1);
+                    normalMap[i, j] = new Vector3(color.R, color.G, color.B) / 255 * 2 - new Vector3(1, 1, 1);
                 }
             }
+
+            return normalMap;
         }
 
         private void LoadBitmapFromFile(ref Bitmap bitmap)
@@ -588,7 +630,8 @@ namespace Lab2
 
         private void timer_Tick(object? sender, EventArgs e)
         {
-            MoveLight();
+            Scene.MoveLightSource();
+            //MoveLight();
         }
 
         private void moveLightCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -616,7 +659,7 @@ namespace Lab2
                 TxtControlPointsReader reader = new(ControlPointsFirstDimensionCount, ControlPointsSecondDimensionCount);
                 string fileName = openFileDialog.FileName;
                 ControlPoints = reader.Read(fileName);
-                Mesh = new Mesh(ControlPoints, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
+                Scene.Mesh = new Mesh(ControlPoints, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
 
                 pictureBox.Invalidate();
             }
