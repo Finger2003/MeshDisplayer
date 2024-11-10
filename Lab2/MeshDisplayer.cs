@@ -50,10 +50,9 @@ namespace Lab2
             G = Graphics.FromImage(Bitmap);
             SetGraphicsTransformation();
 
-            ICoordinateTransformer2D transformer = new CenterCoordinateTransformer2D(Bitmap.Width, Bitmap.Height);
             ReflectionCoefficients reflectionCoefficients = new(ks, kd, m);
 
-            MeshRenderer = new(DirectBitmap, G, transformer, reflectionCoefficients, textureDirectBitmap, normalMap);
+            MeshRenderer = new(DirectBitmap, G, CoordinateTransformer, reflectionCoefficients, textureDirectBitmap, normalMap);
             MeshRenderer.GetColor = MeshRenderer.GetMeshRGBColor;
             MeshRenderer.GetNormalVector = MeshRenderer.GetNormalVectorFromVertices;
             MeshRenderer.DrawEdges = drawEdgesCheckBox.Checked;
