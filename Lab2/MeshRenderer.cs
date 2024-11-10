@@ -1,13 +1,7 @@
 ﻿using Lab2.CoordinatesTransformers;
 using Lab2.Model;
 using Lab2.Renderers;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lab2
 {
@@ -80,11 +74,6 @@ namespace Lab2
             }
         }
 
-        //public Bitmap GetRenderedBitmap()
-        //{
-        //    return DirectBitmap.Bitmap;
-        //}
-
         private void fillTriangle(Triangle triangle)
         {
 
@@ -140,54 +129,49 @@ namespace Lab2
                 // Posortowanie AET w kierunku rosnących X
                 AET.Sort((e1, e2) => e1.X.CompareTo(e2.X));
 
-                //unsafe
-                //{
-                    // Transformacja układu współrzędnych
-                    //int transformedY = -scanline + DirectBitmap.Height / 2;
-                    int transformedY = CoordinateTransformer.TransformY(scanline);
+                // Transformacja układu współrzędnych
+                int transformedY = CoordinateTransformer.TransformY(scanline);
 
-                    // Aktualnie rozważany punkt
-                    Point p = new(0, scanline);
+                // Aktualnie rozważany punkt
+                Point p = new(0, scanline);
 
-                    // Dla kolejnych par krawędzi 0-1, 2-3
-                    for (int i = 0; i < AET.Count - 1; i += 2)
+                // Dla kolejnych par krawędzi 0-1, 2-3
+                for (int i = 0; i < AET.Count - 1; i += 2)
+                {
+                    AETElement e1 = AET[i];
+                    AETElement e2 = AET[i + 1];
+
+                    int x1 = (int)e1.X;
+                    int x2 = (int)e2.X;
+
+                    if (transformedY >= 0 && transformedY < DirectBitmap.Height)
                     {
-                        AETElement e1 = AET[i];
-                        AETElement e2 = AET[i + 1];
-
-                        int x1 = (int)e1.X;
-                        int x2 = (int)e2.X;
-
-                        if (transformedY >= 0 && transformedY < DirectBitmap.Height)
+                        // Wypełnianie scanlinii między krawędziami
+                        for (int x = x1; x < x2; x++)
                         {
-                            // Wypełnianie scanlinii między krawędziami
-                            for (int x = x1; x < x2; x++)
-                            {
-                                p.X = x;
-                                float[] coords = getBaricentricCoords(p);
+                            p.X = x;
+                            float[] coords = getBaricentricCoords(p);
 
-                                if (coords.Contains(float.NaN))
-                                    continue;
+                            if (coords.Contains(float.NaN))
+                                continue;
 
-                                float u = triangle.V1.U * coords[0] + triangle.V2.U * coords[1] + triangle.V3.U * coords[2];
-                                float v = triangle.V1.V * coords[0] + triangle.V2.V * coords[1] + triangle.V3.V * coords[2];
+                            float u = triangle.V1.U * coords[0] + triangle.V2.U * coords[1] + triangle.V3.U * coords[2];
+                            float v = triangle.V1.V * coords[0] + triangle.V2.V * coords[1] + triangle.V3.V * coords[2];
 
-                                Color color = getColor(coords, u, v);
+                            Color color = getColor(coords, u, v);
 
-                                // Transformacja układu współrzędnych
-                                //int transformedX = x + DirectBitmap.Width / 2;
-                                int transformedX = CoordinateTransformer.TransformX(x);
+                            // Transformacja układu współrzędnych
+                            int transformedX = CoordinateTransformer.TransformX(x);
 
-                                if (transformedX >= 0 && transformedX < DirectBitmap.Width)
-                                    DirectBitmap.SetPixel(transformedX, transformedY, color);
-                            }
+                            if (transformedX >= 0 && transformedX < DirectBitmap.Width)
+                                DirectBitmap.SetPixel(transformedX, transformedY, color);
                         }
                     }
+                }
 
-                    // Aktualizacja wartości x dla nowej scanlinii
-                    for (int i = 0; i < AET.Count; i++)
-                        AET[i].X += AET[i].InverseSlope;
-                //}
+                // Aktualizacja wartości x dla nowej scanlinii
+                for (int i = 0; i < AET.Count; i++)
+                    AET[i].X += AET[i].InverseSlope;
 
 
                 Color getColor(float[] coords, float u, float v)

@@ -10,6 +10,5 @@ namespace Lab2.Renderers
     public interface IMeshRenderer
     {
         public void RenderMesh(Mesh mesh, LightSource lightSource);
-        //public Bitmap GetRenderedBitmap();
     }
 }

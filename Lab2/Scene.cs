@@ -22,13 +22,6 @@ namespace Lab2
             MeshRenderer.RenderMesh(Mesh, LightSource);
         }
 
-        //public Bitmap GetRenderedBitmap()
-        //{
-        //    RenderScene();
-        //    return MeshRenderer.GetRenderedBitmap();
-        //}
-
-
 
         private float LightRadiusStep { get; set; } = 2;
         private float LightAngleStep { get; set; } = 0.1f;
@@ -39,7 +32,6 @@ namespace Lab2
 
         public void MoveLightSource()
         {
-            //LightPositionMutex.WaitOne();
 
             LightRadius += LightRadiusStep;
             LightAngle += LightAngleStep;
@@ -47,25 +39,15 @@ namespace Lab2
             float x = LightRadius * MathF.Cos(LightAngle);
             float y = LightRadius * MathF.Sin(LightAngle);
 
-            //Vector3 lightPosition = LightSource.Position;
-
-            //lightPosition.X = x;
-            //lightPosition.Y = y;
-
             lock (LightSource)
                 LightSource.Position = new(x, y, LightSource.Position.Z);
 
-            //LightPosition = new Vector3(x, y, LightPosition.Z);
 
             if (LightRadius >= MaxLightRadius || LightRadius <= MinLightRadius)
             {
                 LightRadiusStep *= -1;
                 LightAngleStep *= -1;
             }
-
-            //LightPositionMutex.ReleaseMutex();
-            //pictureBox.Invalidate();
-
         }
         public void ResetLightSourcePosition()
         {
