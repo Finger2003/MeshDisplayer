@@ -24,6 +24,7 @@ namespace Lab2.Model
         public Mesh(Vector3[,] controlPoints, int fidelityU, int fidelityV, int alphaAngle, int betaAngle)
         {
             ControlPoints = controlPoints;
+            ControlPointsAfterRotation = new Vector3[controlPoints.GetLength(0), controlPoints.GetLength(1)];
             AlphaRadians = MathHelper.DegreesToRadians(alphaAngle);
             BetaRadians = MathHelper.DegreesToRadians(betaAngle);
             SetFidelity(fidelityU, fidelityV);
@@ -99,7 +100,7 @@ namespace Lab2.Model
                     pv *= m;
 
                     // Wektor normalny
-                    nuv = Vector3.Cross(pu, pv);
+                    nuv = Vector3.Cross(pv, pu);
                     nuv = Vector3.Normalize(nuv);
 
                     Vertices[ui, vi] = new Vertex(p, pu, pv, nuv, u, v);
@@ -180,9 +181,22 @@ namespace Lab2.Model
             RotateVertices();
         }
 
+        public Vector3[,] ControlPointsAfterRotation { get; set; }
         private void RotateVertices()
         {
-            Matrix4x4 rotationMatrix = Matrix4x4.CreateRotationZ(AlphaRadians) * Matrix4x4.CreateRotationX(BetaRadians);
+            //Matrix4x4 Rz = new(MathF.Cos(AlphaRadians), -MathF.Sin(AlphaRadians), 0, 0,
+            //                   MathF.Sin(AlphaRadians), MathF.Cos(AlphaRadians), 0, 0,
+            //                   0, 0, 1, 0,
+            //                   0, 0, 0, 1);
+            //Matrix4x4 Rx = new(1, 0, 0, 0,
+            //                   0, MathF.Cos(BetaRadians), -MathF.Sin(BetaRadians), 0,
+            //                   0, MathF.Sin(BetaRadians), MathF.Cos(BetaRadians), 0,
+            //                   0, 0, 0, 1);
+
+            //Matrix4x4 rotationMatrix = Rz * Rx;
+
+            // CreateRotationX tworzy obrót zgodnie ze wskazówkami zegara
+            Matrix4x4 rotationMatrix = Matrix4x4.CreateRotationZ(AlphaRadians) * Matrix4x4.CreateRotationX(-BetaRadians);
 
             foreach (Vertex vertex in Vertices)
             {
@@ -192,6 +206,13 @@ namespace Lab2.Model
                 Vector3 n = Vector3.Transform(vertex.BeforeRotationState.N, rotationMatrix);
 
                 vertex.AfterRotationState = new Vertex.State(p, pu, pv, n);
+            }
+            for(int i = 0; i < ControlPoints.GetLength(0); i++)
+            {
+                for (int j = 0; j < ControlPoints.GetLength(1); j++)
+                {
+                    ControlPointsAfterRotation[i, j] = Vector3.Transform(ControlPoints[i, j], rotationMatrix);
+                }
             }
         }
     }

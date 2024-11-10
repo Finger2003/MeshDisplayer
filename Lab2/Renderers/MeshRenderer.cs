@@ -25,7 +25,7 @@ namespace Lab2.Renderers
         public Vector3[,] NormalMap { get; set; }
         public Color MeshColor { get; set; }
 
-        float[,] PaintedPixelsZ{ get; set; }
+        float[,] PaintedPixelsZ { get; set; } = new float[0, 0];
         public MeshRenderer(DirectBitmap directBitmap, Graphics bitmapGraphics, ICoordinateTransformer2D coordinateTransformer, ReflectionCoefficients reflectionCoefficients, DirectBitmap textureDirectBitmap, Vector3[,] normalMap)
         {
             DirectBitmap = directBitmap;
@@ -47,7 +47,7 @@ namespace Lab2.Renderers
 
             for(int i = 0; i < DirectBitmap.Width; i++)
                 for (int j = 0; j < DirectBitmap.Height; j++)
-                    PaintedPixelsZ[i, j] = float.PositiveInfinity;
+                    PaintedPixelsZ[i, j] = float.NegativeInfinity;
 
 
             if (DrawFilling)
@@ -164,15 +164,15 @@ namespace Lab2.Renderers
                             if (coords.Any(x => float.IsNaN(x) || float.IsPositiveInfinity(x) || float.IsNegativeInfinity(x)))
                                 continue;
 
-                            float u = MathHelper.InterpolateFloatFromBaricentric(triangle.V1.U, triangle.V2.U, triangle.V3.U, coords);
-                            float v = MathHelper.InterpolateFloatFromBaricentric(triangle.V1.V, triangle.V2.V, triangle.V3.V, coords);
                             Vector3 P = MathHelper.InterpolateVectorFromBaricentric(triangle.V1.AfterRotationState.P, triangle.V2.AfterRotationState.P, triangle.V3.AfterRotationState.P, coords);
 
-                            if (PaintedPixelsZ[transformedX, transformedY] < P.Z)
+                            if (PaintedPixelsZ[transformedX, transformedY] > P.Z)
                                 continue;
 
                             PaintedPixelsZ[transformedX, transformedY] = P.Z;
 
+                            float u = MathHelper.InterpolateFloatFromBaricentric(triangle.V1.U, triangle.V2.U, triangle.V3.U, coords);
+                            float v = MathHelper.InterpolateFloatFromBaricentric(triangle.V1.V, triangle.V2.V, triangle.V3.V, coords);
                             Color color = getInterpolatedColor(coords, u, v, P);
 
 
@@ -213,9 +213,6 @@ namespace Lab2.Renderers
                     float kd = ReflectionCoefficients.Kd;
                     float ks = ReflectionCoefficients.Ks;
                     float m = ReflectionCoefficients.M;
-                    //float VRDot = Vector3.Dot(V, R);
-
-
 
                     Vector3 I = Il * Io * (kd * Math.Max(0, NLDot) + ks * MathF.Pow(Math.Max(0, Vector3.Dot(V, R)), m));
 
