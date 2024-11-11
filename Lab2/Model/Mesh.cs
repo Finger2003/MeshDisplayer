@@ -195,8 +195,7 @@ namespace Lab2.Model
 
             //Matrix4x4 rotationMatrix = Rz * Rx;
 
-            // CreateRotationX tworzy obrót zgodnie ze wskazówkami zegara
-            Matrix4x4 rotationMatrix = Matrix4x4.CreateRotationZ(AlphaRadians) * Matrix4x4.CreateRotationX(-BetaRadians);
+            Matrix4x4 rotationMatrix = Matrix4x4.CreateRotationZ(-AlphaRadians) *  Matrix4x4.CreateRotationX(-BetaRadians);
 
             foreach (Vertex vertex in Vertices)
             {

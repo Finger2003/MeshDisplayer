@@ -197,8 +197,10 @@ namespace Lab2
 
             SetGraphicsTransformation();
 
-            MeshRenderer.DirectBitmap = DirectBitmap;
-            MeshRenderer.G = G;
+            //MeshRenderer.DirectBitmap = DirectBitmap;
+            //MeshRenderer.G = G;
+            //MeshRenderer.PaintedPixelsZ = new float[DirectBitmap.Width, DirectBitmap.Height];
+            MeshRenderer.SetNewBitmap(DirectBitmap, G);
 
             pictureBox.Invalidate();
 

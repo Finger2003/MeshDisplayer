@@ -25,11 +25,12 @@ namespace Lab2.Renderers
         public Vector3[,] NormalMap { get; set; }
         public Color MeshColor { get; set; }
 
-        float[,] PaintedPixelsZ { get; set; } = new float[0, 0];
+        public float[,] PaintedPixelsZ { get; set; } = new float[0, 0];
         public MeshRenderer(DirectBitmap directBitmap, Graphics bitmapGraphics, ICoordinateTransformer2D coordinateTransformer, ReflectionCoefficients reflectionCoefficients, DirectBitmap textureDirectBitmap, Vector3[,] normalMap)
         {
             DirectBitmap = directBitmap;
             G = bitmapGraphics;
+            PaintedPixelsZ = new float[DirectBitmap.Width, DirectBitmap.Height];
             CoordinateTransformer = coordinateTransformer;
             ReflectionCoefficients = reflectionCoefficients;
             TextureDirectBitmap = textureDirectBitmap;
@@ -39,14 +40,21 @@ namespace Lab2.Renderers
             GetNormalVector = GetNormalVectorFromVertices;
         }
 
+        public void SetNewBitmap(DirectBitmap directBitmap, Graphics bitmapGraphics)
+        {
+            DirectBitmap = directBitmap;
+            G = bitmapGraphics;
+            PaintedPixelsZ = new float[DirectBitmap.Width, DirectBitmap.Height];
+        }
+
         public void RenderMesh(Mesh mesh, LightSource lightSource)
         {
             G.Clear(Color.White);
 
-            PaintedPixelsZ = new float[DirectBitmap.Width, DirectBitmap.Height];
+            //PaintedPixelsZ = new float[DirectBitmap.Width, DirectBitmap.Height];
 
-            for(int i = 0; i < DirectBitmap.Width; i++)
-                for (int j = 0; j < DirectBitmap.Height; j++)
+            for (int i = 0; i < PaintedPixelsZ.GetLength(0); i++)
+                for (int j = 0; j < PaintedPixelsZ.GetLength(1); j++)
                     PaintedPixelsZ[i, j] = float.NegativeInfinity;
 
 
