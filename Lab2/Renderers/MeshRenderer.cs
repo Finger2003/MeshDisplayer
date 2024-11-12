@@ -66,8 +66,8 @@ namespace Lab2.Renderers
                     LightSource.Color = lightSource.Color;
                 }
 
-                //Parallel.ForEach(mesh.Triangles, fillTriangle);
-                mesh.Triangles.ForEach(fillTriangle);
+                Parallel.ForEach(mesh.Triangles, FillTriangle);
+                //mesh.Triangles.ForEach(fillTriangle);
             }
 
             if (DrawEdges)
@@ -87,7 +87,7 @@ namespace Lab2.Renderers
             }
         }
 
-        private void fillTriangle(Triangle triangle)
+        private void FillTriangle(Triangle triangle)
         {
 
             Point[] trianglePoints =

@@ -28,7 +28,7 @@ namespace Lab2.VertexFileReaders
                 for(int j = 0; j < ControlPointsSecondDimensionCount; j++)
                 {
                     if ((line = sr.ReadLine()) is null)
-                        throw new Exception("Not enough control points in the file");
+                        throw new Exception("Niewystarczająca liczba wierzchołków w pliku");
 
                     float[] coords = line.Split(' ').Select(float.Parse).ToArray();
                     controlPoints[i, j] = new Vector3(coords[0], coords[1], coords[2]);

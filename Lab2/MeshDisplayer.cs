@@ -378,13 +378,22 @@ namespace Lab2
             openFileDialog.Filter = "Text|*.txt";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                TxtControlPointsReader reader = new(ControlPointsFirstDimensionCount, ControlPointsSecondDimensionCount);
-                string fileName = openFileDialog.FileName;
-                Vector3[,] controlPoints = reader.Read(fileName);
-                Scene.Mesh.ControlPoints = controlPoints;
-                Scene.Mesh.InterPolateVertices();
+                try
+                {
+                    Vector3[,] controlPoints = GetControlPointsFromFile(openFileDialog.FileName);
+                    Scene.Mesh.ControlPoints = controlPoints;
+                    Scene.Mesh.InterPolateVertices();
 
-                pictureBox.Invalidate();
+                    pictureBox.Invalidate();
+                }
+                catch(FormatException)
+                {
+                    MessageBox.Show("Niew³aœciwy format wierzcho³ków", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }
