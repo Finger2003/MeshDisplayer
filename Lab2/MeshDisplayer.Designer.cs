@@ -67,6 +67,7 @@
             openFileDialog = new OpenFileDialog();
             meshColorButton = new Button();
             meshGroupBox = new GroupBox();
+            loadControlPointsButton = new Button();
             textureButton = new Button();
             lightGroupBox = new GroupBox();
             lightPanel = new Panel();
@@ -82,7 +83,6 @@
             normalMapButton = new Button();
             fpsLabel = new Label();
             menuStrip1 = new MenuStrip();
-            loadControlPointsButton = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             fidelityPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)fidelityTrackBar).BeginInit();
@@ -422,7 +422,7 @@
             lightZCoordTrackBar.SmallChange = 5;
             lightZCoordTrackBar.TabIndex = 0;
             lightZCoordTrackBar.TickFrequency = 5;
-            lightZCoordTrackBar.Value = 200;
+            lightZCoordTrackBar.Value = 500;
             lightZCoordTrackBar.Scroll += lightZAxisTrackBar_Scroll;
             // 
             // objectColorPanel
@@ -482,6 +482,17 @@
             meshGroupBox.TabIndex = 11;
             meshGroupBox.TabStop = false;
             meshGroupBox.Text = "Siatka";
+            // 
+            // loadControlPointsButton
+            // 
+            loadControlPointsButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            loadControlPointsButton.Location = new Point(21, 296);
+            loadControlPointsButton.Name = "loadControlPointsButton";
+            loadControlPointsButton.Size = new Size(187, 40);
+            loadControlPointsButton.TabIndex = 21;
+            loadControlPointsButton.Text = "Wczytaj plik z punktami kontrolnymi";
+            loadControlPointsButton.UseVisualStyleBackColor = true;
+            loadControlPointsButton.Click += loadControlPointsButton_Click;
             // 
             // textureButton
             // 
@@ -658,17 +669,6 @@
             menuStrip1.Size = new Size(1174, 24);
             menuStrip1.TabIndex = 16;
             menuStrip1.Text = "menuStrip1";
-            // 
-            // loadControlPointsButton
-            // 
-            loadControlPointsButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            loadControlPointsButton.Location = new Point(21, 296);
-            loadControlPointsButton.Name = "loadControlPointsButton";
-            loadControlPointsButton.Size = new Size(187, 40);
-            loadControlPointsButton.TabIndex = 21;
-            loadControlPointsButton.Text = "Wczytaj plik z punktami kontrolnymi";
-            loadControlPointsButton.UseVisualStyleBackColor = true;
-            loadControlPointsButton.Click += loadControlPointsButton_Click;
             // 
             // MeshDisplayer
             // 

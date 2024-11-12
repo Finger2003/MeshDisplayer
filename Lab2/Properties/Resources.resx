@@ -136,4 +136,13 @@
   <data name="DefaultMeshColor" xml:space="preserve">
     <value>White</value>
   </data>
+  <data name="NormalMapFolder" xml:space="preserve">
+    <value>Zasoby/Mapy normalne</value>
+  </data>
+  <data name="TextureFolder" xml:space="preserve">
+    <value>Zasoby/Tekstury</value>
+  </data>
+  <data name="ControlPointsFolder" xml:space="preserve">
+    <value>Zasoby/Punkty kontrolne</value>
+  </data>
 </root>

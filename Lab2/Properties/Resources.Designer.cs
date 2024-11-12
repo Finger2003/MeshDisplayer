@@ -61,6 +61,15 @@ namespace Lab2.Properties {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Zasoby/Punkty kontrolne.
+        /// </summary>
+        internal static string ControlPointsFolder {
+            get {
+                return ResourceManager.GetString("ControlPointsFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu control_points.txt.
         /// </summary>
         internal static string DefaultControlPointsPath {
@@ -114,6 +123,24 @@ namespace Lab2.Properties {
             get {
                 object obj = ResourceManager.GetObject("Icon", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Zasoby/Mapy normalne.
+        /// </summary>
+        internal static string NormalMapFolder {
+            get {
+                return ResourceManager.GetString("NormalMapFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Zasoby/Tekstury.
+        /// </summary>
+        internal static string TextureFolder {
+            get {
+                return ResourceManager.GetString("TextureFolder", resourceCulture);
             }
         }
     }
