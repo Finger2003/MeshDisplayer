@@ -66,7 +66,8 @@ namespace Lab2.Renderers
                     LightSource.Color = lightSource.Color;
                 }
 
-                Parallel.ForEach(mesh.Triangles, fillTriangle);
+                //Parallel.ForEach(mesh.Triangles, fillTriangle);
+                mesh.Triangles.ForEach(fillTriangle);
             }
 
             if (DrawEdges)
@@ -182,7 +183,7 @@ namespace Lab2.Renderers
                             float u = MathHelper.InterpolateFloatFromBaricentric(triangle.V1.U, triangle.V2.U, triangle.V3.U, coords);
                             float v = MathHelper.InterpolateFloatFromBaricentric(triangle.V1.V, triangle.V2.V, triangle.V3.V, coords);
                             Color color = getInterpolatedColor(coords, u, v, P);
-
+                            //color = GetTextureColor(u, v);
 
                             if (transformedX >= 0 && transformedX < DirectBitmap.Width)
                                 DirectBitmap.SetPixel(transformedX, transformedY, color);
@@ -208,8 +209,12 @@ namespace Lab2.Renderers
                     Vector3 N = GetNormalVector(triangle, coords, u, v);
                     Vector3 V = Vector3.UnitZ;
 
-                    Il = Vector3.Normalize(Il);
-                    Io = Vector3.Normalize(Io);
+                    //Il = Vector3.Normalize(Il);
+                    //Io = Vector3.Normalize(Io);
+
+                    Il /= 255;
+                    Io /= 255;
+
                     L = Vector3.Normalize(L);
                     N = Vector3.Normalize(N);
 
