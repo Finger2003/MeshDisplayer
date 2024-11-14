@@ -1,38 +1,27 @@
-﻿using Lab2.Model;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Lab2.VertexFileReaders
+namespace Lab2.ControlPointsFileReaders
 {
-    public class TxtControlPointsReader
+    public class TxtControlPointsReader(int controlPointsFirstDimensionCount, int controlPointsSecondDimensionCount)
     {
-        public int ControlPointsFirstDimensionCount { get; set; }
-        public int ControlPointsSecondDimensionCount { get; set; }
-        public TxtControlPointsReader(int controlPointsFirstDimensionCount, int controlPointsSecondDimensionCount)
-        {
-            ControlPointsFirstDimensionCount = controlPointsFirstDimensionCount;
-            ControlPointsSecondDimensionCount = controlPointsSecondDimensionCount;
-        }
+        public int ControlPointsFirstDimensionCount { get; set; } = controlPointsFirstDimensionCount;
+        public int ControlPointsSecondDimensionCount { get; set; } = controlPointsSecondDimensionCount;
 
         public Vector3[,] Read(string path)
         {
             Vector3[,] controlPoints = new Vector3[ControlPointsFirstDimensionCount, ControlPointsSecondDimensionCount];
             using StreamReader sr = new(path);
             string? line;
-            for(int i = 0; i < ControlPointsFirstDimensionCount; i++)
-            for(int j = 0; j < ControlPointsSecondDimensionCount; j++)
-            {
-                if ((line = sr.ReadLine()) is null)
-                    throw new Exception("Niewystarczająca liczba wierzchołków w pliku");
+            for (int i = 0; i < ControlPointsFirstDimensionCount; i++)
+                for (int j = 0; j < ControlPointsSecondDimensionCount; j++)
+                {
+                    if ((line = sr.ReadLine()) is null)
+                        throw new Exception("Niewystarczająca liczba wierzchołków w pliku");
 
-                float[] coords = line.Split(' ').Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
-                controlPoints[i, j] = new Vector3(coords[0], coords[1], coords[2]);
-            }
+                    float[] coords = line.Split(' ').Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
+                    controlPoints[i, j] = new Vector3(coords[0], coords[1], coords[2]);
+                }
 
             return controlPoints;
         }

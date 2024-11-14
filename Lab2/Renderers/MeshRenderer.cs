@@ -10,10 +10,10 @@ namespace Lab2.Renderers
     {
         public bool DrawFilling { get; set; } = true;
         public bool DrawEdges { get; set; } = true;
-        public bool DrawControlPoitns { get; set; } = false;
+        public bool DrawControlPoints { get; set; } = false;
         public ICoordinateTransformer2D CoordinateTransformer { get; set; }
-        public DirectBitmap DirectBitmap { get; set; }
-        public Graphics G { get; set; }
+        public DirectBitmap DirectBitmap { get; private set; }
+        public Graphics G { get; private set; }
 
         private LightSource LightSource { get; } = new(Vector3.Zero, Color.White);
 
@@ -88,27 +88,27 @@ namespace Lab2.Renderers
                 int n = mesh.ControlPointsAfterRotation.GetLength(0);
                 int m = mesh.ControlPointsAfterRotation.GetLength(1);
                 for (int i = 0; i < n - 1; i++)
-                for (int j = 0; j < m; j++)
-                {
-                    PointF p1 = new(mesh.ControlPointsAfterRotation[i, j].X, mesh.ControlPointsAfterRotation[i, j].Y);
-                    PointF p2 = new(mesh.ControlPointsAfterRotation[i + 1, j].X, mesh.ControlPointsAfterRotation[i + 1, j].Y);
-                    G.DrawLine(Pens.Red, p1, p2);
-                }
+                    for (int j = 0; j < m; j++)
+                    {
+                        PointF p1 = new(mesh.ControlPointsAfterRotation[i, j].X, mesh.ControlPointsAfterRotation[i, j].Y);
+                        PointF p2 = new(mesh.ControlPointsAfterRotation[i + 1, j].X, mesh.ControlPointsAfterRotation[i + 1, j].Y);
+                        G.DrawLine(Pens.Red, p1, p2);
+                    }
 
                 for (int i = 0; i < n; i++)
-                for (int j = 0; j < m - 1; j++)
-                {
-                    PointF p1 = new(mesh.ControlPointsAfterRotation[i, j].X, mesh.ControlPointsAfterRotation[i, j].Y);
-                    PointF p2 = new(mesh.ControlPointsAfterRotation[i, j + 1].X, mesh.ControlPointsAfterRotation[i, j + 1].Y);
-                    G.DrawLine(Pens.Red, p1, p2);
-                }
+                    for (int j = 0; j < m - 1; j++)
+                    {
+                        PointF p1 = new(mesh.ControlPointsAfterRotation[i, j].X, mesh.ControlPointsAfterRotation[i, j].Y);
+                        PointF p2 = new(mesh.ControlPointsAfterRotation[i, j + 1].X, mesh.ControlPointsAfterRotation[i, j + 1].Y);
+                        G.DrawLine(Pens.Red, p1, p2);
+                    }
 
                 for (int i = 0; i < n; i++)
-                for (int j = 0; j < m; j++)
-                {
-                    PointF p = new(mesh.ControlPointsAfterRotation[i, j].X, mesh.ControlPointsAfterRotation[i, j].Y);
-                    G.FillEllipse(Brushes.Red, p.X - 4, p.Y - 4, 8, 8);
-                }
+                    for (int j = 0; j < m; j++)
+                    {
+                        PointF p = new(mesh.ControlPointsAfterRotation[i, j].X, mesh.ControlPointsAfterRotation[i, j].Y);
+                        G.FillEllipse(Brushes.Red, p.X - 4, p.Y - 4, 8, 8);
+                    }
             }
         }
 

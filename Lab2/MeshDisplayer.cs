@@ -3,12 +3,10 @@ using Lab2.Model;
 using Lab2.Renderers;
 using Lab2.SceneModel;
 using Lab2.Utils;
-using Lab2.VertexFileReaders;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Numerics;
 using System.Timers;
+using Lab2.ControlPointsFileReaders;
 
 namespace Lab2
 {
@@ -355,11 +353,11 @@ namespace Lab2
         {
             Vector3[,] normalMap = new Vector3[bitmap.Width, bitmap.Height];
             for (int i = 0; i < bitmap.Width; i++)
-            for (int j = 0; j < bitmap.Height; j++)
-            {
-                Color color = bitmap.GetPixel(i, j);
-                normalMap[i, j] = new Vector3(color.R, color.G, color.B) / 255 * 2 - new Vector3(1, 1, 1);
-            }
+                for (int j = 0; j < bitmap.Height; j++)
+                {
+                    Color color = bitmap.GetPixel(i, j);
+                    normalMap[i, j] = new Vector3(color.R, color.G, color.B) / 255 * 2 - new Vector3(1, 1, 1);
+                }
 
             return normalMap;
         }

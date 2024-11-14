@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Lab2.Utils;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using Lab2.Utils;
 
 namespace Lab2.Model
 {
     public class Mesh
     {
-        public List<Triangle> Triangles { get; set; } = [];
+        public List<Triangle> Triangles { get; } = [];
 
-        public Vertex[,] Vertices { get; set; } = new Vertex[0, 0];
+        public Vertex[,] Vertices { get; private set; } = new Vertex[0, 0];
 
-        public Vector3[,] ControlPoints { get; set; }
-        public Vector3[,] ControlPointsAfterRotation { get; set; }
+        public Vector3[,] ControlPoints { get; private set; }
+        public Vector3[,] ControlPointsAfterRotation { get; private set; }
 
         private float AlphaRadians { get; set; }
         private float BetaRadians { get; set; }
@@ -120,14 +115,14 @@ namespace Lab2.Model
             // Łączenie w trójkąty
             Triangles.Clear();
             for (int ui = 0; ui < FidelityU - 1; ui++)
-            for (int vi = 0; vi < FidelityV - 1; vi++)
-            {
-                Triangle t1 = new(Vertices[ui, vi], Vertices[ui + 1, vi], Vertices[ui, vi + 1]);
-                Triangle t2 = new(Vertices[ui + 1, vi], Vertices[ui + 1, vi + 1], Vertices[ui, vi + 1]);
+                for (int vi = 0; vi < FidelityV - 1; vi++)
+                {
+                    Triangle t1 = new(Vertices[ui, vi], Vertices[ui + 1, vi], Vertices[ui, vi + 1]);
+                    Triangle t2 = new(Vertices[ui + 1, vi], Vertices[ui + 1, vi + 1], Vertices[ui, vi + 1]);
 
-                Triangles.Add(t1);
-                Triangles.Add(t2);
-            }
+                    Triangles.Add(t1);
+                    Triangles.Add(t2);
+                }
 
             // Obrót wierzchołków
             RotateVertices();
@@ -151,11 +146,11 @@ namespace Lab2.Model
                 int rows = tab.GetLength(0);
                 int cols = tab.GetLength(1);
                 int m = cols - 1;
-                int basebinCoeff = MathHelper.GetBinCoeff(m, 0);
+                int baseBinCoeff = MathHelper.GetBinCoeff(m, 0);
 
                 for (int i = 0; i < rows; i++)
                 {
-                    int binCoeff = basebinCoeff;
+                    int binCoeff = baseBinCoeff;
                     for (int j = 0; j < cols; j++)
                     {
                         tab[i, j] = binCoeff * powers[i, j] * oneMinusPowers[i, m - j];
@@ -170,7 +165,7 @@ namespace Lab2.Model
             FidelityU = fidelityU;
             FidelityV = fidelityV;
             InterPolateVertices();
-        }       
+        }
 
 
         public void SetAlphaAngle(int alphaAngle)
@@ -198,7 +193,7 @@ namespace Lab2.Model
 
             //Matrix4x4 rotationMatrix = Rz * Rx;
 
-            Matrix4x4 rotationMatrix = Matrix4x4.CreateRotationZ(-AlphaRadians) *  Matrix4x4.CreateRotationX(-BetaRadians);
+            Matrix4x4 rotationMatrix = Matrix4x4.CreateRotationZ(-AlphaRadians) * Matrix4x4.CreateRotationX(-BetaRadians);
 
             foreach (Vertex vertex in Vertices)
             {
@@ -209,9 +204,9 @@ namespace Lab2.Model
 
                 vertex.AfterRotationState = new Vertex.State(p, pu, pv, n);
             }
-            for(int i = 0; i < ControlPoints.GetLength(0); i++)
-            for (int j = 0; j < ControlPoints.GetLength(1); j++)
-                ControlPointsAfterRotation[i, j] = Vector3.Transform(ControlPoints[i, j], rotationMatrix);
+            for (int i = 0; i < ControlPoints.GetLength(0); i++)
+                for (int j = 0; j < ControlPoints.GetLength(1); j++)
+                    ControlPointsAfterRotation[i, j] = Vector3.Transform(ControlPoints[i, j], rotationMatrix);
         }
     }
 }
