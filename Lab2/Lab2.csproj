@@ -28,12 +28,6 @@
     <None Update="control_points.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="normal_map.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="texture.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
 	<Content Include="Zasoby\**">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>

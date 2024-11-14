@@ -1,6 +1,7 @@
 ﻿using Lab2.Model;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -30,7 +31,7 @@ namespace Lab2.VertexFileReaders
                     if ((line = sr.ReadLine()) is null)
                         throw new Exception("Niewystarczająca liczba wierzchołków w pliku");
 
-                    float[] coords = line.Split(' ').Select(float.Parse).ToArray();
+                    float[] coords = line.Split(' ').Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
                     controlPoints[i, j] = new Vector3(coords[0], coords[1], coords[2]);
                 }
             }
