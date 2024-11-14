@@ -1,0 +1,43 @@
+﻿namespace Lab2.Utils
+{
+    public class ZBuffer
+    {
+        private float[,] Buffer { get;  }
+        private int Width { get; }
+
+        private int Height { get; }
+
+        public ZBuffer(int width, int height)
+        {
+            Width = width;
+            Height = height;
+            Buffer = new float[width, height];
+        }
+
+        public void Clear(float value)
+        {
+            for (int i = 0; i < Width; i++)
+                for (int j = 0; j < Height; j++)
+                    Buffer[i, j] = value;
+        }
+
+        public bool CheckIfBiggerAndSet(int x, int y, float z)
+        {
+            return CheckAndSet(x, y, z, (a, b) => a > b);
+        }
+
+        private bool CheckAndSet(int x, int y, float z, Func<float, float, bool> comparerFunc)
+        {
+            if (x < 0 || x >= Width || y < 0 || y >= Height)
+                return false;
+
+            if (comparerFunc(z, Buffer[x, y]))
+            {
+                Buffer[x, y] = z;
+                return true;
+            }
+
+            return false;
+        }
+    }
+}

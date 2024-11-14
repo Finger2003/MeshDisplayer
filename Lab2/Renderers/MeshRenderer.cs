@@ -26,12 +26,14 @@ namespace Lab2.Renderers
         public Vector3[,] NormalMap { get; set; }
         public Color MeshColor { get; set; }
 
-        public float[,] PaintedPixelsZ { get; set; }// = new float[0, 0];
+        private ZBuffer ZBuffer { get; set; }
+        //public float[,] PaintedPixelsZ { get; set; }// = new float[0, 0];
         public MeshRenderer(DirectBitmap directBitmap, Graphics bitmapGraphics, ICoordinateTransformer2D coordinateTransformer, ReflectionCoefficients reflectionCoefficients, DirectBitmap textureDirectBitmap, Vector3[,] normalMap)
         {
             DirectBitmap = directBitmap;
             G = bitmapGraphics;
-            PaintedPixelsZ = new float[DirectBitmap.Width, DirectBitmap.Height];
+            ZBuffer = new(directBitmap.Width, directBitmap.Height);
+            //PaintedPixelsZ = new float[DirectBitmap.Width, DirectBitmap.Height];
             CoordinateTransformer = coordinateTransformer;
             ReflectionCoefficients = reflectionCoefficients;
             TextureDirectBitmap = textureDirectBitmap;
@@ -45,7 +47,8 @@ namespace Lab2.Renderers
         {
             DirectBitmap = directBitmap;
             G = bitmapGraphics;
-            PaintedPixelsZ = new float[DirectBitmap.Width, DirectBitmap.Height];
+            ZBuffer = new(directBitmap.Width, directBitmap.Height);
+            //PaintedPixelsZ = new float[DirectBitmap.Width, DirectBitmap.Height];
         }
 
         public void RenderMesh(Mesh mesh, LightSource lightSource)
@@ -54,9 +57,11 @@ namespace Lab2.Renderers
 
             //PaintedPixelsZ = new float[DirectBitmap.Width, DirectBitmap.Height];
 
-            for (int i = 0; i < PaintedPixelsZ.GetLength(0); i++)
-                for (int j = 0; j < PaintedPixelsZ.GetLength(1); j++)
-                    PaintedPixelsZ[i, j] = float.NegativeInfinity;
+            ZBuffer.Clear(float.NegativeInfinity);
+
+            //for (int i = 0; i < PaintedPixelsZ.GetLength(0); i++)
+            //    for (int j = 0; j < PaintedPixelsZ.GetLength(1); j++)
+            //        PaintedPixelsZ[i, j] = float.NegativeInfinity;
 
 
             if (DrawFilling)
@@ -83,7 +88,7 @@ namespace Lab2.Renderers
                     G.DrawLine(Pens.Black, v3, v1);
                 }
 
-            if (DrawControlPoitns)
+            if (DrawControlPoints)
             {
                 int n = mesh.ControlPointsAfterRotation.GetLength(0);
                 int m = mesh.ControlPointsAfterRotation.GetLength(1);
@@ -199,65 +204,69 @@ namespace Lab2.Renderers
 
                             Vector3 P = MathHelper.InterpolateVectorFromBaricentric(triangle.V1.AfterRotationState.P, triangle.V2.AfterRotationState.P, triangle.V3.AfterRotationState.P, coords);
 
-                            if (PaintedPixelsZ[transformedX, transformedY] > P.Z)
-                                continue;
 
-                            PaintedPixelsZ[transformedX, transformedY] = P.Z;
+                            //lock (ZBuffer)
+                            //{
+                                if (!ZBuffer.CheckIfBiggerAndSet(transformedX, transformedY, P.Z))
+                                    continue;
+                            //}
+                            //if (PaintedPixelsZ[transformedX, transformedY] > P.Z)
+                            //    continue;
+
+                            //PaintedPixelsZ[transformedX, transformedY] = P.Z;
 
                             float u = MathHelper.InterpolateFloatFromBaricentric(triangle.V1.U, triangle.V2.U, triangle.V3.U, coords);
                             float v = MathHelper.InterpolateFloatFromBaricentric(triangle.V1.V, triangle.V2.V, triangle.V3.V, coords);
                             Color color = getInterpolatedColor(coords, u, v, P);
 
                             //color = GetTextureColor(u, v);
-                            if (transformedX >= 0 && transformedX < DirectBitmap.Width)
-                                DirectBitmap.SetPixel(transformedX, transformedY, color);
+                            //if (transformedX >= 0 && transformedX < DirectBitmap.Width)
+                            DirectBitmap.SetPixel(transformedX, transformedY, color);
                         }
                 }
 
                 // Aktualizacja wartości x dla nowej scanlinii
                 for (int i = 0; i < AET.Count; i++)
                     AET[i].X += AET[i].InverseSlope;
+            }
+            Color getInterpolatedColor(float[] coords, float u, float v, Vector3 P)
+            {
+                Color color = GetColor(u, v);
+                Color lightColor = LightSource.Color;
+                Vector3 lightPosition = LightSource.Position;
 
 
-                Color getInterpolatedColor(float[] coords, float u, float v, Vector3 P)
-                {
-                    Color color = GetColor(u, v);
-                    Color lightColor = LightSource.Color;
-                    Vector3 lightPosition = LightSource.Position;
+                Vector3 Il = new(lightColor.R, lightColor.G, lightColor.B);
+                Vector3 Io = new(color.R, color.G, color.B);
+                Vector3 L = lightPosition - P;
+                Vector3 N = GetNormalVector(triangle, coords, u, v);
+                Vector3 V = Vector3.UnitZ;
+
+                //Il = Vector3.Normalize(Il);
+                //Io = Vector3.Normalize(Io);
+
+                Il /= 255;
+                Io /= 255;
+
+                L = Vector3.Normalize(L);
+                N = Vector3.Normalize(N);
+
+                float NLDot = Vector3.Dot(N, L);
+                float VNDot = Vector3.Dot(V, N);
+                Vector3 R = 2 * NLDot * N - L;
+                R = Vector3.Normalize(R);
 
 
-                    Vector3 Il = new(lightColor.R, lightColor.G, lightColor.B);
-                    Vector3 Io = new(color.R, color.G, color.B);
-                    Vector3 L = lightPosition - P;
-                    Vector3 N = GetNormalVector(triangle, coords, u, v);
-                    Vector3 V = Vector3.UnitZ;
+                float kd = ReflectionCoefficients.Kd;
+                float ks = ReflectionCoefficients.Ks;
+                float m = ReflectionCoefficients.M;
 
-                    //Il = Vector3.Normalize(Il);
-                    //Io = Vector3.Normalize(Io);
+                Vector3 I = Il * Io * (kd * Math.Max(0, VNDot * NLDot) + ks * MathF.Pow(Math.Max(0, Vector3.Dot(V, R)), m));
 
-                    Il /= 255;
-                    Io /= 255;
+                I = Vector3.Clamp(I, Vector3.Zero, Vector3.One);
+                I *= 255;
 
-                    L = Vector3.Normalize(L);
-                    N = Vector3.Normalize(N);
-
-                    float NLDot = Vector3.Dot(N, L);
-                    float VNDot = Vector3.Dot(V, N);
-                    Vector3 R = 2 * NLDot * N - L;
-                    R = Vector3.Normalize(R);
-
-
-                    float kd = ReflectionCoefficients.Kd;
-                    float ks = ReflectionCoefficients.Ks;
-                    float m = ReflectionCoefficients.M;
-
-                    Vector3 I = Il * Io * (kd * Math.Max(0, VNDot * NLDot) + ks * MathF.Pow(Math.Max(0, Vector3.Dot(V, R)), m));
-
-                    I = Vector3.Clamp(I, Vector3.Zero, Vector3.One);
-                    I *= 255;
-
-                    return Color.FromArgb((int)I.X, (int)I.Y, (int)I.Z);
-                }
+                return Color.FromArgb((int)I.X, (int)I.Y, (int)I.Z);
             }
         }
 

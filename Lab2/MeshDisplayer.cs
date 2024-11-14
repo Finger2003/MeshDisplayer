@@ -54,7 +54,7 @@ namespace Lab2
             {
                 DrawEdges = drawEdgesCheckBox.Checked,
                 DrawFilling = drawFillingCheckBox.Checked,
-                DrawControlPoitns = drawControlPointsCheckBox.Checked,
+                DrawControlPoints = drawControlPointsCheckBox.Checked,
                 MeshColor = meshColor
             };
             MeshRenderer.GetColor = MeshRenderer.GetMeshRGBColor;
@@ -284,7 +284,7 @@ namespace Lab2
 
         private void drawControlPointsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            MeshRenderer.DrawControlPoitns = drawControlPointsCheckBox.Checked;
+            MeshRenderer.DrawControlPoints = drawControlPointsCheckBox.Checked;
 
             pictureBox.Invalidate();
         }
