@@ -1,18 +1,11 @@
 ﻿namespace Lab2.Utils
 {
-    public class ZBuffer
+    public class ZBuffer(int width, int height)
     {
-        private float[,] Buffer { get;  }
-        private int Width { get; }
+        private float[,] Buffer { get; } = new float[width, height];
+        private int Width { get; } = width;
 
-        private int Height { get; }
-
-        public ZBuffer(int width, int height)
-        {
-            Width = width;
-            Height = height;
-            Buffer = new float[width, height];
-        }
+        private int Height { get; } = height;
 
         public void Clear(float value)
         {

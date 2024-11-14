@@ -1,3 +1,4 @@
+using Lab2.ControlPointsFileReaders;
 using Lab2.CoordinatesTransformers;
 using Lab2.Model;
 using Lab2.Renderers;
@@ -6,7 +7,6 @@ using Lab2.Utils;
 using System.Diagnostics;
 using System.Numerics;
 using System.Timers;
-using Lab2.ControlPointsFileReaders;
 
 namespace Lab2
 {

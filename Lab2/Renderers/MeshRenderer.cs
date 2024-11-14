@@ -207,8 +207,8 @@ namespace Lab2.Renderers
 
                             //lock (ZBuffer)
                             //{
-                                if (!ZBuffer.CheckIfBiggerAndSet(transformedX, transformedY, P.Z))
-                                    continue;
+                            if (!ZBuffer.CheckIfBiggerAndSet(transformedX, transformedY, P.Z))
+                                continue;
                             //}
                             //if (PaintedPixelsZ[transformedX, transformedY] > P.Z)
                             //    continue;
