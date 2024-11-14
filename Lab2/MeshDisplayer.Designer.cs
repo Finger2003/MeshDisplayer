@@ -74,6 +74,7 @@
             resetLightPositionButton = new Button();
             moveLightCheckBox = new CheckBox();
             surfaceGroupBox = new GroupBox();
+            drawControlPointsCheckBox = new CheckBox();
             texturePictureBox = new PictureBox();
             normalMapCheckBox = new CheckBox();
             meshColorPictureBox = new PictureBox();
@@ -113,9 +114,9 @@
             // 
             pictureBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pictureBox.BackColor = SystemColors.Control;
-            pictureBox.Location = new Point(12, 132);
+            pictureBox.Location = new Point(12, 149);
             pictureBox.Name = "pictureBox";
-            pictureBox.Size = new Size(925, 709);
+            pictureBox.Size = new Size(925, 692);
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = false;
             pictureBox.SizeChanged += pictureBox_SizeChanged;
@@ -461,7 +462,7 @@
             // 
             // meshColorButton
             // 
-            meshColorButton.Location = new Point(226, 19);
+            meshColorButton.Location = new Point(226, 26);
             meshColorButton.Name = "meshColorButton";
             meshColorButton.Size = new Size(89, 89);
             meshColorButton.TabIndex = 10;
@@ -496,7 +497,7 @@
             // 
             // textureButton
             // 
-            textureButton.Location = new Point(448, 19);
+            textureButton.Location = new Point(448, 26);
             textureButton.Name = "textureButton";
             textureButton.Size = new Size(89, 89);
             textureButton.TabIndex = 12;
@@ -558,6 +559,7 @@
             // surfaceGroupBox
             // 
             surfaceGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            surfaceGroupBox.Controls.Add(drawControlPointsCheckBox);
             surfaceGroupBox.Controls.Add(texturePictureBox);
             surfaceGroupBox.Controls.Add(normalMapCheckBox);
             surfaceGroupBox.Controls.Add(textureButton);
@@ -570,14 +572,26 @@
             surfaceGroupBox.Controls.Add(objectColorPanel);
             surfaceGroupBox.Location = new Point(12, 12);
             surfaceGroupBox.Name = "surfaceGroupBox";
-            surfaceGroupBox.Size = new Size(924, 114);
+            surfaceGroupBox.Size = new Size(924, 131);
             surfaceGroupBox.TabIndex = 14;
             surfaceGroupBox.TabStop = false;
             surfaceGroupBox.Text = "Powierzchnia siatki";
             // 
+            // drawControlPointsCheckBox
+            // 
+            drawControlPointsCheckBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            drawControlPointsCheckBox.AutoSize = true;
+            drawControlPointsCheckBox.Location = new Point(767, 80);
+            drawControlPointsCheckBox.Name = "drawControlPointsCheckBox";
+            drawControlPointsCheckBox.Size = new Size(148, 19);
+            drawControlPointsCheckBox.TabIndex = 20;
+            drawControlPointsCheckBox.Text = "Rysuj punkty kontrolne";
+            drawControlPointsCheckBox.UseVisualStyleBackColor = true;
+            drawControlPointsCheckBox.CheckedChanged += drawControlPointsCheckBox_CheckedChanged;
+            // 
             // texturePictureBox
             // 
-            texturePictureBox.Location = new Point(543, 19);
+            texturePictureBox.Location = new Point(543, 26);
             texturePictureBox.Name = "texturePictureBox";
             texturePictureBox.Size = new Size(121, 89);
             texturePictureBox.SizeMode = PictureBoxSizeMode.Zoom;
@@ -588,7 +602,7 @@
             // 
             normalMapCheckBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             normalMapCheckBox.AutoSize = true;
-            normalMapCheckBox.Location = new Point(712, 80);
+            normalMapCheckBox.Location = new Point(712, 105);
             normalMapCheckBox.Name = "normalMapCheckBox";
             normalMapCheckBox.Size = new Size(203, 19);
             normalMapCheckBox.TabIndex = 15;
@@ -598,7 +612,7 @@
             // 
             // meshColorPictureBox
             // 
-            meshColorPictureBox.Location = new Point(321, 19);
+            meshColorPictureBox.Location = new Point(321, 26);
             meshColorPictureBox.Name = "meshColorPictureBox";
             meshColorPictureBox.Size = new Size(121, 89);
             meshColorPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
@@ -621,7 +635,7 @@
             // 
             // normalMapPictureBox
             // 
-            normalMapPictureBox.Location = new Point(99, 19);
+            normalMapPictureBox.Location = new Point(99, 26);
             normalMapPictureBox.Name = "normalMapPictureBox";
             normalMapPictureBox.Size = new Size(121, 89);
             normalMapPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
@@ -644,7 +658,7 @@
             // 
             // normalMapButton
             // 
-            normalMapButton.Location = new Point(6, 19);
+            normalMapButton.Location = new Point(6, 26);
             normalMapButton.Name = "normalMapButton";
             normalMapButton.Size = new Size(87, 89);
             normalMapButton.TabIndex = 16;
@@ -656,7 +670,7 @@
             // 
             fpsLabel.AutoSize = true;
             fpsLabel.Font = new Font("Segoe UI", 21.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            fpsLabel.Location = new Point(20, 139);
+            fpsLabel.Location = new Point(18, 166);
             fpsLabel.Name = "fpsLabel";
             fpsLabel.Size = new Size(62, 40);
             fpsLabel.TabIndex = 15;
@@ -781,5 +795,6 @@
         private Panel lightPanel;
         private MenuStrip menuStrip1;
         private Button loadControlPointsButton;
+        private CheckBox drawControlPointsCheckBox;
     }
 }

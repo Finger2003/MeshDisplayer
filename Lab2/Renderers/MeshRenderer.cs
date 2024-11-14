@@ -10,6 +10,7 @@ namespace Lab2.Renderers
     {
         public bool DrawFilling { get; set; } = true;
         public bool DrawEdges { get; set; } = true;
+        public bool DrawControlPoitns { get; set; } = false;
         public ICoordinateTransformer2D CoordinateTransformer { get; set; }
         public DirectBitmap DirectBitmap { get; set; }
         public Graphics G { get; set; }
@@ -72,8 +73,6 @@ namespace Lab2.Renderers
 
             if (DrawEdges)
             {
-
-
                 foreach (Triangle triangle in mesh.Triangles)
                 {
                     PointF v1 = new(triangle.V1.AfterRotationState.P.X, triangle.V1.AfterRotationState.P.Y);
@@ -83,6 +82,40 @@ namespace Lab2.Renderers
                     G.DrawLine(Pens.Black, v1, v2);
                     G.DrawLine(Pens.Black, v2, v3);
                     G.DrawLine(Pens.Black, v3, v1);
+                }
+            }
+
+            if (DrawControlPoitns)
+            {
+                int n = mesh.ControlPointsAfterRotation.GetLength(0);
+                int m = mesh.ControlPointsAfterRotation.GetLength(1);
+                for (int i = 0; i < n - 1; i++)
+                {
+                    for (int j = 0; j < m; j++)
+                    {
+                        PointF p1 = new(mesh.ControlPointsAfterRotation[i, j].X, mesh.ControlPointsAfterRotation[i, j].Y);
+                        PointF p2 = new(mesh.ControlPointsAfterRotation[i + 1, j].X, mesh.ControlPointsAfterRotation[i + 1, j].Y);
+                        G.DrawLine(Pens.Red, p1, p2);
+                    }
+                }
+
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < m - 1; j++)
+                    {
+                        PointF p1 = new(mesh.ControlPointsAfterRotation[i, j].X, mesh.ControlPointsAfterRotation[i, j].Y);
+                        PointF p2 = new(mesh.ControlPointsAfterRotation[i, j + 1].X, mesh.ControlPointsAfterRotation[i, j + 1].Y);
+                        G.DrawLine(Pens.Red, p1, p2);
+                    }
+                }
+
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < m; j++)
+                    {
+                        PointF p = new(mesh.ControlPointsAfterRotation[i, j].X, mesh.ControlPointsAfterRotation[i, j].Y);
+                        G.FillEllipse(Brushes.Red, p.X - 4, p.Y - 4, 8, 8);
+                    }
                 }
             }
         }
@@ -164,7 +197,7 @@ namespace Lab2.Renderers
                         {
                             // Transformacja układu współrzędnych
                             int transformedX = CoordinateTransformer.TransformX(x);
-                            if(transformedX < 0 || transformedX >= DirectBitmap.Width)
+                            if (transformedX < 0 || transformedX >= DirectBitmap.Width)
                                 continue;
 
                             p.X = x;

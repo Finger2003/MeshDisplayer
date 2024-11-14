@@ -15,6 +15,7 @@ namespace Lab2.Model
         public Vertex[,] Vertices { get; set; } = new Vertex[0, 0];
 
         public Vector3[,] ControlPoints { get; set; }
+        public Vector3[,] ControlPointsAfterRotation { get; set; }
 
         private float AlphaRadians { get; set; }
         private float BetaRadians { get; set; }
@@ -28,6 +29,13 @@ namespace Lab2.Model
             AlphaRadians = MathHelper.DegreesToRadians(alphaAngle);
             BetaRadians = MathHelper.DegreesToRadians(betaAngle);
             SetFidelity(fidelityU, fidelityV);
+        }
+
+        public void SetControlPoints(Vector3[,] controlPoints)
+        {
+            ControlPoints = controlPoints;
+            ControlPointsAfterRotation = new Vector3[controlPoints.GetLength(0), controlPoints.GetLength(1)];
+            InterPolateVertices();
         }
 
         public void InterPolateVertices()
@@ -181,7 +189,7 @@ namespace Lab2.Model
             RotateVertices();
         }
 
-        public Vector3[,] ControlPointsAfterRotation { get; set; }
+
         private void RotateVertices()
         {
             //Matrix4x4 Rz = new(MathF.Cos(AlphaRadians), -MathF.Sin(AlphaRadians), 0, 0,

@@ -52,12 +52,16 @@ namespace Lab2
 
             ReflectionCoefficients reflectionCoefficients = new(ks, kd, m);
 
-            MeshRenderer = new(DirectBitmap, G, CoordinateTransformer, reflectionCoefficients, textureDirectBitmap, normalMap);
+            MeshRenderer = new(DirectBitmap, G, CoordinateTransformer, reflectionCoefficients, textureDirectBitmap, normalMap)
+            {
+                DrawEdges = drawEdgesCheckBox.Checked,
+                DrawFilling = drawFillingCheckBox.Checked,
+                DrawControlPoitns = drawControlPointsCheckBox.Checked,
+                MeshColor = meshColor
+            };
             MeshRenderer.GetColor = MeshRenderer.GetMeshRGBColor;
             MeshRenderer.GetNormalVector = MeshRenderer.GetNormalVectorFromVertices;
-            MeshRenderer.DrawEdges = drawEdgesCheckBox.Checked;
-            MeshRenderer.DrawFilling = drawFillingCheckBox.Checked;
-            MeshRenderer.MeshColor = meshColor;
+
 
             Vector3[,] controlPoints = GetControlPointsFromFile(Properties.Resources.DefaultControlPointsPath);
             Vector3 lightPosition = new(0, 0, lightZCoordTrackBar.Value);
@@ -245,7 +249,7 @@ namespace Lab2
             {
                 lock (Scene.LightSource)
                     Scene.LightSource.Color = colorDialog.Color;
-                
+
                 lightColorPictureBox.BackColor = colorDialog.Color;
 
                 pictureBox.Invalidate();
@@ -274,21 +278,28 @@ namespace Lab2
         private void drawFillingCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             MeshRenderer.DrawFilling = drawFillingCheckBox.Checked;
-            
+
+            pictureBox.Invalidate();
+        }
+
+        private void drawControlPointsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            MeshRenderer.DrawControlPoitns = drawControlPointsCheckBox.Checked;
+
             pictureBox.Invalidate();
         }
 
         private void fixedColorRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             MeshRenderer.GetColor = MeshRenderer.GetMeshRGBColor;
-            
+
             pictureBox.Invalidate();
         }
 
         private void textureRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             MeshRenderer.GetColor = MeshRenderer.GetTextureColor;
-            
+
             pictureBox.Invalidate();
         }
 
@@ -321,7 +332,7 @@ namespace Lab2
                 MeshRenderer.GetNormalVector = MeshRenderer.GetNormalVectorFromVertices;
 
             pictureBox.Invalidate();
-        }        
+        }
 
         private void normalMapButton_Click(object sender, EventArgs e)
         {
@@ -384,12 +395,13 @@ namespace Lab2
                 try
                 {
                     Vector3[,] controlPoints = GetControlPointsFromFile(openFileDialog.FileName);
-                    Scene.Mesh.ControlPoints = controlPoints;
-                    Scene.Mesh.InterPolateVertices();
+                    Scene.Mesh.SetControlPoints(controlPoints);
+                    //Scene.Mesh.ControlPoints = controlPoints;
+                    //Scene.Mesh.InterPolateVertices();
 
                     pictureBox.Invalidate();
                 }
-                catch(FormatException)
+                catch (FormatException)
                 {
                     MessageBox.Show("Niew³aœciwy format wierzcho³ków", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -399,5 +411,7 @@ namespace Lab2
                 }
             }
         }
+
+
     }
 }
