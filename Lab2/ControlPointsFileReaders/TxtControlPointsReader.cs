@@ -25,15 +25,13 @@ namespace Lab2.VertexFileReaders
             using StreamReader sr = new(path);
             string? line;
             for(int i = 0; i < ControlPointsFirstDimensionCount; i++)
+            for(int j = 0; j < ControlPointsSecondDimensionCount; j++)
             {
-                for(int j = 0; j < ControlPointsSecondDimensionCount; j++)
-                {
-                    if ((line = sr.ReadLine()) is null)
-                        throw new Exception("Niewystarczająca liczba wierzchołków w pliku");
+                if ((line = sr.ReadLine()) is null)
+                    throw new Exception("Niewystarczająca liczba wierzchołków w pliku");
 
-                    float[] coords = line.Split(' ').Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
-                    controlPoints[i, j] = new Vector3(coords[0], coords[1], coords[2]);
-                }
+                float[] coords = line.Split(' ').Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
+                controlPoints[i, j] = new Vector3(coords[0], coords[1], coords[2]);
             }
 
             return controlPoints;

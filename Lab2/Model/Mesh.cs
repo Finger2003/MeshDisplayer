@@ -120,15 +120,13 @@ namespace Lab2.Model
             // Łączenie w trójkąty
             Triangles.Clear();
             for (int ui = 0; ui < FidelityU - 1; ui++)
+            for (int vi = 0; vi < FidelityV - 1; vi++)
             {
-                for (int vi = 0; vi < FidelityV - 1; vi++)
-                {
-                    Triangle t1 = new Triangle(Vertices[ui, vi], Vertices[ui + 1, vi], Vertices[ui, vi + 1]);
-                    Triangle t2 = new Triangle(Vertices[ui + 1, vi], Vertices[ui + 1, vi + 1], Vertices[ui, vi + 1]);
+                Triangle t1 = new(Vertices[ui, vi], Vertices[ui + 1, vi], Vertices[ui, vi + 1]);
+                Triangle t2 = new(Vertices[ui + 1, vi], Vertices[ui + 1, vi + 1], Vertices[ui, vi + 1]);
 
-                    Triangles.Add(t1);
-                    Triangles.Add(t2);
-                }
+                Triangles.Add(t1);
+                Triangles.Add(t2);
             }
 
             // Obrót wierzchołków
@@ -143,10 +141,7 @@ namespace Lab2.Model
                 for (int i = 0; i < rows; i++)
                 {
                     tab[i, 0] = 1;
-                    for (int j = 1; j < cols; j++)
-                    {
-                        tab[i, j] = tab[i, j - 1] * initialValue;
-                    }
+                    for (int j = 1; j < cols; j++) tab[i, j] = tab[i, j - 1] * initialValue;
                     initialValue += step;
                 }
             }
@@ -215,12 +210,8 @@ namespace Lab2.Model
                 vertex.AfterRotationState = new Vertex.State(p, pu, pv, n);
             }
             for(int i = 0; i < ControlPoints.GetLength(0); i++)
-            {
-                for (int j = 0; j < ControlPoints.GetLength(1); j++)
-                {
-                    ControlPointsAfterRotation[i, j] = Vector3.Transform(ControlPoints[i, j], rotationMatrix);
-                }
-            }
+            for (int j = 0; j < ControlPoints.GetLength(1); j++)
+                ControlPointsAfterRotation[i, j] = Vector3.Transform(ControlPoints[i, j], rotationMatrix);
         }
     }
 }

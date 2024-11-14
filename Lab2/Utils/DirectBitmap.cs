@@ -10,13 +10,13 @@ namespace Lab2.Utils
 {
     public class DirectBitmap : IDisposable
     {
-        public Bitmap Bitmap { get; private set; }
-        public int[] Bits { get; private set; }
+        public Bitmap Bitmap { get; }
+        public int[] Bits { get; }
         public bool Disposed { get; private set; }
         public int Height { get; private set; }
-        public int Width { get; private set; }
+        public int Width { get; }
 
-        protected GCHandle BitsHandle { get; private set; }
+        protected GCHandle BitsHandle { get; }
 
         public DirectBitmap(int width, int height)
         {

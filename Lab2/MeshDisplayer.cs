@@ -14,16 +14,16 @@ namespace Lab2
 {
     public partial class MeshDisplayer : Form
     {
-        private int ControlPointsFirstDimensionCount { get; set; } = 4;
-        private int ControlPointsSecondDimensionCount { get; set; } = 4;
+        private int ControlPointsFirstDimensionCount => 4;
+        private int ControlPointsSecondDimensionCount => 4;
 
         private Bitmap Bitmap { get; set; }
         private DirectBitmap DirectBitmap { get; set; }
         private Graphics G { get; set; }
         private System.Timers.Timer Timer { get; } = new(1000 / 30) { AutoReset = true };
-        private CenterCoordinateTransformer2D CoordinateTransformer { get; set; }
-        private Scene Scene { get; set; }
-        private MeshRenderer MeshRenderer { get; set; }
+        private CenterCoordinateTransformer2D CoordinateTransformer { get; }
+        private Scene Scene { get; }
+        private MeshRenderer MeshRenderer { get; }
 
         public MeshDisplayer()
         {
@@ -34,9 +34,9 @@ namespace Lab2
             float ks = scaleTrackBarValueToOne(ksTrackBar);
             float m = mTrackBar.Value;
 
-            DirectBitmap = new(pictureBox.Width, pictureBox.Height);
+            DirectBitmap = new DirectBitmap(pictureBox.Width, pictureBox.Height);
             Bitmap = DirectBitmap.Bitmap;
-            CoordinateTransformer = new(Bitmap.Width, Bitmap.Height);
+            CoordinateTransformer = new CenterCoordinateTransformer2D(Bitmap.Width, Bitmap.Height);
 
             DirectBitmap textureDirectBitmap = LoadDefaultTexture();
             Vector3[,] normalMap = LoadDefaultNormalMap();
@@ -52,7 +52,7 @@ namespace Lab2
 
             ReflectionCoefficients reflectionCoefficients = new(ks, kd, m);
 
-            MeshRenderer = new(DirectBitmap, G, CoordinateTransformer, reflectionCoefficients, textureDirectBitmap, normalMap)
+            MeshRenderer = new MeshRenderer(DirectBitmap, G, CoordinateTransformer, reflectionCoefficients, textureDirectBitmap, normalMap)
             {
                 DrawEdges = drawEdgesCheckBox.Checked,
                 DrawFilling = drawFillingCheckBox.Checked,
@@ -67,7 +67,7 @@ namespace Lab2
             Vector3 lightPosition = new(0, 0, lightZCoordTrackBar.Value);
 
             Mesh mesh = new(controlPoints, fidelityTrackBar.Value, fidelityTrackBar.Value, alphaAngleTrackBar.Value, betaAngleTrackBar.Value);
-            Scene = new(mesh, new LightSource(lightPosition, lightColor), MeshRenderer);
+            Scene = new Scene(mesh, new LightSource(lightPosition, lightColor), MeshRenderer);
 
             Timer.Elapsed += timer_Tick;
         }
@@ -81,13 +81,12 @@ namespace Lab2
         private Vector3[,] LoadDefaultNormalMap()
         {
             Vector3[,] normalMap;
-            using (MemoryStream ms = new(Properties.Resources.DefaultNormalMap))
-            {
-                Image img = Image.FromStream(ms);
-                normalMapPictureBox.Image = img;
-                Bitmap normalBmp = (Bitmap)img;
-                normalMap = GetNormalMap(normalBmp);
-            }
+            using MemoryStream ms = new(Properties.Resources.DefaultNormalMap);
+
+            Image img = Image.FromStream(ms);
+            normalMapPictureBox.Image = img;
+            Bitmap normalBmp = (Bitmap)img;
+            normalMap = GetNormalMap(normalBmp);
 
             return normalMap;
         }
@@ -95,14 +94,13 @@ namespace Lab2
         private DirectBitmap LoadDefaultTexture()
         {
             DirectBitmap textureDirectBitmap;
-            using (MemoryStream ms = new(Properties.Resources.DefaultTexture))
-            {
-                Image img = Image.FromStream(ms);
-                texturePictureBox.Image = img;
-                textureDirectBitmap = new(img.Width, img.Height);
-                using Graphics g = Graphics.FromImage(textureDirectBitmap.Bitmap);
-                g.DrawImage(img, 0, 0, textureDirectBitmap.Width, textureDirectBitmap.Height);
-            }
+            using MemoryStream ms = new(Properties.Resources.DefaultTexture);
+
+            Image img = Image.FromStream(ms);
+            texturePictureBox.Image = img;
+            textureDirectBitmap = new DirectBitmap(img.Width, img.Height);
+            using Graphics g = Graphics.FromImage(textureDirectBitmap.Bitmap);
+            g.DrawImage(img, 0, 0, textureDirectBitmap.Width, textureDirectBitmap.Height);
 
             return textureDirectBitmap;
         }
@@ -117,7 +115,7 @@ namespace Lab2
             bind.Format += bindFormat!;
             kdValueLabel.DataBindings.Add(bind);
 
-            bind = new("Text", ksTrackBar, "Value");
+            bind = new Binding("Text", ksTrackBar, "Value");
             bind.Format += bindFormat!;
             ksValueLabel.DataBindings.Add(bind);
 
@@ -191,7 +189,7 @@ namespace Lab2
             Graphics oldGraphics = G;
             DirectBitmap oldDirectBitmap = DirectBitmap;
 
-            DirectBitmap = new(pictureBox.Width, pictureBox.Height);
+            DirectBitmap = new DirectBitmap(pictureBox.Width, pictureBox.Height);
             Bitmap = DirectBitmap.Bitmap;
             CoordinateTransformer.Width = Bitmap.Width;
             CoordinateTransformer.Height = Bitmap.Height;
@@ -237,7 +235,9 @@ namespace Lab2
         private void lightZAxisTrackBar_Scroll(object sender, EventArgs e)
         {
             lock (Scene.LightSource)
-                Scene.LightSource.Position = new(Scene.LightSource.Position.X, Scene.LightSource.Position.Y, lightZCoordTrackBar.Value);
+            {
+                Scene.LightSource.Position = new Vector3(Scene.LightSource.Position.X, Scene.LightSource.Position.Y, lightZCoordTrackBar.Value);
+            }
 
             pictureBox.Invalidate();
         }
@@ -248,7 +248,9 @@ namespace Lab2
             if (colorDialog.ShowDialog() == DialogResult.OK)
             {
                 lock (Scene.LightSource)
+                {
                     Scene.LightSource.Color = colorDialog.Color;
+                }
 
                 lightColorPictureBox.BackColor = colorDialog.Color;
 
@@ -311,7 +313,7 @@ namespace Lab2
             {
                 string fileName = openFileDialog.FileName;
                 Bitmap textureBitmap = new(fileName);
-                MeshRenderer.TextureDirectBitmap = new(textureBitmap.Width, textureBitmap.Height);
+                MeshRenderer.TextureDirectBitmap = new DirectBitmap(textureBitmap.Width, textureBitmap.Height);
 
                 using Graphics g = Graphics.FromImage(MeshRenderer.TextureDirectBitmap.Bitmap);
                 {
@@ -353,12 +355,10 @@ namespace Lab2
         {
             Vector3[,] normalMap = new Vector3[bitmap.Width, bitmap.Height];
             for (int i = 0; i < bitmap.Width; i++)
+            for (int j = 0; j < bitmap.Height; j++)
             {
-                for (int j = 0; j < bitmap.Height; j++)
-                {
-                    Color color = bitmap.GetPixel(i, j);
-                    normalMap[i, j] = new Vector3(color.R, color.G, color.B) / 255 * 2 - new Vector3(1, 1, 1);
-                }
+                Color color = bitmap.GetPixel(i, j);
+                normalMap[i, j] = new Vector3(color.R, color.G, color.B) / 255 * 2 - new Vector3(1, 1, 1);
             }
 
             return normalMap;
@@ -391,14 +391,13 @@ namespace Lab2
             openFileDialog.InitialDirectory = Path.GetFullPath(Properties.Resources.ControlPointsFolder);
             openFileDialog.Filter = "Text|*.txt";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
                 try
                 {
                     Vector3[,] controlPoints = GetControlPointsFromFile(openFileDialog.FileName);
                     Scene.Mesh.SetControlPoints(controlPoints);
+
                     //Scene.Mesh.ControlPoints = controlPoints;
                     //Scene.Mesh.InterPolateVertices();
-
                     pictureBox.Invalidate();
                 }
                 catch (FormatException)
@@ -409,7 +408,6 @@ namespace Lab2
                 {
                     MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }
         }
 
 

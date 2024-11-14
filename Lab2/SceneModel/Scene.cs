@@ -18,10 +18,10 @@ namespace Lab2.SceneModel
 
         private float LightRadiusStep { get; set; } = 2;
         private float LightAngleStep { get; set; } = 0.1f;
-        private static float MaxLightRadius { get; set; } = 500;
-        private static float MinLightRadius { get; set; } = 0;
-        private float LightRadius { get; set; } = 0;
-        private float LightAngle { get; set; } = 0;
+        private static float MaxLightRadius { get; } = 500;
+        private static float MinLightRadius { get; } = 0;
+        private float LightRadius { get; set; }
+        private float LightAngle { get; set; }
 
         public void MoveLightSource()
         {
@@ -33,7 +33,9 @@ namespace Lab2.SceneModel
             float y = LightRadius * MathF.Sin(LightAngle);
 
             lock (LightSource)
-                LightSource.Position = new(x, y, LightSource.Position.Z);
+            {
+                LightSource.Position = new Vector3(x, y, LightSource.Position.Z);
+            }
 
 
             if (LightRadius >= MaxLightRadius || LightRadius <= MinLightRadius)
@@ -47,7 +49,9 @@ namespace Lab2.SceneModel
             LightRadius = 0;
             LightAngle = 0;
             lock (LightSource)
+            {
                 LightSource.Position = new Vector3(0, 0, LightSource.Position.Z);
+            }
         }
     }
 }
