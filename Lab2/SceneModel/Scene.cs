@@ -25,6 +25,11 @@ namespace Lab2.SceneModel
 
         public void MoveLightSource()
         {
+            if (LightRadius > MaxLightRadius || LightRadius < MinLightRadius)
+            {
+                LightRadiusStep *= -1;
+                LightAngleStep *= -1;
+            }
 
             LightRadius += LightRadiusStep;
             LightAngle += LightAngleStep;
@@ -38,11 +43,7 @@ namespace Lab2.SceneModel
             }
 
 
-            if (LightRadius >= MaxLightRadius || LightRadius <= MinLightRadius)
-            {
-                LightRadiusStep *= -1;
-                LightAngleStep *= -1;
-            }
+
         }
         public void ResetLightSourcePosition()
         {
