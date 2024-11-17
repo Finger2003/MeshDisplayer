@@ -182,17 +182,6 @@ namespace Lab2.Model
 
         private void RotateVertices()
         {
-            //Matrix4x4 Rz = new(MathF.Cos(AlphaRadians), -MathF.Sin(AlphaRadians), 0, 0,
-            //                   MathF.Sin(AlphaRadians), MathF.Cos(AlphaRadians), 0, 0,
-            //                   0, 0, 1, 0,
-            //                   0, 0, 0, 1);
-            //Matrix4x4 Rx = new(1, 0, 0, 0,
-            //                   0, MathF.Cos(BetaRadians), -MathF.Sin(BetaRadians), 0,
-            //                   0, MathF.Sin(BetaRadians), MathF.Cos(BetaRadians), 0,
-            //                   0, 0, 0, 1);
-
-            //Matrix4x4 rotationMatrix = Rz * Rx;
-
             Matrix4x4 rotationMatrix = Matrix4x4.CreateRotationZ(-AlphaRadians) * Matrix4x4.CreateRotationX(-BetaRadians);
 
             foreach (Vertex vertex in Vertices)

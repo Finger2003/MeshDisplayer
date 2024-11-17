@@ -162,20 +162,9 @@ namespace Lab2
 
         private void pictureBox_Paint(object sender, PaintEventArgs e)
         {
-            G.Clear(Color.White);
-
-            Stopwatch sw = new();
-            sw.Start();
-
             Scene.RenderScene();
 
             e.Graphics.DrawImage(Bitmap, 0, 0);
-
-            sw.Stop();
-            float fps = float.PositiveInfinity;
-            if (sw.ElapsedMilliseconds > 0)
-                fps = 1000 / sw.ElapsedMilliseconds;
-            fpsLabel.Text = $"FPS: {fps}";
         }
 
         private void pictureBox_SizeChanged(object sender, EventArgs e)
@@ -197,9 +186,6 @@ namespace Lab2
 
             SetGraphicsTransformation();
 
-            //MeshRenderer.DirectBitmap = DirectBitmap;
-            //MeshRenderer.G = G;
-            //MeshRenderer.PaintedPixelsZ = new float[DirectBitmap.Width, DirectBitmap.Height];
             MeshRenderer.SetNewBitmap(DirectBitmap, G);
 
             pictureBox.Invalidate();

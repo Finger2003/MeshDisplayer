@@ -82,8 +82,6 @@
             normalMapPictureBox = new PictureBox();
             drawEdgesCheckBox = new CheckBox();
             normalMapButton = new Button();
-            fpsLabel = new Label();
-            menuStrip1 = new MenuStrip();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             fidelityPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)fidelityTrackBar).BeginInit();
@@ -666,37 +664,16 @@
             normalMapButton.UseVisualStyleBackColor = true;
             normalMapButton.Click += normalMapButton_Click;
             // 
-            // fpsLabel
-            // 
-            fpsLabel.AutoSize = true;
-            fpsLabel.Font = new Font("Segoe UI", 21.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            fpsLabel.Location = new Point(18, 166);
-            fpsLabel.Name = "fpsLabel";
-            fpsLabel.Size = new Size(62, 40);
-            fpsLabel.TabIndex = 15;
-            fpsLabel.Text = "FPS";
-            // 
-            // menuStrip1
-            // 
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1174, 24);
-            menuStrip1.TabIndex = 16;
-            menuStrip1.Text = "menuStrip1";
-            // 
             // MeshDisplayer
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1174, 853);
-            Controls.Add(fpsLabel);
             Controls.Add(surfaceGroupBox);
             Controls.Add(lightGroupBox);
             Controls.Add(meshGroupBox);
             Controls.Add(pictureBox);
-            Controls.Add(menuStrip1);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            MainMenuStrip = menuStrip1;
             MinimumSize = new Size(1190, 0);
             Name = "MeshDisplayer";
             StartPosition = FormStartPosition.CenterScreen;
@@ -736,7 +713,6 @@
             ((System.ComponentModel.ISupportInitialize)meshColorPictureBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)normalMapPictureBox).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -791,9 +767,7 @@
         private PictureBox meshColorPictureBox;
         private PictureBox normalMapPictureBox;
         private PictureBox lightColorPictureBox;
-        private Label fpsLabel;
         private Panel lightPanel;
-        private MenuStrip menuStrip1;
         private Button loadControlPointsButton;
         private CheckBox drawControlPointsCheckBox;
     }

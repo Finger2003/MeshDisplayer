@@ -27,13 +27,11 @@ namespace Lab2.Renderers
         public Color MeshColor { get; set; }
 
         private ZBuffer ZBuffer { get; set; }
-        //public float[,] PaintedPixelsZ { get; set; }// = new float[0, 0];
         public MeshRenderer(DirectBitmap directBitmap, Graphics bitmapGraphics, ICoordinateTransformer2D coordinateTransformer, ReflectionCoefficients reflectionCoefficients, DirectBitmap textureDirectBitmap, Vector3[,] normalMap)
         {
             DirectBitmap = directBitmap;
             G = bitmapGraphics;
             ZBuffer = new(directBitmap.Width, directBitmap.Height);
-            //PaintedPixelsZ = new float[DirectBitmap.Width, DirectBitmap.Height];
             CoordinateTransformer = coordinateTransformer;
             ReflectionCoefficients = reflectionCoefficients;
             TextureDirectBitmap = textureDirectBitmap;
@@ -48,21 +46,14 @@ namespace Lab2.Renderers
             DirectBitmap = directBitmap;
             G = bitmapGraphics;
             ZBuffer = new(directBitmap.Width, directBitmap.Height);
-            //PaintedPixelsZ = new float[DirectBitmap.Width, DirectBitmap.Height];
         }
 
         public void RenderMesh(Mesh mesh, LightSource lightSource)
         {
             G.Clear(Color.White);
 
-            //PaintedPixelsZ = new float[DirectBitmap.Width, DirectBitmap.Height];
 
             ZBuffer.Clear(float.NegativeInfinity);
-
-            //for (int i = 0; i < PaintedPixelsZ.GetLength(0); i++)
-            //    for (int j = 0; j < PaintedPixelsZ.GetLength(1); j++)
-            //        PaintedPixelsZ[i, j] = float.NegativeInfinity;
-
 
             if (DrawFilling)
             {
@@ -72,8 +63,7 @@ namespace Lab2.Renderers
                     LightSource.Color = lightSource.Color;
                 }
 
-                //Parallel.ForEach(mesh.Triangles, FillTriangle);
-                mesh.Triangles.ForEach(FillTriangle);
+                Parallel.ForEach(mesh.Triangles, FillTriangle);
             }
 
             if (DrawEdges)
@@ -205,22 +195,13 @@ namespace Lab2.Renderers
                             Vector3 P = MathHelper.InterpolateVectorFromBaricentric(triangle.V1.AfterRotationState.P, triangle.V2.AfterRotationState.P, triangle.V3.AfterRotationState.P, coords);
 
 
-                            //lock (ZBuffer)
-                            //{
                             if (!ZBuffer.CheckIfBiggerAndSet(transformedX, transformedY, P.Z))
                                 continue;
-                            //}
-                            //if (PaintedPixelsZ[transformedX, transformedY] > P.Z)
-                            //    continue;
-
-                            //PaintedPixelsZ[transformedX, transformedY] = P.Z;
 
                             float u = MathHelper.InterpolateFloatFromBaricentric(triangle.V1.U, triangle.V2.U, triangle.V3.U, coords);
                             float v = MathHelper.InterpolateFloatFromBaricentric(triangle.V1.V, triangle.V2.V, triangle.V3.V, coords);
                             Color color = getInterpolatedColor(coords, u, v, P);
 
-                            //color = GetTextureColor(u, v);
-                            //if (transformedX >= 0 && transformedX < DirectBitmap.Width)
                             DirectBitmap.SetPixel(transformedX, transformedY, color);
                         }
                 }
@@ -242,8 +223,6 @@ namespace Lab2.Renderers
                 Vector3 N = GetNormalVector(triangle, coords, u, v);
                 Vector3 V = Vector3.UnitZ;
 
-                //Il = Vector3.Normalize(Il);
-                //Io = Vector3.Normalize(Io);
 
                 Il /= 255;
                 Io /= 255;
