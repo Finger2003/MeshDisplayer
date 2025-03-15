@@ -1,4 +1,6 @@
-namespace Lab2
+using MeshDisplayer;
+
+namespace MeshDisplayer
 {
     internal static class Program
     {

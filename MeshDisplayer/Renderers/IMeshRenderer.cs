@@ -1,7 +1,7 @@
-﻿using Lab2.Model;
-using Lab2.SceneModel;
+﻿using MeshDisplayer.Model;
+using MeshDisplayer.SceneModel;
 
-namespace Lab2.Renderers
+namespace MeshDisplayer.Renderers
 {
     public interface IMeshRenderer
     {

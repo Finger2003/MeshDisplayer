@@ -1,4 +1,4 @@
-﻿namespace Lab2.CoordinatesTransformers
+﻿namespace MeshDisplayer.CoordinatesTransformers
 {
     public interface ICoordinateTransformer2D
     {

@@ -1,7 +1,7 @@
-﻿using Lab2.Utils;
+﻿using MeshDisplayer.Utils;
 using System.Numerics;
 
-namespace Lab2.Model
+namespace MeshDisplayer.Model
 {
     public class Mesh
     {

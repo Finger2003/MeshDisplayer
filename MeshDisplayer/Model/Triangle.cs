@@ -1,4 +1,4 @@
-﻿namespace Lab2.Model
+﻿namespace MeshDisplayer.Model
 {
     public class Triangle(Vertex v1, Vertex v2, Vertex v3)
     {

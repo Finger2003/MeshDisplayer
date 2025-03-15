@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Lab2.Utils
+namespace MeshDisplayer.Utils
 {
     public static class MathHelper
     {

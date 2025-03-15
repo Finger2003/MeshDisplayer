@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Lab2.SceneModel
+namespace MeshDisplayer.SceneModel
 {
     public class LightSource(Vector3 position, Color color)
     {

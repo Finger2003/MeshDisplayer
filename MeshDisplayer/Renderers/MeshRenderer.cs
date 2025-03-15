@@ -1,10 +1,10 @@
-﻿using Lab2.CoordinatesTransformers;
-using Lab2.Model;
-using Lab2.SceneModel;
-using Lab2.Utils;
+﻿using MeshDisplayer.CoordinatesTransformers;
+using MeshDisplayer.Model;
+using MeshDisplayer.SceneModel;
+using MeshDisplayer.Utils;
 using System.Numerics;
 
-namespace Lab2.Renderers
+namespace MeshDisplayer.Renderers
 {
     public class MeshRenderer : IMeshRenderer
     {

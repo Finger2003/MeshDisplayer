@@ -1,4 +1,4 @@
-﻿namespace Lab2.Utils
+﻿namespace MeshDisplayer.Utils
 {
     public class AETElement(Point p1, Point p2)
     {

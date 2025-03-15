@@ -1,4 +1,4 @@
-﻿namespace Lab2.SceneModel
+﻿namespace MeshDisplayer.SceneModel
 {
     public class ReflectionCoefficients(float ks, float kd, float m)
     {

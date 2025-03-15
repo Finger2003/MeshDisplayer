@@ -1,4 +1,4 @@
-﻿namespace Lab2.CoordinatesTransformers
+﻿namespace MeshDisplayer.CoordinatesTransformers
 {
     public class CenterCoordinateTransformer2D(int width, int height) : ICoordinateTransformer2D
     {

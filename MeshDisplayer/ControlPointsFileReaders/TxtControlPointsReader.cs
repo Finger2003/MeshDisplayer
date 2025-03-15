@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Numerics;
 
-namespace Lab2.ControlPointsFileReaders
+namespace MeshDisplayer.ControlPointsFileReaders
 {
     public class TxtControlPointsReader(int controlPointsFirstDimensionCount, int controlPointsSecondDimensionCount)
     {

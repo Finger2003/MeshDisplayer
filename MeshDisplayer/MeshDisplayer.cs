@@ -1,14 +1,14 @@
-using Lab2.ControlPointsFileReaders;
-using Lab2.CoordinatesTransformers;
-using Lab2.Model;
-using Lab2.Renderers;
-using Lab2.SceneModel;
-using Lab2.Utils;
+using MeshDisplayer.ControlPointsFileReaders;
+using MeshDisplayer.CoordinatesTransformers;
+using MeshDisplayer.Model;
+using MeshDisplayer.Renderers;
+using MeshDisplayer.SceneModel;
+using MeshDisplayer.Utils;
 using System.Diagnostics;
 using System.Numerics;
 using System.Timers;
 
-namespace Lab2
+namespace MeshDisplayer
 {
     public partial class MeshDisplayer : Form
     {

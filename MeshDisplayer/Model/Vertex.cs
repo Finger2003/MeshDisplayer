@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Lab2.Model
+namespace MeshDisplayer.Model
 {
     public class Vertex
     {

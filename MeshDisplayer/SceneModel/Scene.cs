@@ -1,8 +1,8 @@
-﻿using Lab2.Model;
-using Lab2.Renderers;
+﻿using MeshDisplayer.Model;
+using MeshDisplayer.Renderers;
 using System.Numerics;
 
-namespace Lab2.SceneModel
+namespace MeshDisplayer.SceneModel
 {
     public class Scene(Mesh mesh, LightSource lightSource, IMeshRenderer meshRenderer)
     {
